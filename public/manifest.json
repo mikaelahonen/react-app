@@ -3,7 +3,7 @@
   "name": "Quantified Self Web Application",
   "icons": [
     {
-      "src": "/static/favicon-2.png",
+      "src": "/favicon-2.png",
       "sizes": "192x192",
       "type": "image/png"
     }

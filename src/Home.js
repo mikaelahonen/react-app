@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Jumbotron, Grid, Row, Col, Table } from 'react-bootstrap';
 import Head from './Components';
 import GoogleMapsContainer from './GoogleMapsContainer';
-import GeoLocation from './GeoLocation';
+import {getLocation} from './GeoLocation';
 import {getPosition} from './functions';
 
 
@@ -10,15 +10,21 @@ import {getPosition} from './functions';
 class Position extends Component{	
 
 	state = {
-		lat: 1,
-		lon: 2,
-		acc: 3
+		lat: "Not set",
+		lng: "Not set",
+		acc: "Not set"
 	}	
 	
 
-	componentDidMount() {
-		
-				
+	componentWillMount() {
+		getLocation()
+		.then((pos) => {
+			this.setState({
+				lat: pos.coords.latitude.toFixed(2),
+				lng: pos.coords.longitude.toFixed(2),
+				acc: pos.coords.accuracy.toFixed(0)
+			});
+		});				
 	}
 	
 	render() {
@@ -30,9 +36,9 @@ class Position extends Component{
 						<tr><th>Metric</th><th>Value</th></tr>
 					</thead>
 					<tbody>					
-						<tr><td>Latitude</td><td><GeoLocation coord="lon" /></td></tr>
-						<tr><td>Longitude</td><td><GeoLocation coord="lat" /></td></tr>
-						<tr><td>Accuracy</td><td><GeoLocation coord="acc" /></td></tr>
+						<tr><td>Latitude</td><td>{this.state.lat}</td></tr>
+						<tr><td>Longitude</td><td>{this.state.lng}</td></tr>
+						<tr><td>Accuracy</td><td>{this.state.acc} meters</td></tr>
 					</tbody>
 				</Table>				
 			</div>

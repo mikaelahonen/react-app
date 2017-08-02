@@ -17,7 +17,7 @@ class App extends Component {
 	render() {
 		return (
 			<div>
-			<Menu/>			
+				<Menu/>			
 				<Grid>
 					<Row>
 						<Col md={12}>
@@ -30,8 +30,8 @@ class App extends Component {
 					</Row>
 				</Grid>
 			</div>
-    );
-  }
+		);
+	}
 }
 
 export default App;

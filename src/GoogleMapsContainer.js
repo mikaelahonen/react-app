@@ -3,14 +3,6 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 
 import {getLocation} from './GeoLocation';
 
-class Mymarker extends Component{
-	render(){
-		return (
-			<p>asd</p>	
-		);
-	}
-}
-
 export class MapContainer extends Component {
 		
 	
@@ -36,7 +28,6 @@ export class MapContainer extends Component {
 		return (
 				
 			<div className="maps-container">
-			<Mymarker/>
 					<Map 
 						className= 'maps'
 						google={this.props.google} 

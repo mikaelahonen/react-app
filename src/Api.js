@@ -1,7 +1,7 @@
 var host = 'localhost:8000';
 
 export function isLoggedIn(){
-	return !!localStorage.token
+	return !!!localStorage.token
 }
 
 export function postData(endpoint, json) {

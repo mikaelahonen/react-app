@@ -4,29 +4,42 @@ import { Button, Jumbotron, Grid, Row, Col, Table, Form, FormControl, FormGroup,
 class Login extends Component {
   render() {
     return (
-		<Grid>
-			<Row>
-				<Col sm={4}>
-					<h1>Login</h1>
-					<form onSubmit={this.handleSubmit}>
-					
-						<FormGroup>
-							<ControlLabel>Username</ControlLabel>
-							<FormControl id="username" type="text" />
-						</FormGroup>
+
+		<div id="login-wrap">
+		
+				<Col lg={3} md={4} sm={6} id="login-form">
+				
+								<h1>Login</h1>
+								<legend></legend>
+								<form>
+									<FormGroup controlId="formHorizontalUsername">
+									
+											<FormControl type="text" placeholder="Username" />
 						
-						<FormGroup>
-							<ControlLabel>Password</ControlLabel>
-							<FormControl id="password" type="text" />
-						</FormGroup>
-						
-						<Button type="submit">
-							Submit
-						</Button>
-					</form>
-				</Col>
-			</Row>
-		</Grid>
+									</FormGroup>
+
+									<FormGroup controlId="formHorizontalPassword">
+										
+											<FormControl type="password" placeholder="Password" />
+		
+									</FormGroup>
+
+
+
+									<FormGroup>
+								
+										<Button type="submit" block >
+											Sign in
+										</Button>
+										
+									</FormGroup>
+								</form>
+							</Col>
+
+				
+			
+		</div>		
+
 	);
   }
 }

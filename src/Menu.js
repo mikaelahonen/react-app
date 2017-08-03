@@ -30,7 +30,8 @@ class Menu extends Component {
 					</Nav>
 					<Nav pullRight>
 						<NavDropdown eventKey={2} title={<span><FontAwesome name="user"/> User</span>} id="basic-nav-dropdown">
-							<MenuItem eventKey={2.1}><Link to='/user/logout'>Logout</Link></MenuItem>
+							<MenuItem eventKey={2.1}><Link to='/login'>Login</Link></MenuItem>
+							<MenuItem eventKey={2.2}><Link to='/user/logout'>Logout</Link></MenuItem>
 						</NavDropdown>
 						{/*<NavItem eventKey={2} href="/">Link Right</NavItem>*/}
 					</Nav>

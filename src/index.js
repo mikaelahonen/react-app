@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './App';
+
 import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
@@ -9,8 +9,9 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import {isLoggedIn} from './Api';
 
+import App from './App';
 import Login from './Login';
-import User from './User';
+import Logout from './Logout';
 import Home from './Home';
 import Gym from './Gym';
 import GymWorkouts from './GymWorkouts';
@@ -19,8 +20,9 @@ ReactDOM.render((
 	<BrowserRouter>
 		<Switch>
 			<Route path='/login' component={Login}/>
+			<Route path='/logout' component={Logout}/>
 			<Route path='/' component={() => (
-				!isLoggedIn() ? (<Redirect to="/login" />) : (<App />)
+				!!localStorage.token ? (<App />) : (<Redirect to="/login" />)
 			)}/>
 		</Switch>
 	</BrowserRouter>

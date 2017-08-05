@@ -4,14 +4,14 @@ import { Button, Jumbotron, Grid, Row, Col } from 'react-bootstrap';
 import {Switch, Route} from 'react-router-dom'
 //Gym components
 import UserHome from './User'
-import UserLogout from './UserLogout'
+
 
 class User extends Component {
   render() {
     return (
 		<Switch>
 			<Route exact path='/user' component={UserHome}/>
-			<Route path='/user/logout' component={UserLogout}/>
+				{/*<Route path='/user/logout' component={UserLogout}/>*/}
 				{/*Route path='/user/login' component={UserLogin}/>*/}
 		</Switch>
 	);

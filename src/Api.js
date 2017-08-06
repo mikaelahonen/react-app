@@ -3,7 +3,7 @@ if(process.env.NODE_ENV === 'development'){
 	api_url = 'http://localhost:8000';
 	console.log("Environment: development");
 }else if(process.env.NODE_ENV === 'production'){
-	api_url = 'https://app.mikaelahonen.com'
+	api_url = 'https://api.mikaelahonen.com'
 	console.log("Environment: production");
 }
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Col, FormControl, FormGroup} from 'react-bootstrap';
-
+import {postData} from './Api'; 
 import { Redirect } from 'react-router-dom';
 
 class Login extends Component {
@@ -30,20 +30,13 @@ class Login extends Component {
 		console.log("Login username: ", this.state.username);
 		var username = this.state.username;
 		var password = this.state.password;
-		var token = null;
-		fetch('http://localhost:8000/api-token-auth/',{
-			method: "POST",
-			mode: "cors",
-			headers: {
-			  'Accept': 'application/json',
-			  'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				username: username,
-				password: password
-			})		
-		})
-		.then((response) => response.json())
+		
+		var body = {
+			username: username,
+			password: password
+		}
+		
+		postData('/api-token-auth/', body)
 		.then((json) => {
 			console.log("Fetch token request sent");
 			if(json.token){
@@ -70,7 +63,7 @@ class Login extends Component {
 			this.setState({
 				pass: false,
 				login_hint: 'Error!',
-				login_style: {color:"red", border:"2px solid red"}
+				login_style: {color:"white", border:"2px solid white"}
 			})
 		});		
 	}

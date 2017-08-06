@@ -2,12 +2,11 @@
 import React, { Component } from 'react';
 import './style.css';
 //Bootstrap
-import { Button, Jumbotron, Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 //React Router
 import {Switch, Route} from 'react-router-dom'
 //Components
 import Menu from './Menu';
-import Head from './Components';
 import Home from './Home';
 import Gym from './Gym';
 import User from './User';

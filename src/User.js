@@ -1,21 +1,68 @@
 import React, { Component } from 'react';
-import { Button, Jumbotron, Grid, Row, Col } from 'react-bootstrap';
+import {Col, Table} from 'react-bootstrap';
 //React Router
-import {Switch, Route} from 'react-router-dom'
 //Gym components
-import UserHome from './User'
+
 
 
 class User extends Component {
-  render() {
-    return (
-		<Switch>
-			<Route exact path='/user' component={UserHome}/>
-				{/*<Route path='/user/logout' component={UserLogout}/>*/}
-				{/*Route path='/user/login' component={UserLogin}/>*/}
-		</Switch>
-	);
-  }
+	
+	state = {
+		userid: "Missing",
+		email: "Missing",
+		firstname: "Missing",
+		lastname: "Missing",
+
+	}
+	
+	componentWillMount(){
+		
+		fetch('http://localhost:8000/users/current/',{
+			mode: "cors",
+			headers: {
+			  'Accept': 'application/json',
+			  'Content-Type': 'application/json',
+			  'Authorization': 'JWT ' + localStorage.token,
+			},	
+		})
+		.then((response) => response.json())
+		.then((json) => {
+			var email = json.email;
+			var firstname = json.firstname;
+			var lastname = json.lastname;
+			var userid = json.id;
+			this.setState({
+				userid: userid,
+				email: email,
+				firstname: firstname,
+				lastname: lastname,
+			})
+		})
+	}
+	
+	render() {
+		return (
+			<Col>
+				<h1>User</h1>
+				<legend></legend>
+				<Table>
+					<tr>
+						<td>User id</td><td>{this.state.userid}</td>
+					</tr>
+					<tr>
+						<td>First name</td><td>{this.state.firstname}</td>
+					</tr>
+					<tr>
+						<td>Last name</td><td>{this.state.lastname}</td>
+					</tr>
+					<tr>
+						<td>Email</td><td>{this.state.email}</td>
+					</tr>
+				</Table>
+				
+			</Col>
+		);
+	}
 }
 
 export default User;

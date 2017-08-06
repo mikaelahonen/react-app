@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Jumbotron, Grid, Row, Col, Table } from 'react-bootstrap';
-import Head from './Components';
+import { Button, Jumbotron, Table } from 'react-bootstrap';
 import GoogleMapsContainer from './GoogleMapsContainer';
 import {getLocation} from './GeoLocation';
-import {getPosition} from './functions';
 
 
 
@@ -52,7 +50,7 @@ class Home extends Component {
 	render() {
 		return (
 			<div>
-				<Head head="Home"/>
+				<h1>Home</h1>
 				<Jumbotron>
 					<h2>Quantiefied Self App</h2>
 					<p><i>Welcome!</i></p>

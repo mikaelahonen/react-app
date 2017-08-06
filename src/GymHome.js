@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Jumbotron, Grid, Row, Col, Well } from 'react-bootstrap';
-import Head from './Components';
+import { Button, Jumbotron, Row, Col, Well } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import FontAwesome from  'react-fontawesome';
 
@@ -8,7 +7,7 @@ class GymHome extends Component {
   render() {
     return (
 		<div>
-			<Head head="GymHome"/>
+			<h1>GymHome</h1>
 			<Jumbotron>
 				<h2>Gym App</h2>
 				<p><i>Welcome!</i></p>

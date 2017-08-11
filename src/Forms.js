@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Jumbotron, Grid, Row, Col, Table, Form, FormControl, FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
+import { Button, ButtonToolbar, FormControl, FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
+import FontAwesome from  'react-fontawesome';
 
 class FormWorkout extends React.Component {
 
@@ -11,12 +12,11 @@ class FormWorkout extends React.Component {
 	render() {
 		
 		return (			
-
+		
 				<form onSubmit={this.handleSubmit}>
-				
 					<FormGroup>
 						<ControlLabel>Id</ControlLabel>
-						<FormControl id="id" type="text" disabled placeholder={1} />
+						<FormControl id="id" type="text" disabled placeholder={this.props.selected} />
 					</FormGroup>
 					
 					<FormGroup>
@@ -49,9 +49,12 @@ class FormWorkout extends React.Component {
 						<FormControl type="text" placeholder="My gym" />
 					</FormGroup>
 					
-					<Button type="submit">
-						Submit
-					</Button>
+					<ButtonToolbar>
+						<Button><FontAwesome name="plus"/></Button>
+						<Button><FontAwesome name="save"/></Button>
+						<Button><FontAwesome name="remove"/></Button>
+					</ButtonToolbar>
+	
 				</form>
 
 		);

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import FontAwesome from  'react-fontawesome';
-import {Table} from 'react-bootstrap';
+import {Table, Button} from 'react-bootstrap';
 import {getData} from './Api';
 import { Link } from 'react-router-dom';
 
@@ -20,51 +20,34 @@ class Thead extends React.Component{
 }
 
 class Trow extends React.Component{
-	
-
-	
-	handleClick(e){
-		const col = e.target.getAttribute('data-col');
-		const row = e.target.getAttribute('data-row');
-		const val = e.target.innerHTML;
 		
-		console.log("Value: ", val);
-		console.log("Row: ", row);
-		console.log("Col: ", col);
-	}
-	
 	render(){
 		var id = this.props.object.id;
 		var cells = [];
 		for(var key in this.props.object){
-			if(key=='id'){				
+			if(key==='id'){				
 				var url = this.props.object.url;
 				cells = [...cells, <a href={url} target='_blank'>{id}</a>]
-			}else if (key!='url'){
+			}else if (key!=='url'){
 				cells = [...cells, this.props.object[key]]
 			}
 		}
 		
 		var row = cells.map((cell, index) => {
-			return <td data-id={id} data-row={this.props.row} data-col={index+1} onClick={this.handleClick} key={index}>{cell}</td>
+			return <td key={index}>{cell}</td>
 		});
 			
 		return(
-			<tr>{row}</tr>
+			<tr data-row={id} onClick={this.props.changeSelected}>{row}</tr>
 		);
 	}
 }
 
 class Tbody extends React.Component{
 	
-	handleClick(e){
-		const item = e.target;
-		console.log("Row clicked: ", item);
-	}
-	
 	render(){		
 		var body = this.props.body.map((object, index) => {
-			return <Trow onClick={this.handleClick} key={index} row={index+1} object={object}/>
+			return <Trow  changeSelected={this.props.changeSelected} key={index} row={index+1} object={object}/>
 		});
 		
 		return (
@@ -91,7 +74,7 @@ class ApiTable extends React.Component {
 			
 			//Loop the first object to get heads
 			for(var key in json[0]){
-				if(key != 'url'){
+				if(key !== 'url'){
 					head = [...head, key];
 				}
 			}
@@ -115,11 +98,13 @@ class ApiTable extends React.Component {
 		if(!this.state.ready){
 			return <div><FontAwesome name="circle-o-notch" size="3x" spin/></div>;
 		}else{
-			return (			
-				<Table hover>
-					<Thead head={this.state.head} />
-					<Tbody body={this.state.body} />
-				</Table>
+			return (
+				<div>
+					<Table hover>
+						<Thead head={this.state.head} />
+						<Tbody body={this.state.body} changeSelected={this.props.changeSelected} />
+					</Table>
+				</div>
 			);
 		}
 	}

@@ -36,7 +36,8 @@ body,html,#root{
 	position: relative !important;
 }
 #login-form{
-	background-color: rgb(39,174,96);
+	/*background-color: rgb(39,174,96);*/
+	background-color: rgb(40,40,40);
 	color: white;
 	height: 100%;
 	margin: 0px;

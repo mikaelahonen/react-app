@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Col, FormControl, FormGroup} from 'react-bootstrap';
 import {postData} from './Api'; 
 import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class Login extends Component {
 	
@@ -97,8 +98,10 @@ class Login extends Component {
 									Sign in
 								</Button>
 							</FormGroup>
+
 							<div id="login-hint" style={this.state.login_style}>{this.state.login_hint}</div>
 						</form>
+						<Link to="/public/app-1">Go to public app</Link>
 					</Col>
 				</div>
 			);

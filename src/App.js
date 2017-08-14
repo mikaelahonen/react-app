@@ -4,7 +4,7 @@ import './style.css';
 //Bootstrap
 import { Grid, Row, Col } from 'react-bootstrap';
 //React Router
-import {Switch, Route} from 'react-router-dom'
+import {Switch, Route} from 'react-router-dom';
 //Components
 import Menu from './Menu';
 import Home from './Home';

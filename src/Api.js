@@ -7,6 +7,24 @@ if(process.env.NODE_ENV === 'development'){
 	console.log("Environment: production");
 }
 
+export function isLoggedIn(){
+	var pass = false;
+	if(!!localStorage.token){
+		console.log("Token exists");
+		var msToken = getTokenExpMs();
+		console.log('tokenExp: ', msToken);
+		console.log('Date: ', Date());
+		var date = new Date();
+		var msNow = date.getTime();
+		if(msToken > msNow){
+			console.log('Return true')
+			pass = true;
+		}
+	}
+	console.log(pass);
+	return pass;
+}
+
 export function postData(endpoint, json) {
 	initApi();
 	console.log("Post data: ", endpoint);
@@ -49,7 +67,28 @@ export function getData(endpoint) {
 	.then(response => response.json())	
 }
 
+export function getPayload(){
+	//Base64 encoded payload
+	var payloadBase64 = localStorage.token.split(".")[1];
+	var payloadStr = atob(payloadBase64);
+	var payloadJson = JSON.parse(payloadStr);
+	return payloadJson;
+}
+
+export function getTokenExpMs(){
+	var payload = getPayload();
+	var ms = payload.exp*1000;
+	return ms;
+}
+
+export function getTokenExpDate(){
+	var ms = getTokenExpMs();
+	var date = new Date(ms);
+	return date;
+}
+
 //Refresh token
 function initApi(){
 	return true;	
 }
+

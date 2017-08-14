@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Col, Table} from 'react-bootstrap';
+import {getTokenExpDate} from './Api';
 //React Router
 //Gym components
 
@@ -41,26 +42,36 @@ class User extends Component {
 	}
 	
 	render() {
+
 		return (
-			<Col>
+			<div>
 				<h1>User</h1>
 				<legend></legend>
 				<Table>
-					<tr>
-						<td>User id</td><td>{this.state.userid}</td>
-					</tr>
-					<tr>
-						<td>First name</td><td>{this.state.firstname}</td>
-					</tr>
-					<tr>
-						<td>Last name</td><td>{this.state.lastname}</td>
-					</tr>
-					<tr>
-						<td>Email</td><td>{this.state.email}</td>
-					</tr>
+					<tbody>
+						<tr>
+							<td>User id</td><td>{this.state.userid}</td>
+						</tr>
+						<tr>
+							<td>First name</td><td>{this.state.firstname}</td>
+						</tr>
+						<tr>
+							<td>Last name</td><td>{this.state.lastname}</td>
+						</tr>
+						<tr>
+							<td>Email</td><td>{this.state.email}</td>
+						</tr>
+						<tr>
+							<td>Token:</td><td>{localStorage.token.substring(1,50)}...</td>
+						</tr>
+						
+						<tr>
+							<td>Expiration:</td><td>{getTokenExpDate().toLocaleString()}</td>
+						</tr>
+					</tbody>
 				</Table>
 				
-			</Col>
+			</div>
 		);
 	}
 }

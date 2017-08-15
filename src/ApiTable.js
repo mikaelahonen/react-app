@@ -66,10 +66,10 @@ class ApiTable extends React.Component {
 		ready: false,
 	}
 	
-	componentWillMount(){
+	getJsonData(){
 		var body = [];
 		var head = [];
-		getData('/gym/workouts/')
+		getData(this.props.endpoint)
 		.then((json)=>{
 			
 			//Loop the first object to get heads
@@ -88,13 +88,21 @@ class ApiTable extends React.Component {
 				body: json,
 				ready: true,
 			});
-		});
-		
-		
-		
+		});	
+			
+	}
+	
+	componenteWillReceiveProps(){
+		console.log('ApiTable received props');
+		this.getJsonData();
+	}
+	
+	componentWillMount(){
+		this.getJsonData();
 	}
 	
 	render() {
+		console.log('Reload: ', this.props.reload);
 		if(!this.state.ready){
 			return <div><FontAwesome name="circle-o-notch" size="3x" spin/></div>;
 		}else{

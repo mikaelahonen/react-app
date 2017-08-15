@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Row, Col} from 'react-bootstrap';
+import {Row, Col, Button} from 'react-bootstrap';
 import ApiTable from './ApiTable';
 import FormWorkout from './Forms';
 
@@ -7,7 +7,8 @@ import FormWorkout from './Forms';
 class GymWorkouts extends React.Component {
 	
 	state = {
-		selected: '[None]',
+		selected: '0',
+		reload: 0,
 	}
 	
 	changeSelected(e){
@@ -15,8 +16,17 @@ class GymWorkouts extends React.Component {
 		this.setState({
 			selected: selected,
 		});
-		e.prevenDefault;
+		e.preventDefault;
 	}
+	
+	handleDelete(){
+		console.log('Handle delete');
+		this.setState({
+			selected: '0',
+			reload: this.state.reload + 1,
+		});
+	}
+	
 	
 	render() {
 		
@@ -26,12 +36,10 @@ class GymWorkouts extends React.Component {
 			<legend></legend>
 			<Row>
 				<Col md={4}>
-					<h2>Current workout</h2>
-					<FormWorkout selected={this.state.selected} />	
+					<FormWorkout selected={this.state.selected} handleDelete={() => this.handleDelete()} />	
 				</Col>
 				<Col md={8}>
-					<h2>All workouts</h2>					
-					<ApiTable endpoint='/gym/workouts/' changeSelected={(e) => this.changeSelected(e)}/>
+					<ApiTable endpoint={'/gym/workouts/'} reload={this.state.reload} changeSelected={(e) => this.changeSelected(e)}/>
 				</Col>
 			</Row>
 		  </div>

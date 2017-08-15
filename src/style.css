@@ -74,4 +74,7 @@ body,html,#root{
 	cursor: pointer;
 }
 
-
+#form{
+	background-color: rgb(222,222,222);
+	padding: 15px;
+}

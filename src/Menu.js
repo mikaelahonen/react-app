@@ -8,7 +8,7 @@ class Menu extends Component {
 	
 	render() {
 		return (
-			<Navbar inverse collapseOnSelect fluid>
+			<Navbar inverse collapseOnSelect>
 				<Navbar.Header>
 					<Navbar.Brand>
 						<Link to="/"><FontAwesome name="home"/></Link>

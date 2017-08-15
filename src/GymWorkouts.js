@@ -8,18 +8,19 @@ import FontAwesome from  'react-fontawesome';
 class GymWorkouts extends React.Component {
 	
 	form = [
-		{id:{type: 'number'}},
-		{workout:{type: 'text'}},
-		{start_time:{type: 'datetime-local'}},
-		{end_time:{type: 'datetime-local'}},
-		{location:{type: 'text'}}
+		{name: 'id', type: 'number', placeholder: '0'},
+		{name: 'workout', type: 'text', placeholder: 'Workout name'},
+		{name: 'start_time', type: 'datetime-local'},
+		{name: 'end_time', type: 'datetime-local'},
+		{name: 'location', type: 'text', placeholder: 'Workout location'}
 	]
 	
 	endpoint = '/gym/workouts/';
 	
 	state = {
-		selected: '0',
-		reload: 0,
+		ready: false,
+		data: undefined,
+		selected: undefined,
 	}
 	
 	updateTable(){
@@ -34,10 +35,18 @@ class GymWorkouts extends React.Component {
 	}
 	
 	changeSelected(e){
-		var selected = e.currentTarget.getAttribute('data-row');
+		
+		var selectedId = e.currentTarget.getAttribute('data-row');		
+		var selectedObject = this.state.data.filter((obj) => {
+			return obj.id == selectedId;
+		})[0];
+			
 		this.setState({
-			selected: selected,
+			selectedObject: selectedObject,
 		});
+		
+		console.log("Selected object: ", selectedObject);
+		
 		e.preventDefault;
 	}
 	
@@ -56,15 +65,11 @@ class GymWorkouts extends React.Component {
 
 	render() {
 		var table = <div>{spinner}</div>;
-		var selectedObject = undefined;
 		var spinner = <FontAwesome name="circle-o-notch" size="3x" spin/>;		
 		if(this.state.ready){
 			//Render data table
-			table = <ApiTable data={this.state.data} changeSelected={(e) => this.changeSelected(e)}/>;
-			//Get selected object by id			
-			selectedObject = this.state.data.filter((obj) => {
-				return obj.id == this.state.selected;
-			})[0];
+			table = <ApiTable data={this.state.data} changeSelected={(e) => this.changeSelected(e)}/>;				
+			console.log('This.state.ready');			
 		}
 		
 		return (			
@@ -73,7 +78,7 @@ class GymWorkouts extends React.Component {
 			<legend></legend>
 			<Row>
 				<Col md={4}>
-					<FormWorkout form={this.form} selected={selectedObject} handleDelete={() => this.handleDelete()} />	
+					<FormWorkout form={this.form} selectedObject={this.state.selectedObject} handleDelete={() => this.handleDelete()} />	
 				</Col>
 				<Col md={8}>
 					{table}

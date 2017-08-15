@@ -10,18 +10,14 @@ if(process.env.NODE_ENV === 'development'){
 export function isLoggedIn(){
 	var pass = false;
 	if(!!localStorage.token){
-		console.log("Token exists");
 		var msToken = getTokenExpMs();
-		console.log('tokenExp: ', msToken);
-		console.log('Date: ', Date());
 		var date = new Date();
 		var msNow = date.getTime();
 		if(msToken > msNow){
-			console.log('Return true')
 			pass = true;
 		}
 	}
-	console.log(pass);
+	console.log('Logged In: ', pass);
 	return pass;
 }
 

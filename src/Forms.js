@@ -6,13 +6,6 @@ import {deleteData} from './Api';
 class FormWorkout extends React.Component {
 
 	
-	state = {
-		workout: 'Workout 1',
-		start_time: '2017-10-11T11:12:13',
-		end_time: '2017-10-11T12:19:08',
-		location: 'Laardilandia',
-	}
-	
 	addItem(e){
 		console.log("Add new item");
 		this.setState(this.state);
@@ -42,59 +35,36 @@ class FormWorkout extends React.Component {
 		this.setState({
 			[name]: value
 		});
+		console.log('Changed');
 	}
 	
-	render() {		
-		var id = 0;
-		if(this.props.selected !== undefined){
-			id = this.props.selected.id;
-		}		
+	
+	render() {			
+		
+		//Insert input values if table row is clicked
+		//Consider using componentWIllReceiveProps
+		const inputs = this.props.form.map((input, index) =>
+			<FormGroup key={index}>
+				<ControlLabel>{input.name.replace('_',' ').toUpperCase()}</ControlLabel>
+				<FormControl name={input.name} type={input.type} placeholder={input.placeholder} onChange={(e) => this.handleChange(e)} />
+			</FormGroup>
+		);	
+		
+		console.log('Form reaction');
 		
 		return (			
 		
-				<form id="form" onSubmit={this.handleSubmit}>
-					<FormGroup>
-						<ControlLabel>Id</ControlLabel>
-						<FormControl name="id" type="text" disabled value={id} />
-					</FormGroup>
-					
-					<FormGroup>
-						<ControlLabel>Workout</ControlLabel>
-						<FormControl name="workout" type="text" placeholder="Full body" onChange={(e) => this.handleChange(e)} />
-					</FormGroup>
-					
-					<FormGroup>
-						<InputGroup>
-							<ControlLabel>Start time</ControlLabel>
-						</InputGroup>
-						<InputGroup>
-							<FormControl name="start_time" type="datetime-local" />
-							<InputGroup.Button><Button>Now</Button></InputGroup.Button>
-						</InputGroup>
-					</FormGroup>
-					
-					<FormGroup>
-						<InputGroup>
-							<ControlLabel>End time</ControlLabel>
-						</InputGroup>
-						<InputGroup>
-							<FormControl name="end_time" type="datetime-local" />
-							<InputGroup.Button><Button>Now</Button></InputGroup.Button>
-						</InputGroup>
-					</FormGroup>
-					
-					<FormGroup>
-						<ControlLabel>Location</ControlLabel>
-						<FormControl name="location" type="text" placeholder="My gym" />
-					</FormGroup>
-					
-					<ButtonToolbar>
-						<Button title="Add new" onClick={(e) => this.addItem(e)}><FontAwesome name="plus"/></Button>
-						<Button title="Save changes" onClick={this.updateItem}><FontAwesome name="save"/></Button>
-						<Button title="Delete item" onClick={(e) => this.deleteItem(e)}><FontAwesome name="remove"/></Button>
-					</ButtonToolbar>
-	
-				</form>
+			<form id="form" onSubmit={this.handleSubmit}>
+				
+				{inputs}
+				
+				<ButtonToolbar>
+					<Button title="Add new" onClick={(e) => this.addItem(e)}><FontAwesome name="plus"/></Button>
+					<Button title="Save changes" onClick={this.updateItem}><FontAwesome name="save"/></Button>
+					<Button title="Delete item" onClick={(e) => this.deleteItem(e)}><FontAwesome name="remove"/></Button>
+				</ButtonToolbar>
+
+			</form>
 
 		);
 

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import FontAwesome from  'react-fontawesome';
 import {Table, Button} from 'react-bootstrap';
-import {getData} from './Api';
 import { Link } from 'react-router-dom';
 
 class Thead extends React.Component{
 	render(){
 		const cells = this.props.head.map((cell, index) =>
-			<th key={cell} data-col={index}>{cell}</th>
+			<th key={cell} data-col={index}>{cell.replace("_"," ").toUpperCase()}</th>
 		);
 		return (
 			<thead>
@@ -62,59 +60,30 @@ class ApiTable extends React.Component {
 	
 	state = {
 		head: [],
-		body: [],
-		ready: false,
-	}
-	
-	getJsonData(){
-		var body = [];
-		var head = [];
-		getData(this.props.endpoint)
-		.then((json)=>{
-			
-			//Loop the first object to get heads
-			for(var key in json[0]){
-				if(key !== 'url'){
-					head = [...head, key];
-				}
-			}
-			
-			for(var object in json){
-				body = [...body, object]
-			}
-			
-			this.setState({
-				head: head,
-				body: json,
-				ready: true,
-			});
-		});	
-			
-	}
-	
-	componenteWillReceiveProps(){
-		console.log('ApiTable received props');
-		this.getJsonData();
 	}
 	
 	componentWillMount(){
-		this.getJsonData();
+		var head = [];			
+		//Loop the first object to get heads
+		for(var key in this.props.data[0]){
+			if(key !== 'url'){
+				head = [...head, key];
+			}
+		}		
+		this.setState({
+			head: head,
+		});
 	}
 	
 	render() {
-		console.log('Reload: ', this.props.reload);
-		if(!this.state.ready){
-			return <div><FontAwesome name="circle-o-notch" size="3x" spin/></div>;
-		}else{
-			return (
-				<div>
-					<Table hover>
-						<Thead head={this.state.head} />
-						<Tbody body={this.state.body} changeSelected={this.props.changeSelected} />
-					</Table>
-				</div>
-			);
-		}
+		return (
+			<div>
+				<Table hover>
+					<Thead head={this.state.head} />
+					<Tbody body={this.props.data} changeSelected={this.props.changeSelected} />
+				</Table>
+			</div>
+		);
 	}
 }
 

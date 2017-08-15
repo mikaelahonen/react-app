@@ -7,20 +7,15 @@ class FormWorkout extends React.Component {
 
 	
 	state = {
-		workout: '',
-		start_time: '',
-		end_time: '',
-		location: '',
+		workout: 'Workout 1',
+		start_time: '2017-10-11T11:12:13',
+		end_time: '2017-10-11T12:19:08',
+		location: 'Laardilandia',
 	}
 	
 	addItem(e){
 		console.log("Add new item");
-		this.setState({
-			workout: 'Workout 1',
-			start_time: '2017-10-11T11:12:13',
-			end_time: '',
-			location: '',
-		});
+		this.setState(this.state);
 		e.preventDefault;
 	}
 	
@@ -49,14 +44,18 @@ class FormWorkout extends React.Component {
 		});
 	}
 	
-	render() {
+	render() {		
+		var id = 0;
+		if(this.props.selected !== undefined){
+			id = this.props.selected.id;
+		}		
 		
 		return (			
 		
 				<form id="form" onSubmit={this.handleSubmit}>
 					<FormGroup>
 						<ControlLabel>Id</ControlLabel>
-						<FormControl name="id" type="text" disabled value={this.props.selected} />
+						<FormControl name="id" type="text" disabled value={id} />
 					</FormGroup>
 					
 					<FormGroup>

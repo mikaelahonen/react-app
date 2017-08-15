@@ -49,6 +49,23 @@ export function getData(endpoint) {
 	.then(response => response.json())	
 }
 
+export function deleteData(endpoint) {
+	initApi();
+	console.log("Delete data: ", endpoint);
+	
+	var headers = {};	
+	if (!!localStorage.token){
+		headers.Authorization = 'JWT ' + localStorage.token
+	}
+	
+	return fetch(api_url + endpoint,{
+		method: "DELETE",
+		mode: "cors",
+		headers: headers,
+	})
+	.then(response => response)
+}
+
 //Refresh token
 function initApi(){
 	return true;	

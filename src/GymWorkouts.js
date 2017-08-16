@@ -8,8 +8,8 @@ import FontAwesome from  'react-fontawesome';
 class GymWorkouts extends React.Component {
 	
 	form = [
-		{name: 'id', type: 'number', placeholder: '0'},
-		{name: 'workout', type: 'text', placeholder: 'Workout name'},
+		{name: 'id', type: 'number', placeholder: '[Null]', readOnly: 'readOnly'},
+		{name: 'name', type: 'text', placeholder: 'Workout name'},
 		{name: 'start_time', type: 'datetime-local'},
 		{name: 'end_time', type: 'datetime-local'},
 		{name: 'location', type: 'text', placeholder: 'Workout location'}

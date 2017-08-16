@@ -38,30 +38,56 @@ class FormWorkout extends React.Component {
 		console.log('Changed');
 	}
 	
+	handleValue(input){
+		var value = undefined;
+		if(this.props.selectedObject !== undefined){
+			var type = input.type;
+			var name = input.name;
+			value = this.props.selectedObject[input.name];
+			//Django rest returns time in format "2017-08-10T10:02:04Z" so strip the Z out
+			if(type==='datetime-local'){
+				value = value.replace('Z','');
+			}
+			return value;
+		}
+		return value;
+
+	}
 	
 	render() {			
 		
 		//Insert input values if table row is clicked
 		//Consider using componentWIllReceiveProps
-		const inputs = this.props.form.map((input, index) =>
-			<FormGroup key={index}>
-				<ControlLabel>{input.name.replace('_',' ').toUpperCase()}</ControlLabel>
-				<FormControl name={input.name} type={input.type} placeholder={input.placeholder} onChange={(e) => this.handleChange(e)} />
-			</FormGroup>
-		);	
+		var inputs = [];
+		this.props.form.map((input, index) => {
+			var anInput = (
+				 <FormGroup key={index}>
+					<ControlLabel>{input.name.replace('_',' ').toUpperCase()}</ControlLabel>
+					<FormControl
+						readOnly = {input.hasOwnProperty(input.readOnly) ? true : false}
+						value = {this.handleValue(input)}
+						name={input.name} 
+						type={input.type} 
+						placeholder={input.placeholder} 
+						onChange={(e) => this.handleChange(e)} 
+					/>
+				</FormGroup>
+			);
+			inputs.push(anInput);
+		});
 		
-		console.log('Form reaction');
+		console.log('Form reaction.');
 		
 		return (			
 		
 			<form id="form" onSubmit={this.handleSubmit}>
-				
+
 				{inputs}
 				
 				<ButtonToolbar>
-					<Button title="Add new" onClick={(e) => this.addItem(e)}><FontAwesome name="plus"/></Button>
+					<Button title="Add new" onClick={(e) => this.addItem(e)}><FontAwesome name="plus-square"/></Button>
 					<Button title="Save changes" onClick={this.updateItem}><FontAwesome name="save"/></Button>
-					<Button title="Delete item" onClick={(e) => this.deleteItem(e)}><FontAwesome name="remove"/></Button>
+					<Button title="Delete item" onClick={(e) => this.deleteItem(e)}><FontAwesome name="trash-o"/></Button>
 				</ButtonToolbar>
 
 			</form>

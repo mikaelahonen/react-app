@@ -4,13 +4,14 @@ import FontAwesome from  'react-fontawesome';
 import {deleteData} from './Api';
 
 class FormWorkout extends React.Component {
-
 	
-	addItem(e){
-		console.log("Add new item");
-		this.setState(this.state);
-		e.preventDefault;
-	}
+	form = [
+		{name: 'id', type: 'number', placeholder: '[Null]', readOnly: 'readOnly'},
+		{name: 'name', type: 'text', placeholder: 'Workout name'},
+		{name: 'start_time', type: 'datetime-local'},
+		{name: 'end_time', type: 'datetime-local'},
+		{name: 'location', type: 'text', placeholder: 'Workout location'}
+	]
 	
 	deleteItem(e){
 		var ask = window.confirm('Delete object with id ' + this.props.selected);
@@ -48,8 +49,8 @@ class FormWorkout extends React.Component {
 			if(type==='datetime-local'){
 				value = value.replace('Z','');
 			}
-			return value;
 		}
+		console.log('handleValue: ', value);
 		return value;
 
 	}
@@ -85,7 +86,7 @@ class FormWorkout extends React.Component {
 				{inputs}
 				
 				<ButtonToolbar>
-					<Button title="Add new" onClick={(e) => this.addItem(e)}><FontAwesome name="plus-square"/></Button>
+					<Button title="Add new" onClick={(e) => this.props.handleNew(e)}><FontAwesome name="plus-square"/></Button>
 					<Button title="Save changes" onClick={this.updateItem}><FontAwesome name="save"/></Button>
 					<Button title="Delete item" onClick={(e) => this.deleteItem(e)}><FontAwesome name="trash-o"/></Button>
 				</ButtonToolbar>

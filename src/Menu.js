@@ -16,29 +16,10 @@ class Menu extends Component {
 					<Navbar.Toggle />
 				</Navbar.Header>
 				<Navbar.Collapse>
-					<Nav>
-						{/*<MenuItem eventKey={2}>Link</MenuItem>*/}
-						<NavDropdown eventKey={1} title={<span><FontAwesome name="bolt"/> Gym</span>} id="basic-nav-dropdown">
-							
-							<MenuItem header>Home</MenuItem>
-							<LinkContainer exact to='/gym'>
-								<MenuItem eventKey={1.1}>Gym</MenuItem>
-							</LinkContainer>
-							
-							<MenuItem divider />
-							
-							<MenuItem header>Templates</MenuItem>
-							<LinkContainer to='/gym/workouts'>
-								<MenuItem eventKey={1.2}>Workouts</MenuItem>
-							</LinkContainer>
-							
-							<MenuItem divider />
-							
-							<MenuItem header>Training</MenuItem>
-							<MenuItem eventKey={1.3}>...</MenuItem>
-							
-						</NavDropdown>
-
+					<Nav>					
+						<LinkContainer exact to='/gym'>
+							<NavItem eventKey={1}><FontAwesome name="bolt"/> Gym</NavItem>
+						</LinkContainer>
 					</Nav>
 					<Nav pullRight>
 						<NavDropdown eventKey={2} title={<span><FontAwesome name="user"/> User</span>} id="basic-nav-dropdown">

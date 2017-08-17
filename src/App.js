@@ -17,7 +17,7 @@ class App extends Component {
 		return (
 			<div>
 				<Menu/>			
-				<Grid>
+				<Grid id="container">
 					<Row>
 						<Col md={12}>
 							<Switch>

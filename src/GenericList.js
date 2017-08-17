@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Row, Col, Button, ButtonToolbar} from 'react-bootstrap';
+import {Row, Nav, Col, Button, ButtonToolbar} from 'react-bootstrap';
 import ApiTable from './ApiTable';
 import FormWorkout from './Forms';
 import {getData} from './Api';
@@ -28,15 +28,20 @@ class GenericList extends React.Component {
 		return (			
 		  <div>
 			<Row>
-				<Col md={12}>
-					<h1>{this.titleFromUrl()}</h1>
+				<Col xs={12}>
+					<div id="head-area">
+						
+								<h1 id="tbl-head">{this.titleFromUrl()}</h1>
+						
+							
+								<Button id="tbl-btn" bsStyle="success" onClick={() => this.props.history.push(this.props.location.pathname +'/add')}>
+									<FontAwesome name="plus"/>
+								</Button>
+							
+
+						</div>
+
 					<legend></legend>
-					<ButtonToolbar>
-						<Button bsStyle="success" onClick={() => this.props.history.push(this.props.location.pathname +'/add')}>
-							<FontAwesome name="plus"/>
-						</Button>
-					</ButtonToolbar>					
-					<p></p>
 					<ApiTable endpoint={this.props.location.pathname}/>
 				</Col>
 			</Row>

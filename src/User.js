@@ -48,6 +48,12 @@ class User extends Component {
 				<h1>User</h1>
 				<legend></legend>
 				<Table>
+					<thead>
+						<tr>
+							<th>Description</th>
+							<th>Value</th>
+						</tr>
+					</thead>
 					<tbody>
 						<tr>
 							<td>User id</td><td>{this.state.userid}</td>

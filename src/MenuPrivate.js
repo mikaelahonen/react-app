@@ -27,13 +27,17 @@ class Menu extends Component {
 								<MenuItem eventKey={1.2}>App 2</MenuItem>
 							</LinkContainer>
 							
+							<LinkContainer exact to='/public/colors'>
+								<MenuItem eventKey={1.3}>Colors</MenuItem>
+							</LinkContainer>
+							
 						</NavDropdown>
 
 					</Nav>
 					<Nav pullRight>
 
 							<LinkContainer to='/login'>
-								<MenuItem eventKey={2.1}>{<span><FontAwesome name="user"/> Login</span>} </MenuItem>
+								<NavItem eventKey={2.1}>{<span><FontAwesome name="user"/> Login</span>} </NavItem>
 							</LinkContainer>
 
 					</Nav>

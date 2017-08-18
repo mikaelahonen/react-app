@@ -12,16 +12,19 @@ import GymSets from './GymSets'
 class Gym extends Component {
 	render() {
 		return (
-			<div>
-				<Switch>
-					<Route exact path='/gym' component={GymHome}/>
-					<Route exact path='/gym/workouts' component={GenericList}/>
-					<Route exact path='/gym/sets' component={GenericList}/>
-					<Route exact path='/gym/excercises' component={GenericList}/>
-					<Route exact path='/gym/musclegroups' component={GenericList}/>
-					<Route exact path='/gym/workouts/:id' component={GymWorkout}/>
-				</Switch>
-			</div>
+			<Row>
+				<Col xs={12}>
+					<Switch>						
+
+						<Route exact path='/gym/:model/:id/edit' component={GenericList}/>
+						<Route exact path='/gym/:model/:id/detail' component={GenericList}/>
+						<Route exact path='/gym/:model/add' component={GenericList}/>
+						<Route exact path='/gym/:model/:id' component={GenericList}/>
+						<Route exact path='/gym/:model' component={GenericList}/>
+						<Route exact path='/gym' component={GymHome}/>
+					</Switch>
+				</Col>
+			</Row>
 		);
 	}
 }

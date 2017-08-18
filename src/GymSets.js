@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Row, Col, Button} from 'react-bootstrap';
-import ApiTable from './ApiTable';
+
 
 class GymSets extends React.Component {
 	
@@ -14,7 +14,7 @@ class GymSets extends React.Component {
 			<legend></legend>
 			<Row>
 				<Col md={12}>
-					<ApiTable endpoint={this.endpoint}/>
+
 				</Col>
 			</Row>
 		  </div>

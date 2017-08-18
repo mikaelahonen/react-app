@@ -6,6 +6,7 @@ import {Switch, Route} from 'react-router-dom';
 import MenuPrivate from './MenuPrivate';
 import PublicAppOne from './PublicApp1';
 import PublicAppTwo from './PublicApp2';
+import PublicColors from './PublicColors';
 
 class PublicApp extends Component {
   render() {
@@ -18,6 +19,7 @@ class PublicApp extends Component {
 							<Switch>
 								<Route path='/public/app-1' component={PublicAppOne}/>
 								<Route path='/public/app-2' component={PublicAppTwo}/>
+								<Route path='/public/colors' component={PublicColors}/>
 							</Switch>
 						</Col>
 					</Row>

@@ -22,6 +22,9 @@ class Menu extends Component {
 						</LinkContainer>
 					</Nav>
 					<Nav pullRight>
+						<LinkContainer exact to='/public'>
+							<NavItem eventKey={1}><FontAwesome name="mobile"/> Public apps</NavItem>
+						</LinkContainer>
 						<NavDropdown eventKey={2} title={<span><FontAwesome name="user"/> User</span>} id="basic-nav-dropdown">
 							<LinkContainer to='/user'>
 								<MenuItem eventKey={2.1}>User</MenuItem>

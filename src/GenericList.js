@@ -156,7 +156,7 @@ class GenericList extends React.Component {
 				
 		if(this.state.ready){
 			//Render data table
-			table= <Table hover>
+			table= <Table hover responsive>
 					<Thead head={this.state.head} />
 					<Tbody body={this.state.data} />
 				</Table>				

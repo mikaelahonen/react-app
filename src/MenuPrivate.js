@@ -19,16 +19,13 @@ class Menu extends Component {
 					<Nav>
 						<NavDropdown eventKey={1} title={<span><FontAwesome name="mobile"/> Apps</span>} id="basic-nav-dropdown">							
 
-							<LinkContainer exact to='/public/app-1'>
-								<MenuItem eventKey={1.1}>App 1</MenuItem>
-							</LinkContainer>
 							
-							<LinkContainer exact to='/public/app-2'>
-								<MenuItem eventKey={1.2}>App 2</MenuItem>
+							<LinkContainer exact to='/public/scores'>
+								<MenuItem eventKey={1.1}>Scores</MenuItem>
 							</LinkContainer>
 							
 							<LinkContainer exact to='/public/colors'>
-								<MenuItem eventKey={1.3}>Colors</MenuItem>
+								<MenuItem eventKey={1.2}>Colors</MenuItem>
 							</LinkContainer>
 							
 						</NavDropdown>
@@ -36,7 +33,7 @@ class Menu extends Component {
 					</Nav>
 					<Nav pullRight>
 
-							<LinkContainer to='/login'>
+							<LinkContainer to='/'>
 								<NavItem eventKey={2.1}>{<span><FontAwesome name="user"/> Login</span>} </NavItem>
 							</LinkContainer>
 

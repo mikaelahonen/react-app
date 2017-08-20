@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import FontAwesome from  'react-fontawesome';
 
-class Menu extends Component {
+class MenuPublic extends Component {
 	
 	render() {
 		return (
@@ -44,4 +44,4 @@ class Menu extends Component {
 		}
 	}
 
-export default Menu;
+export default MenuPublic;

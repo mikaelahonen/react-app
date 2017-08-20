@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Col, Table} from 'react-bootstrap';
-import {getTokenExpDate} from './Api';
+import {getTokenExpDate} from 'functions/Api';
 //React Router
 //Gym components
 

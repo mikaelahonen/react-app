@@ -6,22 +6,21 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
-import {isLoggedIn} from './Api';
+import {isLoggedIn} from 'functions/Api';
 
-import App from './App';
-import PublicApp from './PublicApp';
+import AppPrivate from 'private/App';
+import AppPublic from 'public/App';
 import Login from './Login';
 import Logout from './Logout';
-import PublicAppTwo from './PublicApp2';
 
 ReactDOM.render((
 	<BrowserRouter>
 		<Switch>
-			<Route path='/public' component={PublicApp}/>
+			<Route path='/public' component={AppPublic}/>
 			<Route path='/login' component={Login}/>
 			<Route path='/logout' component={Logout}/>
 			<Route path='/' component={() => (
-				isLoggedIn() ? (<App />) : (<Redirect to="/login" />)
+				isLoggedIn() ? (<AppPrivate />) : (<Redirect to="/login" />)
 			)}/>
 		</Switch>
 	</BrowserRouter>

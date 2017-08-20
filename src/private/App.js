@@ -1,22 +1,22 @@
  //React
 import React, { Component } from 'react';
-import './style.css';
+import 'css/style.css';
 //Bootstrap
 import { Grid, Row, Col } from 'react-bootstrap';
 //React Router
 import {Switch, Route} from 'react-router-dom';
 //Components
-import Menu from './Menu';
-import Home from './Home';
-import Gym from './Gym';
-import User from './User';
+import MenuPrivate from 'private/Menu';
+import Home from 'private/Home';
+import Gym from 'private/gym/Gym';
+import User from 'private/user/User';
 
-class App extends Component {
+class AppPrivate extends Component {
 	
 	render() {
 		return (
 			<div>
-				<Menu/>			
+				<MenuPrivate/>			
 				<Grid id="container">
 					<Row>
 						<Col md={12}>
@@ -33,4 +33,4 @@ class App extends Component {
 	}
 }
 
-export default App;
+export default AppPrivate;

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
-
-import {getLocation} from './GeoLocation';
+import {getLocation} from 'components/GeoLocation';
 
 export class MapContainer extends Component {
 		

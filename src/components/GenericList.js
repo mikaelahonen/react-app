@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Table, Button} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import {getData} from './Api';
+import {getData} from 'functions/Api';
 import FontAwesome from  'react-fontawesome';
 
 //Combine all these

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Jumbotron, Table } from 'react-bootstrap';
-import GoogleMapsContainer from './GoogleMapsContainer';
-import {getLocation} from './GeoLocation';
+import GoogleMapsContainer from 'components/GoogleMapsContainer';
+import {getLocation} from 'components/GeoLocation';
 
 
 

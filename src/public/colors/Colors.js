@@ -3,7 +3,7 @@ import { Button, Jumbotron, Row, Col, Well, FormGroup, FormControl,Grid} from 'r
 import {Link} from 'react-router-dom';
 import FontAwesome from  'react-fontawesome';
 
-class PublicColors extends Component {
+class Colors extends Component {
 	
 	state = {
 		r: 255,
@@ -107,4 +107,4 @@ class PublicColors extends Component {
 	}
 }
 
-export default PublicColors;
+export default Colors;

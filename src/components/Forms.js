@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, ButtonToolbar, FormControl, FormGroup, ControlLabel, InputGroup } from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
-import {deleteData} from './Api';
+import {deleteData} from 'functions/Api';
 
 class FormWorkout extends React.Component {
 	

@@ -3,10 +3,10 @@ import { Button, Jumbotron, Grid, Row, Col } from 'react-bootstrap';
 //React Router
 import {Switch, Route} from 'react-router-dom'
 //Gym components
-import GymHome from './GymHome'
-import GenericList from './GenericList'
-import GymWorkout from './GymWorkout'
-import GymSets from './GymSets'
+import GymHome from 'private/gym/GymHome'
+import GenericList from 'components/GenericList'
+import GymWorkout from 'private/gym/GymWorkout'
+import GymSets from 'private/gym/GymSets'
 
 
 class Gym extends Component {
@@ -14,8 +14,7 @@ class Gym extends Component {
 		return (
 			<Row>
 				<Col xs={12}>
-					<Switch>						
-
+					<Switch>
 						<Route exact path='/gym/:model/:id/edit' component={GenericList}/>
 						<Route exact path='/gym/:model/:id/detail' component={GenericList}/>
 						<Route exact path='/gym/:model/add' component={GenericList}/>

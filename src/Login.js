@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Col, FormControl, FormGroup} from 'react-bootstrap';
-import {postData} from './Api'; 
+import {postData} from 'functions/Api'; 
 import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 

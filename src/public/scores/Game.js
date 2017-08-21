@@ -31,7 +31,8 @@ class ScoreGame extends Component {
 
 	//Add score to player when enter is pressed
 	handleKey(playerIndex, e){
-		if (e.key === 'Enter') {
+		
+		if (e.key === 'Enter' || e.key === 'Tab') {
 
 			var value = Number(this.state.players[playerIndex].scoreInput);
 			var tempPlayers = this.state.players;
@@ -48,6 +49,7 @@ class ScoreGame extends Component {
 			//Get next player and set focus
 			var nextPlayer = this.nextPlayer(); 
 			this.inputs[nextPlayer].focus();
+			e.preventDefault();
 		}			
 	}
 	
@@ -216,7 +218,7 @@ class ScoreGame extends Component {
 						<FormControl
 							type='number'
 							onChange={(e) => this.handleScoreInputChange(playerIndex, e)}
-							onKeyPress={(e) => this.handleKey(playerIndex, e)}
+							onKeyDown={(e) => this.handleKey(playerIndex, e)}
 							inputRef={ref => {this.inputs[playerIndex] = ref;}}
 						/>
 

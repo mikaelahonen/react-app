@@ -94,7 +94,7 @@ class ScorePlayers extends Component {
 								name='newPlayer' 
 								placeholder='Player 1' 
 								onChange={(e) => this.handleChange(e)}
-								onKeyPress={(e) => this.handleKey(e)}
+								onKeyDown={(e) => this.handleKey(e)}
 								inputRef={ref => {this.input = ref;}}
 							/>
 							

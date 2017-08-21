@@ -19,7 +19,6 @@ class Scores extends Component {
 	}	
 	
 	componentWillMount(){
-		console.log('State: ', this.state);
 		if(localStorage.getItem('scoreApp') === null) {
 			localStorage.scoreApp = JSON.stringify(this.initialState);
 		}

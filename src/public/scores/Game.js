@@ -4,6 +4,10 @@ import FontAwesome from  'react-fontawesome';
 
 class ScoreGame extends Component {
 	
+	//Store input elements here
+	inputs = [];
+	
+	//Click to delete score
 	handleScoreDelete(playerIndex, scoreIndex, e){
 		console.log("Delete: ", playerIndex, "-", scoreIndex);
 		var tempPlayers = this.state.players;
@@ -18,18 +22,49 @@ class ScoreGame extends Component {
 
 	}
 	
+	//Store score to players state when input changes
 	handleScoreInputChange(i, e){
 		var tempPlayers = this.state.players;
 		tempPlayers[i].scoreInput = e.target.value;
 		this.setState({players: tempPlayers});		
 	}
+
+	//Add score to player when enter is pressed
+	handleKey(playerIndex, e){
+		if (e.key === 'Enter') {
+
+			var value = Number(this.state.players[playerIndex].scoreInput);
+			var tempPlayers = this.state.players;
+			tempPlayers[playerIndex].score.push(value);
+			
+			//Set scoreInput property to 0
+			tempPlayers[playerIndex].scoreInput = 0;
+			//To do: Remove player's scoreInput
+			this.setState({players: tempPlayers});
+			
+			//Clear current input
+			e.target.value = '';
+			
+			//Get next player and set focus
+			var nextPlayer = this.nextPlayer(); 
+			this.inputs[nextPlayer].focus();
+		}			
+	}
 	
-	handleScoreAdd(i){
-		var scoreInput = Number(this.state.players[i].scoreInput);
-		var tempPlayers = this.state.players;
-		tempPlayers[i].score.push(scoreInput);
-		//To do: Remove player's scoreInput
-		this.setState({players: tempPlayers});
+	nextPlayer(){
+		var players = this.state.players;
+
+		var leastRoundsPlayer = 0;
+		var leastRounds = players[0].score.length;
+		for(var i=1; i < players.length; i++){
+			var playerRounds = players[i].score.length;
+			if(playerRounds < leastRounds){
+				leastRoundsPlayer = i;
+				leastRounds = playerRounds;
+			}
+		}
+		return leastRoundsPlayer;
+
 	}
 	
 	//Load data from local storage
@@ -126,11 +161,19 @@ class ScoreGame extends Component {
 	
 	render(){
 
+		if(this.state.players.length === 0){
+			return <p>Add players to the game.</p>;
+		}
+		
+		
 		var totals = this.calculateTotals();
 		var ranks = this.calculateRanks(totals);
-	
-		//Create score columns to Game tab
+		var scoreStyle = {backgroundColor: 'rgb(245,245,245)', margin: '10px 5px', padding: '5px', display: 'inline-block', width: '160px', verticalAlign:'top'};
+		var wrapperStyle = {textAlign:'left',overflow: 'auto',whiteSpace:'nowrap', textAlign:'center'};
 		var playerScores = [];
+		var nextPlayer = this.nextPlayer();
+		
+		
 		
 		//Loop all players
 		this.state.players.map((player, playerIndex)=>{
@@ -142,7 +185,12 @@ class ScoreGame extends Component {
 			var total = totals[playerIndex];
 			var rank = ranks[playerIndex];
 			var isWinner = this.isWinner(total);
-								
+			var turnPointer = '';
+			
+			if(playerIndex == nextPlayer){
+				turnPointer = <FontAwesome style={{color: 'gray'}} name="caret-right"/>
+			}
+			
 			//Set distinct style for winner score			
 			if(isWinner){
 				winnerHighlight={backgroundColor: '#5cb85c', color: 'white'}
@@ -162,17 +210,18 @@ class ScoreGame extends Component {
 			});
 			
 			var playerScore=
-				<div key={playerIndex} style={{display: 'inline-block', width: '160px', marginRight: '10px', verticalAlign:'top'}}>
-					<h3>{player.name}</h3>
+				<div key={playerIndex} style={scoreStyle}>
+					<h3>{turnPointer} {player.name}</h3>
 					<FormGroup>
-						<InputGroup>
-							<FormControl type='number'onChange={(e) => this.handleScoreInputChange(playerIndex, e)}/>
-							<InputGroup.Button>
-								<Button onClick={() => this.handleScoreAdd(playerIndex)}>+</Button>
-							</InputGroup.Button>
-						</InputGroup>
+						<FormControl
+							type='number'
+							onChange={(e) => this.handleScoreInputChange(playerIndex, e)}
+							onKeyPress={(e) => this.handleKey(playerIndex, e)}
+							inputRef={ref => {this.inputs[playerIndex] = ref;}}
+						/>
+
 					</FormGroup>
-					<h4>{rank}.</h4>
+					<h4># {rank}</h4>
 					<legend></legend>
 					<h4 style={{padding: '5px',...winnerHighlight}}>{total}</h4>
 					<legend></legend> 
@@ -181,11 +230,15 @@ class ScoreGame extends Component {
 			playerScores.push(playerScore);
 		});
 		
+		
+	
 		return (
-			<div style={{textAlign:'center'}}>
+			<div style={wrapperStyle}>
 				{playerScores}
 			</div>
-		)			
+		)	
+
+			
 	}
 }
 

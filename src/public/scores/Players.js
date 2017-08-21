@@ -88,7 +88,7 @@ class ScorePlayers extends Component {
 					<legend></legend>
 
 					<FormGroup>
-						<InputGroup>
+			
 							<FormControl 
 								id="newPlayerInput" 
 								name='newPlayer' 
@@ -97,10 +97,8 @@ class ScorePlayers extends Component {
 								onKeyPress={(e) => this.handleKey(e)}
 								inputRef={ref => {this.input = ref;}}
 							/>
-							<InputGroup.Button>
-								<Button onClick={() => this.handleNewPlayer()}>+</Button>
-							</InputGroup.Button>
-						</InputGroup>
+							
+					
 					</FormGroup>					
 				</Col>
 				

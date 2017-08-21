@@ -101,7 +101,7 @@ class Login extends Component {
 
 							<div id="login-hint" style={this.state.login_style}>{this.state.login_hint}</div>
 						</form>
-						<Link to="/public/app-1">Go to public app</Link>
+						<Link to="/public">Go to public app</Link>
 					</Col>
 				</div>
 			);

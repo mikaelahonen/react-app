@@ -17,15 +17,15 @@ class MenuPublic extends Component {
 				</Navbar.Header>
 				<Navbar.Collapse>
 					<Nav>
-						<NavDropdown eventKey={1} title={<span><FontAwesome name="mobile"/> Apps</span>} id="basic-nav-dropdown">							
+						<NavDropdown eventKey={1} title={<span><FontAwesome name="mobile"/> APPS</span>} id="basic-nav-dropdown">							
 
 							
 							<LinkContainer exact to='/public/scores'>
-								<MenuItem eventKey={1.1}>Scores</MenuItem>
+								<MenuItem eventKey={1.1}>SCORES</MenuItem>
 							</LinkContainer>
 							
 							<LinkContainer exact to='/public/colors'>
-								<MenuItem eventKey={1.2}>Colors</MenuItem>
+								<MenuItem eventKey={1.2}>COLORS</MenuItem>
 							</LinkContainer>
 							
 						</NavDropdown>
@@ -33,8 +33,8 @@ class MenuPublic extends Component {
 					</Nav>
 					<Nav pullRight>
 
-							<LinkContainer to='/'>
-								<NavItem eventKey={2.1}>{<span><FontAwesome name="user"/> Login</span>} </NavItem>
+							<LinkContainer exact to='/'>
+								<NavItem  eventKey={2}>{<span><FontAwesome name="user"/> LOGIN</span>} </NavItem>
 							</LinkContainer>
 
 					</Nav>

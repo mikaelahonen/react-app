@@ -3,10 +3,6 @@ import {FormGroup, FormControl, InputGroup, ControlLabel, Button, ButtonToolbar}
 import FontAwesome from  'react-fontawesome';
 
 class ScoreGame extends Component {
-	//Functions for Game tab
-	handlePoints(){
-		console.log('Handle points');
-	}
 	
 	handleScoreDelete(playerIndex, scoreIndex, e){
 		console.log("Delete: ", playerIndex, "-", scoreIndex);
@@ -28,7 +24,7 @@ class ScoreGame extends Component {
 		this.setState({players: tempPlayers});		
 	}
 	
-	handleScoreInputAdd(i){
+	handleScoreAdd(i){
 		var scoreInput = Number(this.state.players[i].scoreInput);
 		var tempPlayers = this.state.players;
 		tempPlayers[i].score.push(scoreInput);
@@ -36,49 +32,123 @@ class ScoreGame extends Component {
 		this.setState({players: tempPlayers});
 	}
 	
+	//Load data from local storage
 	componentWillMount(){
-		this.setState(JSON.parse(localStorage.scoreApp));
-		
+		if(!!localStorage.scoreApp){
+			this.setState(JSON.parse(localStorage.scoreApp));
+		}
 	}
-
-	componentWillUnmount(){
+	
+	//Update data to localstorage
+	componentDidUpdate(){
 		localStorage.scoreApp = JSON.stringify(this.state);
 	}	
 	
-	render(){
+	
+	countUp(){				
+		//Count up or down?
+		var initialScore = Number(this.state.initialScore);
+		var targetScore = Number(this.state.targetScore);
+		return initialScore < targetScore;
+	}
+	
+	calculateTotals(){
+		
+		//Initialize array for score totals
+		var totals = [];
+		//Take players to an array
+		var players = this.state.players;
 
-		//Create score columns to Game tab
-		var playerScores = [];
-		this.state.players.map((player, playerIndex)=>{
+		
+		//Loop all players
+		for(var i = 0; i < players.length; i++){
+		
+			//Initially each player has score of 0
+			var total = 0
 			
-			//variables
-			var sum = 0;			
-			var sumStyle = {};
-			var scores = [];
+			//Get score array of current player
+			var score = players[i].score;
 			
-			//Count total sum			
-			if(player.score.length!==0){				
-				sum = player.score.reduce( (prev, curr) => prev + curr );
+			//If players score array is not empty -> total scores
+			if(score.length!==0){				
+				total = score.reduce( (prev, curr) => prev + curr );
 			}
 			
-			//Add to initial score or substract from initial score
-			var initialScore = Number(this.state.initialScore);
-			var targetScore = Number(this.state.targetScore);
-			var countUp = initialScore < targetScore;
-			if(countUp){
-				sum = initialScore + sum;
+			//If count up -> Increase, else decrease
+			if(this.countUp()){
+				total = Number(this.state.initialScore) + total;
 			} else {
-				sum = initialScore - sum;
-			}			
+				total = Number(this.state.initialScore) - total;
+			}
 			
-			//Set distinct style for winner score
-			var isAbove = sum >= targetScore;
-			var isBelow = sum <= targetScore;
-			if((countUp && isAbove) || (!countUp && isBelow)){
-				sumStyle={backgroundColor: '#5cb85c', color: 'white'}
+			//Push total to totals array
+			totals.push(total);
+		}
+		
+		return totals;
+	}
+	
+	isWinner(score){
+		var isAbove = score >= this.state.targetScore;
+		var isBelow = score <= this.state.targetScore;
+		var countUp = this.countUp();
+		var countDown = !countUp;
+		
+		var aboveAndCountUp = countUp && isAbove
+		var belowAndCountDown = countDown && isBelow
+		
+		if(aboveAndCountUp || belowAndCountDown){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	calculateRanks(totals){
+		
+		//Initialize sorted array
+		var sorted = [];
+		
+		//Sort big to small if scores all upwards 
+		if(this.countUp()){
+			sorted = totals.slice().sort((a,b) => b-a);	
+		//Else sort small to big
+		} else {
+			sorted = totals.slice().sort((a,b) => a-b);	
+		}
+
+		//Get ranks by getting indexes from sorted array
+		var ranks = totals.slice().map((rank) => sorted.indexOf(rank)+1);
+		
+		
+		return ranks;
+	}
+	
+	render(){
+
+		var totals = this.calculateTotals();
+		var ranks = this.calculateRanks(totals);
+	
+		//Create score columns to Game tab
+		var playerScores = [];
+		
+		//Loop all players
+		this.state.players.map((player, playerIndex)=>{
+			
+			//variables			
+			var winnerHighlight = {};
+			var scores = [];
+			var countUp = this.countUp();
+			var total = totals[playerIndex];
+			var rank = ranks[playerIndex];
+			var isWinner = this.isWinner(total);
+								
+			//Set distinct style for winner score			
+			if(isWinner){
+				winnerHighlight={backgroundColor: '#5cb85c', color: 'white'}
 			}				
 			
-			//For loop wouldn't work
+			//Loop score array of the player
 			player.score.map((score, scoreIndex)=>{				
 				var scoreButton = 
 					<FormGroup key={scoreIndex}>
@@ -92,18 +162,20 @@ class ScoreGame extends Component {
 			});
 			
 			var playerScore=
-				<div key={playerIndex} style={{display: 'inline-block', width: '150px', marginRight: '10px', verticalAlign:'top'}}>
+				<div key={playerIndex} style={{display: 'inline-block', width: '160px', marginRight: '10px', verticalAlign:'top'}}>
 					<h3>{player.name}</h3>
 					<FormGroup>
 						<InputGroup>
 							<FormControl type='number'onChange={(e) => this.handleScoreInputChange(playerIndex, e)}/>
 							<InputGroup.Button>
-								<Button onClick={() => this.handleScoreInputAdd(playerIndex)}>+</Button>
+								<Button onClick={() => this.handleScoreAdd(playerIndex)}>+</Button>
 							</InputGroup.Button>
 						</InputGroup>
 					</FormGroup>
-					<h4 style={sumStyle}>{sum}</h4>
+					<h4>{rank}.</h4>
 					<legend></legend>
+					<h4 style={{padding: '5px',...winnerHighlight}}>{total}</h4>
+					<legend></legend> 
 					{scores}
 				</div>
 			playerScores.push(playerScore);

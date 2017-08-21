@@ -11,13 +11,29 @@ import ScoreGame from 'public/scores/Game';
 
 class Scores extends Component {
 	
-	state = {
+	initialState = {
 		players: [],
 		initialScore: 0,
 		targetScore: 100,
+		newPlayer: '',
 	}	
 	
-	render() {		
+	componentWillMount(){
+		console.log('State: ', this.state);
+		if(localStorage.getItem('scoreApp') === null) {
+			localStorage.scoreApp = JSON.stringify(this.initialState);
+		}
+	}
+	
+	componentWillUnmount(){
+		var verify  = window.confirm('Save changes before leaving?');
+		if(verify){
+			localStorage.scoreApp = JSON.stringify(this.initialState);
+		}
+	}
+	
+	render() {
+	
 		return (
 			<Grid id="container">
 				<Row>

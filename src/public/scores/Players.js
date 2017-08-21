@@ -16,6 +16,7 @@ class ScorePlayers extends Component {
 		this.setState({
 			newPlayer: value
 		});		
+		console.log(value);
 	}
 	
 	handleKey(e){
@@ -28,7 +29,7 @@ class ScorePlayers extends Component {
 		var newPlayer = {
 			name:this.state.newPlayer,
 			score:[],
-			scoreInput: undefined,
+			scoreInput: 0,
 		};
 		var players = this.state.players;
 		players.push(newPlayer);
@@ -49,19 +50,21 @@ class ScorePlayers extends Component {
 			this.setState({players: tempPlayers});
 		}
 		
-	}
+	}	
 	
+	//Load data from local storage
 	componentWillMount(){
-		this.setState(JSON.parse(localStorage.scoreApp));
-		
+		if(!!localStorage.scoreApp){
+			this.setState(JSON.parse(localStorage.scoreApp));
+		}
 	}
-
 	
 	componentDidMount(){
 		this.inputFocus();
 	}
 	
-	componentWillUnmount(){
+	//Update data to localstorage
+	componentDidUpdate(){
 		localStorage.scoreApp = JSON.stringify(this.state);
 	}
 	
@@ -71,7 +74,7 @@ class ScorePlayers extends Component {
 		var players = [];
 		this.state.players.map((player, index)=>{
 			players.push(
-				<Button key={index} onClick={() => this.handlePlayerDelete(index)}>
+				<Button key={index} onClick={() => this.handlePlayerDelete(index)} style={{marginBottom: '10px'}}>
 					{player.name}&nbsp;&nbsp;&nbsp;&nbsp;<FontAwesome style={{color: 'lightgray'}} name="times"/>
 				</Button>
 			);
@@ -86,16 +89,16 @@ class ScorePlayers extends Component {
 
 					<FormGroup>
 						<InputGroup>
-					<FormControl 
-						id="newPlayerInput" 
-						name='newPlayer' 
-						placeholder='Player 1' 
-						onChange={(e) => this.handleChange(e)}
-						onKeyPress={(e) => this.handleKey(e)}
-						inputRef={ref => {this.input = ref;}}
-					/>
+							<FormControl 
+								id="newPlayerInput" 
+								name='newPlayer' 
+								placeholder='Player 1' 
+								onChange={(e) => this.handleChange(e)}
+								onKeyPress={(e) => this.handleKey(e)}
+								inputRef={ref => {this.input = ref;}}
+							/>
 							<InputGroup.Button>
-								<Button onClick={() => this.HandleNewPlayer()}>+</Button>
+								<Button onClick={() => this.handleNewPlayer()}>+</Button>
 							</InputGroup.Button>
 						</InputGroup>
 					</FormGroup>					

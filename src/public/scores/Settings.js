@@ -3,13 +3,19 @@ import {FormGroup, FormControl, ControlLabel, Button, ButtonToolbar, Col, Row} f
 
 class ScoreSettings extends Component {
 	
+	initialState = {
+		players: [],
+		initialScore: 0,
+		targetScore: 100,
+		newPlayer: '',
+	}
+	
 	//Functions for Settings tab
 	handleInitialScoreChange(e){
 		var value = e.target.value;
 		this.setState({
 			initialScore: value,
 		});
-		console.log('cfsad');
 	}
 	
 	handleTargetScoreChange(e){
@@ -22,16 +28,21 @@ class ScoreSettings extends Component {
 	handleClear(){
 		//This does not work
 		localStorage.removeItem('scoreApp');
-		var none = {};
-		this.setState(none);
+		this.setState(this.initialState);
 		alert("Game data removed from your device.");
+		this.initialInput.value = this.initialState.initialScore;
+		this.targetInput.value = this.initialState.targetScore;
 	}
 	
+	//Load data from local storage
 	componentWillMount(){
-		this.setState(JSON.parse(localStorage.scoreApp));
+		if(!!localStorage.scoreApp){
+			this.setState(JSON.parse(localStorage.scoreApp));
+		}
 	}
 	
-	componentWillUnmount(){
+	//Update data to localstorage
+	componentDidUpdate(){
 		localStorage.scoreApp = JSON.stringify(this.state);
 	}
 	
@@ -48,6 +59,7 @@ class ScoreSettings extends Component {
 							type='number'
 							onChange={(e) => this.handleInitialScoreChange(e)}
 							defaultValue = {this.state.initialScore}
+							inputRef={ref => {this.initialInput = ref;}}
 						/>
 					</FormGroup>
 					
@@ -58,6 +70,7 @@ class ScoreSettings extends Component {
 							type='number'
 							onChange={(e) => this.handleTargetScoreChange(e)}
 							defaultValue = {this.state.targetScore}
+							inputRef={ref => {this.targetInput = ref;}}
 						/>
 					</FormGroup>
 				</Col>

@@ -31,8 +31,11 @@ class ScoreGame extends Component {
 
 	//Add score to player when enter is pressed
 	handleKey(playerIndex, e){
+		console.log(playerIndex);
+		//Apply tab press only if text field has some text
+		var tabAndText = e.key === 'Tab' && e.target.value !== ''
 		
-		if (e.key === 'Enter' || e.key === 'Tab') {
+		if (e.key === 'Enter' || tabAndText) {
 
 			var value = Number(this.state.players[playerIndex].scoreInput);
 			var tempPlayers = this.state.players;
@@ -50,7 +53,15 @@ class ScoreGame extends Component {
 			var nextPlayer = this.nextPlayer(); 
 			this.inputs[nextPlayer].focus();
 			e.preventDefault();
-		}			
+			
+		} 
+		//If Tab was pressed on last player's input and it was empty -> Go to first
+		else if(e.key === 'Tab' && playerIndex===this.state.players.length-1){
+			this.inputs[0].focus();
+			e.preventDefault();
+		}
+		
+		
 	}
 	
 	nextPlayer(){
@@ -202,7 +213,7 @@ class ScoreGame extends Component {
 			player.score.map((score, scoreIndex)=>{				
 				var scoreButton = 
 					<FormGroup key={scoreIndex}>
-						<Button onClick={(e) => this.handleScoreDelete(playerIndex, scoreIndex, e)}>
+						<Button tabIndex={-1} onClick={(e) => this.handleScoreDelete(playerIndex, scoreIndex, e)}>
 							{player.score[scoreIndex]}
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<FontAwesome style={{color: 'lightgray'}} name="times"/>

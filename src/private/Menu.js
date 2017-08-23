@@ -1,45 +1,67 @@
 import React, { Component } from 'react';
-import { Navbar, MenuItem, Nav, NavDropdown, NavItem } from 'react-bootstrap';
+import {Grid, Row, Col, Navbar, MenuItem, Nav, NavDropdown, NavItem, Button, FormGroup, FormControl } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import FontAwesome from  'react-fontawesome';
 
 class MenuPrivate extends Component {
 	
+	wrapperStyle = {		
+		top: '0px', 
+		height: '56px', 
+		width: '100%',
+		backgroundColor: '#51A351',
+		margin: '0px',
+		color: 'white',
+	}
+	
+	btnStyle = {
+
+		display: 'inline-block',
+		cursor: 'pointer',
+		fontSize: '24px',
+		paddingTop: '14px',
+		paddingBottom: '14px',
+	}
+	
+	spanStyle = {
+		fontSize: '24px',
+		lineHeight: '24px',
+		paddingTop: '14px',
+		paddingBottom: '14px',
+	}
+	
+	
 	render() {
-		return (
-			<Navbar inverse collapseOnSelect>
-				<Navbar.Header>
-					<Navbar.Brand>
-						<Link to="/"><FontAwesome name="home"/></Link>
-					</Navbar.Brand>
-					<Navbar.Toggle />
-				</Navbar.Header>
-				<Navbar.Collapse>
-					<Nav>					
-						<LinkContainer exact to='/gym'>
-							<NavItem eventKey={1}><FontAwesome name="bolt"/> Gym</NavItem>
-						</LinkContainer>
-					</Nav>
-					<Nav pullRight>
-						<LinkContainer exact to='/public'>
-							<NavItem eventKey={1}><FontAwesome name="mobile"/> Public apps</NavItem>
-						</LinkContainer>
-						<NavDropdown eventKey={2} title={<span><FontAwesome name="user"/> User</span>} id="basic-nav-dropdown">
-							<LinkContainer to='/user'>
-								<MenuItem eventKey={2.1}>User</MenuItem>
-							</LinkContainer>
-							<LinkContainer to='/login'>
-								<MenuItem eventKey={2.2}>Login</MenuItem>
-							</LinkContainer>
-							<LinkContainer to='/logout'>
-								<MenuItem eventKey={2.3}>Logout</MenuItem>
-							</LinkContainer>
-						</NavDropdown>
-						{/*<MenuItem eventKey={2} href="/">Link Right</MenuItem>*/}
-					</Nav>
-				</Navbar.Collapse>
-			</Navbar>
+		
+		
+		
+		var path = window.location.pathname;
+		var head = '';
+		console.log(path);
+		path === "/" ? head = 'Quantified Self App' : head = path;
+		
+		return (	
+		
+		
+		
+		<div  style={this.wrapperStyle}>
+			<Grid>
+				<Row>
+					<Col xs={2}>
+						<div><FontAwesome 
+							style={this.btnStyle}
+							name="bars"
+							onClick={() => this.props.clickHandler()}
+						/></div>
+					</Col>
+					<Col sm={10} xsHidden>					
+						<div style={this.spanStyle}>{head}</div>
+					</Col>
+				</Row>
+			</Grid>
+		</div>
+
 		);
 		}
 	}

@@ -5,7 +5,7 @@ import {Switch, Route} from 'react-router-dom'
 //Gym components
 import GymHome from 'private/gym/GymHome'
 import GenericList from 'components/GenericList'
-import GymWorkout from 'private/gym/GymWorkout'
+import GymWorkouts from 'private/gym/GymWorkouts'
 import GymSets from 'private/gym/GymSets'
 
 

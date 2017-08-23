@@ -92,6 +92,19 @@ body,html,#root{
 
 }
 
+/*Override bootstrap colors for side bar*/
+.nav-pills a{
+	color: #51A351;
+	
+}
+
+.nav-pills > li.active > a, 
+.nav-pills > li.active > a:hover, 
+.nav-pills > li.active > a:focus{
+	background-color: #51A351;
+	color: white;
+}
+
 
 
 

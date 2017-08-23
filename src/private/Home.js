@@ -54,7 +54,7 @@ class Home extends Component {
 				<Jumbotron>
 					<h2>Quantiefied Self App</h2>
 					<p><i>Welcome!</i></p>
-					<Button bsStyle='primary' bsSize='large'>Home button</Button>
+					<Button bsStyle='success' bsSize='large'>Home button</Button>
 				</Jumbotron>
 				<h2>Location</h2>
 				<Position/>

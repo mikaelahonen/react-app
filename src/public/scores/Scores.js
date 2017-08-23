@@ -24,13 +24,6 @@ class Scores extends Component {
 		}
 	}
 	
-	componentWillUnmount(){
-		var verify  = window.confirm('Save changes before leaving?');
-		if(verify){
-			localStorage.scoreApp = JSON.stringify(this.initialState);
-		}
-	}
-	
 	render() {
 	
 		return (

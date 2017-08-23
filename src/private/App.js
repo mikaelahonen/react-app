@@ -6,6 +6,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 //React Router
 import {Switch, Route} from 'react-router-dom';
 //Components
+import MenuSide from 'private/MenuSide';
 import MenuPrivate from 'private/Menu';
 import Home from 'private/Home';
 import Gym from 'private/gym/Gym';
@@ -13,10 +14,35 @@ import User from 'private/user/User';
 
 class AppPrivate extends Component {
 	
+	state = {
+		menu: false
+	}
+	
+	handleMenu(){
+
+		var menu = undefined;
+		if(this.state.menu){
+			menu = false;
+		}else{
+			menu = true;
+		}
+
+		this.setState({
+			menu: menu
+		});
+	}
+	
 	render() {
+		
+	
+		var sideMenu = this.state.menu ? <MenuSide clickHandler={() => this.handleMenu()} /> : '';
+		
 		return (
 			<div>
-				<MenuPrivate/>			
+				{sideMenu}
+				<MenuPrivate 
+					clickHandler={() => this.handleMenu()}
+				/>			
 				<Grid id="container">
 					<Row>
 						<Col md={12}>
@@ -28,6 +54,7 @@ class AppPrivate extends Component {
 						</Col>
 					</Row>
 				</Grid>
+				
 			</div>
 		);
 	}

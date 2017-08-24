@@ -9,10 +9,10 @@ import {Switch, Route} from 'react-router-dom';
 import MenuSide from 'private/MenuSide';
 import MenuPrivate from 'private/Menu';
 import Home from 'private/Home';
-import Gym from 'private/gym/Gym';
+import GymRouter from 'private/gym/GymRouter';
 import User from 'private/user/User';
 
-class AppPrivate extends Component {
+class PrivateRouter extends Component {
 	
 	state = {
 		menu: false
@@ -48,7 +48,7 @@ class AppPrivate extends Component {
 						<Col md={12}>
 							<Switch>
 								<Route exact path='/' component={Home}/>
-								<Route path='/gym' component={Gym}/>
+								<Route path='/gym' component={GymRouter}/>
 								<Route path='/user' component={User}/>
 							</Switch>
 						</Col>
@@ -60,4 +60,4 @@ class AppPrivate extends Component {
 	}
 }
 
-export default AppPrivate;
+export default PrivateRouter;

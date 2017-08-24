@@ -10,7 +10,7 @@ class MenuPrivate extends Component {
 		top: '0px', 
 		height: '56px', 
 		width: '100%',
-		backgroundColor: '#51A351',
+		backgroundColor: '#5cb85c',
 		margin: '0px',
 		color: 'white',
 	}
@@ -48,16 +48,17 @@ class MenuPrivate extends Component {
 		<div  style={this.wrapperStyle}>
 			<Grid>
 				<Row>
-					<Col xs={2}>
+					<Col xs={1}>
 						<div><FontAwesome 
 							style={this.btnStyle}
 							name="bars"
 							onClick={() => this.props.clickHandler()}
 						/></div>
 					</Col>
-					<Col sm={10} xsHidden>					
+					<Col sm={11} xsHidden>					
 						<div style={this.spanStyle}>{head}</div>
 					</Col>
+					
 				</Row>
 			</Grid>
 		</div>

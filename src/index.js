@@ -8,7 +8,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import {isLoggedIn} from 'functions/Api';
 
-import AppPrivate from 'private/App';
+import PrivateRouter from 'private/Router';
 import AppPublic from 'public/App';
 import Login from './Login';
 import Logout from './Logout';
@@ -20,7 +20,7 @@ ReactDOM.render((
 			<Route path='/login' component={Login}/>
 			<Route path='/logout' component={Logout}/>
 			<Route path='/' component={() => (
-				isLoggedIn() ? (<AppPrivate />) : (<Redirect to="/login" />)
+				isLoggedIn() ? (<PrivateRouter />) : (<Redirect to="/login" />)
 			)}/>
 		</Switch>
 	</BrowserRouter>

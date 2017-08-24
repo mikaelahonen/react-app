@@ -9,7 +9,7 @@ class MenuSide extends Component {
 	sideStyle = {
 		height: '100%',
 		backgroundColor: 'white',
-		width: '300px',
+		width: '250px',
 		position: 'absolute',
 		zIndex: '998',
 		padding: '10px',
@@ -18,12 +18,12 @@ class MenuSide extends Component {
 	
 	btnStyle = {
 		top: '48%',
-		left: '278px',
+		left: '228px',
 		border: '2px solid lightgray',
 		zIndex: '999',
 		cursor: 'pointer',
 		textAlign: 'center',
-		padding: '4px',
+		padding: '5px',
 		height: '42px',
 		width: '42px',
 		float: 'right',
@@ -66,12 +66,13 @@ class MenuSide extends Component {
 					{items}
 				</Nav>
 				
-				<div style={this.btnStyle}>
-					<FontAwesome 
-						
+				<div 
+					style={this.btnStyle}
+					onClick={() => this.props.clickHandler()}
+				>
+					<FontAwesome 						
 						name="caret-left"
-						size='2x'
-						onClick={() => this.props.clickHandler()}
+						size='2x'						
 					/>
 				</div>
 			</div>

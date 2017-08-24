@@ -167,7 +167,7 @@ class GenericList extends React.Component {
 		return (
 			<div>
 				<div id="head-area">
-					<h1 id="tbl-head">GYM {caret} {model.toUpperCase()}</h1>
+					<h2 id="tbl-head">Gym {caret} {model}</h2>
 					<Button id="tbl-btn" 
 						bsStyle="success" 
 						onClick={() => this.props.history.push(this.props.location.pathname +'/add')}

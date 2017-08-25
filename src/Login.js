@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Col, FormControl, FormGroup} from 'react-bootstrap';
+import { Button, Grid, Row, Col, FormControl, FormGroup} from 'react-bootstrap';
 import {postData} from 'functions/Api'; 
 import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -78,32 +78,46 @@ class Login extends Component {
 	
 	render() {
 		
+		var hintStyle = { 	
+			textAlign: 'center',
+			padding: '5px',
+			color: 'white',
+		}
+		
+		var rowStyle = {
+			backgroundColor: 'black',
+		}
+		
 		if(this.state.pass){
 			return <Redirect to="/" />
 		}else{
 			return (
-				<div id="login-wrap">
-					<Col lg={3} md={4} sm={6} id="login-form">
-						<h1>LOGIN</h1>
-						<legend></legend>
-						<form onSubmit={this.handleSubmit}>
-							<FormGroup controlId="username">
-								<FormControl type="text" name="username" placeholder="Username" onChange={this.handleChange} />
-							</FormGroup>
-							<FormGroup controlId="password">
-								<FormControl type="password" name="password" placeholder="Password" onChange={this.handleChange} />
-							</FormGroup>
-							<FormGroup>
-								<Button type="submit" block >
-									Sign in
-								</Button>
-							</FormGroup>
+				
+					<div id="login-bg">
+					
+					
+						<div id="login-form">
+						
 
-							<div id="login-hint" style={this.state.login_style}>{this.state.login_hint}</div>
-						</form>
-						<Link to="/public">Go to public app</Link>
-					</Col>
-				</div>
+
+									<FormGroup controlId="username">
+										<FormControl type="text" name="username" placeholder="Username" onChange={this.handleChange} />
+									</FormGroup>
+									<FormGroup controlId="password">
+										<FormControl type="password" name="password" placeholder="Password" onChange={this.handleChange} />
+									</FormGroup>
+									<FormGroup>
+										<Button block onClick={() => this.handleSubmit()}>Sign in</Button>
+									</FormGroup>
+
+									<div style={{...hintStyle,...this.state.login_style}}>{this.state.login_hint}</div>
+								
+									<Link to="/public">Go to public app</Link>
+
+						</div>
+					</div>
+			
+				
 			);
 		}
 	}

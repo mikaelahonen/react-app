@@ -70,10 +70,9 @@ class Login extends Component {
 	}
 	
 	
-	handleSubmit(e){
+	handleSubmit(){
 		if(!!localStorage.token){delete localStorage.token};
 		this.getToken();
-		e.preventDefault();
 	}
 	
 	render() {

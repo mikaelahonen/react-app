@@ -28,6 +28,10 @@ class MenuPublic extends Component {
 								<MenuItem eventKey={1.2}>COLORS</MenuItem>
 							</LinkContainer>
 							
+							<LinkContainer exact to='/public/intervals'>
+								<MenuItem eventKey={1.3}>INTERVALS</MenuItem>
+							</LinkContainer>							
+							
 						</NavDropdown>
 
 					</Nav>

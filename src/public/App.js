@@ -6,6 +6,7 @@ import {Switch, Route} from 'react-router-dom';
 import MenuPublic from 'public/Menu';
 import Scores from 'public/scores/Scores';
 import Colors from 'public/colors/Colors';
+import RunningTrack from 'public/intervals/RunningTrack';
 import Home from 'public/Home';
 
 class AppPublic extends Component {
@@ -18,6 +19,7 @@ class AppPublic extends Component {
 						<Route exact path='/public/' component={Home}/>
 						<Route path='/public/scores' component={Scores}/>
 						<Route path='/public/colors' component={Colors}/>
+						<Route path='/public/intervals' component={RunningTrack}/>
 					</Switch>
 
 			</div>

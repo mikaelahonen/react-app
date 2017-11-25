@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup} from 'react-bootstrap';
-import {getData} from 'functions/Api';
+import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import {getData, deleteData, putData} from 'functions/Api';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
@@ -13,22 +13,123 @@ class GymWorkoutEdit extends React.Component {
 		data: {},
 	}	
 	
+	handleDelete(id, event){
+		console.log('Delete object with id: ' + id + ', Event: ' + event);				
+		var endpoint = '/gym/workouts/' + id + '/';
+		deleteData(endpoint)
+		.then((json)=>{
+			this.props.history.push('/gym/workouts');
+		});
+	}
 	
-	createSets(workout){
+	handleUpdate(id, event){
+		console.log('Update object with id: ' + id + ', Event: ' + event);
+		var endpoint = '/gym/workouts/' + id + '/';
+		putData(endpoint, this.state.data)
+		.then((json)=>{
+			this.props.history.push();
+		});		
+	}
+	
+	handleChange(event){
 
-		var item = 
-			<Panel 
-				header={workout.name}
-				onClick={(event) => this.handleClick(workout.id, event)}
-				style={{cursor: 'pointer'}}
-			>
-				<p>Id: {workout.id}</p>
-				<p>Start time: {workout.start_time}</p>
-				<p>End time: {workout.end_time}</p>
-				<p>Location: {workout.location}</p>
-			</Panel>
+		const target = event.target;
+		const value = target.type === 'checkbox' ? target.checked : target.value;
+		const name = target.id;
+		
+		/*this.setState({
+			data: {[name]: value}
+		});*/
+		
+		this.state.data[name] = value;
+		
+		console.log("Form state: " + this.state.data[name]);
+	}
+	
+	
+	createForm(workout){
+		
+		var form = 
+			
+			<div>
+				<form>
+					<FormGroup>
+						<ControlLabel>Id</ControlLabel>
+						<FormControl
+							readOnly
+							id="id"
+							type="number"
+							placeholder="id"
+							value={this.state.data.id}
+						/>
+					</FormGroup>
 
-		return item;
+					<FormGroup>
+						<ControlLabel>Name</ControlLabel>
+						<FormControl
+							id="name"
+							type="text"
+							placeholder="Bicep and Chest"
+							defaultValue={this.state.data.name}
+							onChange={(e) => this.handleChange(e)}
+						/>
+					</FormGroup>
+					
+					<FormGroup>
+						<ControlLabel>Start time</ControlLabel>
+						<FormControl
+							id="Start_time"
+							type="text"
+							placeholder="2017-01-01"
+							defaultValue={this.state.data.start_time}
+							onChange={(e) => this.handleChange(e)}
+						/>
+					</FormGroup>
+
+					<FormGroup>
+						<ControlLabel>End time</ControlLabel>
+						<FormControl
+						  id="end_time"
+						  type="text"
+						  placeholder="2017-01-31"
+						  defaultValue={this.state.data.end_time}
+						  onChange={(e) => this.handleChange(e)}
+						/>
+					</FormGroup>
+					
+					<FormGroup>
+						<ControlLabel>Location</ControlLabel>
+						<FormControl
+						  id="location"
+						  type="text"
+						  placeholder="Location X"
+						  defaultValue={this.state.data.location}
+						  onChange={(e) => this.handleChange(e)}
+						/>
+					</FormGroup>
+					
+				</form>						
+				
+				<ButtonToolbar>
+		
+					<Button bsStyle="primary" onClick={(event) => this.handleUpdate(workout.id, event)}>
+						<FontAwesome name="refresh"/>
+						&nbsp;
+						Update
+					</Button>
+
+					<Button bsStyle="danger" onClick={(event) => this.handleDelete(workout.id, event)}>
+						<FontAwesome name="remove"/>
+						&nbsp;
+						Delete
+					</Button>
+
+				
+				</ButtonToolbar>
+				
+			</div>
+
+		return form;
 	}
 	
 	componentWillMount(){
@@ -37,7 +138,6 @@ class GymWorkoutEdit extends React.Component {
 			id: this.props.match.params.id
 		});
 	}
-	
 	
 	componentWillReceiveProps(nextProps){
 		var id = nextProps.match.params.id;
@@ -53,6 +153,7 @@ class GymWorkoutEdit extends React.Component {
 		this.getWorkout(id);
 	}
 	
+	
 	getWorkout(id){
 		var data = getData('/gym/workouts/' + id + '/')
 		.then((json)=>{
@@ -66,11 +167,11 @@ class GymWorkoutEdit extends React.Component {
 
 	render() {
 		
-		var data = undefined;
+		var form = undefined;
 		if(this.state.ready){
-			data = this.createSets(this.state.data);
+			form = this.createForm(this.state.data);
 		}else{
-			data = <FontAwesome name="circle-o-notch" size="3x" spin/>;
+			form = <FontAwesome name="circle-o-notch" size="3x" spin/>;
 		}
 		
 		
@@ -100,9 +201,11 @@ class GymWorkoutEdit extends React.Component {
 
 			<Row>
 				<Col md={12}>					
-					{data}
+					{form}
 				</Col>
 			</Row>
+			
+
 		  </div>
 		)
 	}

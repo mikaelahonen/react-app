@@ -52,7 +52,7 @@ class Home extends Component {
 			<div>
 				<h1>Home</h1>
 				<Jumbotron>
-					<h2>Quantiefied Self App</h2>
+					<h2>Web App</h2>
 					<p><i>Welcome!</i></p>
 					<Button bsStyle='success' bsSize='large'>Home button</Button>
 				</Jumbotron>

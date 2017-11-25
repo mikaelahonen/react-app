@@ -19,7 +19,7 @@ class GymHome extends Component {
 				<h2>Gym App</h2>
 				<p><i>Here you can find gym training utilities.</i></p>
 			</Jumbotron>
-			<Row>
+			{/* <Row>
 			
 				<Col sm={4}>
 				
@@ -54,9 +54,9 @@ class GymHome extends Component {
 						
 					</ButtonToolbar>
 					
-				</Col>
+				</Col> 
 
-			</Row>
+			</Row> */}
 		</div>
 	);
   }

@@ -1,6 +1,6 @@
 {
-  "short_name": "Quantified Self",
-  "name": "Quantified Self Web Application",
+  "short_name": "Web App",
+  "name": "Web Application",
   "icons": [
     {
       "src": "/favicon-2.png",

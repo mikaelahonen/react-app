@@ -39,7 +39,7 @@ class MenuPrivate extends Component {
 		var path = window.location.pathname;
 		var head = '';
 		console.log(path);
-		path === "/" ? head = 'Quantified Self App' : head = path;
+		path === "/" ? head = 'Webb App' : head = path;
 		
 		return (	
 		

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Jumbotron} from 'react-bootstrap';
+import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Jumbotron, Table} from 'react-bootstrap';
 import {getData} from 'functions/Api';
-import {Panel} from 'react-bootstrap';
+import {distinctValues} from 'functions/Functions';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -9,37 +9,75 @@ import { LinkContainer } from 'react-router-bootstrap';
 class GymWorkout extends React.Component {
 	
 	state = {
-		ready: false,
-		data: {},
+		readyWorkout: false,
+		readySets: false,
+		workout: {},
+		sets: {},
+		excercises: {},
+		musclegroups: {},
 	}	
-	
+
 	
 	renderWorkout(workout){
-
 		var item = 
-			<Jumbotron>
+			<Panel>
 				<h2>{workout.name}</h2>
 				<p>Id: {workout.id}</p>
 				<p>Start time: {workout.start_time}</p>
 				<p>End time: {workout.end_time}</p>
 				<p>Location: {workout.location}</p>
-			</Jumbotron>
-
+				<p>Sets: {workout.sets.length}</p>
+			</Panel>
 		return item;
 	}
 	
 	renderSets(sets){
 		var items = [];
 		sets.map((set, index) => {
+			
+			var btnUpdate = 
+				<LinkContainer to={'/gym/sets/' + set.id + '/edit'}>
+					<Button bsStyle="primary">
+						<FontAwesome name="edit"/>
+					</Button>
+				</LinkContainer>
+
+			var btnAnalytics = 
+				<LinkContainer to={'/gym/excercises/' + set.excercise + '/analytics'}>
+					<Button bsStyle="primary">
+						<FontAwesome name="line-chart"/>
+					</Button>
+				</LinkContainer>				
+			
 			var item = 
-				<Panel header={set.excercise_obj.excercise} key={index}>
-					<p>Id: {set.id}</p>
-					<p>Reps: {set.reps}</p>
-					<p>Weight: {set.weight}</p>
-				</Panel>
+				<tr key={index}>
+					<td>{set.excercise_name}</td>
+					<td>{set.muscle_group_name}</td>
+					<td>{set.id}</td>
+					<td>{set.workout_rank}</td>
+					<td>{set.reps + " x " + set.weight}</td>
+					<td>{btnUpdate}</td>
+					<td>{btnAnalytics}</td>
+				</tr>
 			items.push(item);
 		});
-		return items;
+		return( 
+			<Table striped>
+				<thead>
+					<tr>
+						<th>Excercise</th>
+						<th>Muscle Group</th>
+						<th>Set id</th>
+						<th>Rank</th>
+						<th>Reps x Weight</th>
+						<th>Edit</th>
+						<th>Analytics</th>
+					</tr>
+				</thead>
+				<tbody>
+					{items}
+				</tbody>
+			</Table>);
 	}
 	
 	componentWillMount(){
@@ -51,53 +89,74 @@ class GymWorkout extends React.Component {
 	
 	
 	componentWillReceiveProps(nextProps){
-		var id = nextProps.match.params.id;
+		var workoutId = nextProps.match.params.id;
 		this.setState({
 			ready: false,
-			id: id,
+			workoutId: workoutId,
 		});
-		this.getWorkout(id);
+		this.getWorkout(workoutId);
+		this.getSets(workoutId);
 	}
 	
 	componentDidMount(){
-		var id = this.props.match.params.id
-		this.getWorkout(id);
+		var workoutId = this.props.match.params.id
+		this.getWorkout(workoutId);
+		this.getSets(workoutId);
 	}
 	
-	getWorkout(id){
-		var data = getData('/gym/workouts/' + id + '/')
+	getWorkout(workoutId){
+		var workout = getData('/gym/workouts/' + workoutId)
 		.then((json)=>{
-			var data = json;		
+			var workout = json;		
 			this.setState({
-				data: data,
-				ready: true,
+				workout: workout,
+				readyWorkout: true,
 			});
+		});
+	}
+	
+	getSets(workoutId){
+		var sets = getData('/gym/sets/?workout=' + workoutId)
+		.then((json)=>{
+			var sets = json;
+				
+
+			
+			this.setState({
+				sets: sets,
+				readySets: true,
+			});
+			
 		});
 	}
 
 	render() {
 		
-		var data = undefined;
-		if(this.state.ready){
-			var workout = this.renderWorkout(this.state.data);
-			var sets = this.renderSets(this.state.data.sets);
+		if(this.state.readyWorkout){
+			var workout = this.renderWorkout(this.state.workout);
+		}else{
+			workout = <FontAwesome name="circle-o-notch" size="3x" spin/>;
+		}
+		
+		if(this.state.readySets){
+			var sets = this.renderSets(this.state.sets);
 			if(sets.length === 0){
 				sets = <p>No sets</p>
 			}
 		}else{
-			data = <FontAwesome name="circle-o-notch" size="3x" spin/>;
+			sets = <FontAwesome name="circle-o-notch" size="3x" spin/>;
 		}
 		
 		
 		return (			
 		  <div>
-			<h2>Workout: {this.state.id}</h2>
+			<h2>Workout: {this.state.workout.id}</h2>
 
 
 			<Row>
 				<Col xs={6}>
 					<FormGroup>
-						<Link to={'/gym/workouts/' + this.state.data.prev_id}>
+						<Link to={'/gym/workouts/' + this.state.workout.prev_id}>
 							<Button block><FontAwesome name="caret-left" size="2x"/></Button>
 						</Link>
 					</FormGroup>
@@ -105,7 +164,7 @@ class GymWorkout extends React.Component {
 				
 				<Col xs={6}>
 					<FormGroup>
-						<Link to={'/gym/workouts/' + this.state.data.next_id}>
+						<Link to={'/gym/workouts/' + this.state.workout.next_id}>
 							<Button block><FontAwesome name="caret-right" size="2x"/></Button>
 						</Link>
 					</FormGroup>
@@ -117,6 +176,7 @@ class GymWorkout extends React.Component {
 			<Row>
 				<Col md={12}>
 					{workout}
+					<br/>
 					{sets}
 				</Col>
 			</Row>

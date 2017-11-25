@@ -40,7 +40,7 @@ class GymWorkouts extends React.Component {
 							<Button bsStyle="success">
 								<FontAwesome name="arrow-right"/>
 								&nbsp;
-								Go
+								Start
 							</Button>
 						</LinkContainer>
 			
@@ -78,8 +78,6 @@ class GymWorkouts extends React.Component {
 				ready: true
 			});
 		});
-
-
 	}
 
 	render() {
@@ -98,15 +96,16 @@ class GymWorkouts extends React.Component {
 
 			<Row>
 				<Col md={12}>
-				<FormGroup>
-					<Link to='/gym/workouts/add'>
-						<Button bsStyle="success">
-							<FontAwesome name="plus"/>
-							&nbsp;
-							Add
-						</Button>
-					</Link>
-				</FormGroup>
+					<h2>All workouts</h2>
+					<FormGroup>
+						<Link to='/gym/workouts/add'>
+							<Button bsStyle="success">
+								<FontAwesome name="plus"/>
+								&nbsp;
+								Add
+							</Button>
+						</Link>
+					</FormGroup>
 				
 					{data}
 				</Col>

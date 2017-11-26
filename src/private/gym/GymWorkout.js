@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Jumbotron, Table} from 'react-bootstrap';
+import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table} from 'react-bootstrap';
 import {getData} from 'functions/Api';
 import {distinctValues} from 'functions/Functions';
 import FontAwesome from  'react-fontawesome';
@@ -9,14 +9,32 @@ import { LinkContainer } from 'react-router-bootstrap';
 class GymWorkout extends React.Component {
 	
 	state = {
-		readyWorkout: false,
-		readySets: false,
+		ready: false,
 		workout: {},
 		sets: {},
 		excercises: {},
 		musclegroups: {},
+		activeExcerciseId: null,
+		excerciseFilter: null,
 	}	
-
+	
+	//Filter to excercises of clicked object
+	handleRowClick(clickedSetId, event){
+		
+		var sets = this.state.sets;
+		var filterId = sets.filter(set => clickedSetId == set.id)[0].excercise;
+		console.log('click: ' + clickedSetId);
+		console.log('filter: ' + filterId);
+		this.setState({
+			excerciseFilter: filterId
+		});
+	}
+	
+	handleShowAll(event){
+		this.setState({
+			excerciseFilter: null,
+		});
+	}
 	
 	renderWorkout(workout){
 		var item = 
@@ -31,46 +49,83 @@ class GymWorkout extends React.Component {
 		return item;
 	}
 	
+	renderToolbar(){
+		var toolbar = 
+			<div>
+				<ButtonToolbar onClick={(event) => this.handleShowAll(event)}>
+					<Button >
+						Show all
+					</Button>
+				</ButtonToolbar>
+			</div>
+		return toolbar;
+	}
+	
 	renderSets(sets){
+
+		//Initiate row items
 		var items = [];
+		
 		sets.map((set, index) => {
 			
-			var btnUpdate = 
-				<LinkContainer to={'/gym/sets/' + set.id + '/edit'}>
-					<Button bsStyle="primary">
-						<FontAwesome name="edit"/>
-					</Button>
-				</LinkContainer>
+			//Filter excercises			
+			if(!this.state.excerciseFilter || set.excercise == this.state.excerciseFilter){					
+				
+				//Style done sets with green
+				var doneStyle = {}
+				if(set.done){
+					doneStyle = {backgroundColor: '#c6efce'}
+				}
+				
+				//Set an icon to currently active sets
+				var activeIcon = ""
+				if(set.id == this.state.workout.active_set){
+					activeIcon = <FontAwesome name="cog" spin/>;
+				}
+				
+				var excerciseStyle = {}
+				/*if(set.excercise == this.state.activeExcerciseId){
+					excerciseStyle = {fontWeight: 'bold'}
+				}*/
+				
+				var btnUpdate = 
+					<LinkContainer to={'/gym/sets/' + set.id + '/edit'}>
+						<Button bsStyle="primary">
+							<FontAwesome name="pencil"/>
+						</Button>
+					</LinkContainer>
 
-			var btnAnalytics = 
-				<LinkContainer to={'/gym/excercises/' + set.excercise + '/analytics'}>
-					<Button bsStyle="primary">
-						<FontAwesome name="line-chart"/>
-					</Button>
-				</LinkContainer>				
+				var btnAnalytics = 
+					<LinkContainer to={'/gym/excercises/' + set.excercise + '/analytics'}>
+						<Button bsStyle="primary">
+							<FontAwesome name="line-chart"/>
+						</Button>
+					</LinkContainer>				
+				
+				var item = 
+					<tr key={index} style={doneStyle} onClick={(event) => this.handleRowClick(set.id, event)}>
+						<td style={excerciseStyle}>{set.excercise_name} ({set.muscle_group_name}) {activeIcon}</td>
+						<td><pre>{set.reps + " x " + set.weight}kg</pre></td>
+						<td>{set.one_rep_max}kg</td>
+						<td>{btnUpdate}</td>
+						<td>{btnAnalytics}</td>
+					</tr>
+					
+				//Add row item to array
+				items.push(item);
+			}
 			
-			var item = 
-				<tr key={index}>
-					<td>{set.excercise_name}</td>
-					<td>{set.muscle_group_name}</td>
-					<td>{set.id}</td>
-					<td>{set.workout_rank}</td>
-					<td>{set.reps + " x " + set.weight}</td>
-					<td>{btnUpdate}</td>
-					<td>{btnAnalytics}</td>
-				</tr>
-			items.push(item);
+			
 		});
+		
 		return( 
-			<Table striped>
+			<Table responsive>
 				<thead>
 					<tr>
 						<th>Excercise</th>
-						<th>Muscle Group</th>
-						<th>Set id</th>
-						<th>Rank</th>
 						<th>Reps x Weight</th>
-						<th>Edit</th>
+						<th>Theoretical max</th>
+						<th>Start</th>
 						<th>Analytics</th>
 					</tr>
 				</thead>
@@ -94,37 +149,34 @@ class GymWorkout extends React.Component {
 			ready: false,
 			workoutId: workoutId,
 		});
-		this.getWorkout(workoutId);
-		this.getSets(workoutId);
+		this.getAsd(workoutId);
 	}
 	
 	componentDidMount(){
 		var workoutId = this.props.match.params.id
-		this.getWorkout(workoutId);
-		this.getSets(workoutId);
+		this.getAsd(workoutId);
 	}
 	
-	getWorkout(workoutId){
-		var workout = getData('/gym/workouts/' + workoutId)
-		.then((json)=>{
-			var workout = json;		
+	getAsd(workoutId){		
+		var workout_promise = getData('/gym/workouts/' + workoutId + '/');
+		var sets_promise = getData('/gym/sets/?workout=' + workoutId);	
+		Promise.all([workout_promise, sets_promise]).then(resolved => {
+			
+			
+			
+			//Workouts and sets from promises
+			var workout = resolved[0];
+			var sets = resolved[1];	
+
+			//Get active excercise
+			var activeExcerciseId = sets.filter(set => set.id == workout.active_set)[0].excercise;
+			
+			//Set state
 			this.setState({
 				workout: workout,
-				readyWorkout: true,
-			});
-		});
-	}
-	
-	getSets(workoutId){
-		var sets = getData('/gym/sets/?workout=' + workoutId)
-		.then((json)=>{
-			var sets = json;
-				
-
-			
-			this.setState({
 				sets: sets,
-				readySets: true,
+				activeExcerciseId: activeExcerciseId,
+				ready: true,
 			});
 			
 		});
@@ -132,52 +184,27 @@ class GymWorkout extends React.Component {
 
 	render() {
 		
-		if(this.state.readyWorkout){
+		if(this.state.ready){
+			var wait = "";
 			var workout = this.renderWorkout(this.state.workout);
-		}else{
-			workout = <FontAwesome name="circle-o-notch" size="3x" spin/>;
-		}
-		
-		if(this.state.readySets){
+			var filter = this.renderToolbar();
 			var sets = this.renderSets(this.state.sets);
-			if(sets.length === 0){
-				sets = <p>No sets</p>
-			}
+			var chart = <div><hr/><p>[CHART OF ACTIVE SET]</p></div>;
 		}else{
-			sets = <FontAwesome name="circle-o-notch" size="3x" spin/>;
+			wait = <FontAwesome name="circle-o-notch" size="3x" spin/>;
 		}
+
 		
 		
 		return (			
-		  <div>
-			<h2>Workout: {this.state.workout.id}</h2>
-
-
-			<Row>
-				<Col xs={6}>
-					<FormGroup>
-						<Link to={'/gym/workouts/' + this.state.workout.prev_id}>
-							<Button block><FontAwesome name="caret-left" size="2x"/></Button>
-						</Link>
-					</FormGroup>
-				</Col>
-				
-				<Col xs={6}>
-					<FormGroup>
-						<Link to={'/gym/workouts/' + this.state.workout.next_id}>
-							<Button block><FontAwesome name="caret-right" size="2x"/></Button>
-						</Link>
-					</FormGroup>
-
-				</Col>
-			</Row>					
-			
-
+		  <div>			
 			<Row>
 				<Col md={12}>
+					{wait}
 					{workout}
-					<br/>
+					{filter}
 					{sets}
+					{chart}
 				</Col>
 			</Row>
 		  </div>

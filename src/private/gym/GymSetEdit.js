@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
+import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel, Radio, Checkbox} from 'react-bootstrap';
 import {getData, deleteData, putData} from 'functions/Api';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
@@ -49,77 +49,9 @@ class GymSetEdit extends React.Component {
 	createForm(set){
 		
 		var form = 
-			
+		
 			<div>
-				<form>
-					<FormGroup>
-						<ControlLabel>Id</ControlLabel>
-						<FormControl
-							readOnly
-							id="id"
-							type="number"
-							placeholder="id"
-							value={this.state.data.id}
-						/>
-					</FormGroup>
-
-					<FormGroup>
-						<ControlLabel>Workout ({this.state.data.workout_name})</ControlLabel>
-						<FormControl
-							id="workout"
-							type="number"
-							placeholder="Bicep and Chest"
-							defaultValue={this.state.data.workout}
-							onChange={(e) => this.handleChange(e)}
-						/>
-					</FormGroup>
-					
-					<FormGroup>
-						<ControlLabel>Reps</ControlLabel>
-						<FormControl
-							id="reps"
-							type="number"
-							placeholder="10"
-							defaultValue={this.state.data.reps}
-							onChange={(e) => this.handleChange(e)}
-						/>
-					</FormGroup>
-
-					<FormGroup>
-						<ControlLabel>Weight</ControlLabel>
-						<FormControl
-						  id="weight"
-						  type="number"
-						  placeholder="80"
-						  defaultValue={this.state.data.weight}
-						  onChange={(e) => this.handleChange(e)}
-						/>
-					</FormGroup>
-					
-					<FormGroup>
-						<ControlLabel>Excercise ({this.state.data.excercise_name})</ControlLabel>
-						<FormControl
-						  id="excercise"
-						  type="number"
-						  placeholder="9"
-						  defaultValue={this.state.data.excercise}
-						  onChange={(e) => this.handleChange(e)}
-						/>
-					</FormGroup>
-					
-					<FormGroup>
-						<ControlLabel>Workout Rank</ControlLabel>
-						<FormControl
-						  id="workout_rank"
-						  type="number"
-						  placeholder="1"
-						  defaultValue={this.state.data.workout_rank}
-						  onChange={(e) => this.handleChange(e)}
-						/>
-					</FormGroup>
-					
-				</form>						
-				
+		
 				<ButtonToolbar>
 		
 					<Button bsStyle="primary" onClick={(event) => this.handleUpdate(set.id, event)}>
@@ -143,6 +75,92 @@ class GymSetEdit extends React.Component {
 					</LinkContainer>
 				
 				</ButtonToolbar>
+			
+			
+				<form>
+					<h3>Set</h3>
+						<FormGroup>
+							<ControlLabel>Reps</ControlLabel>
+							<FormControl
+								id="reps"
+								type="number"
+								placeholder="10"
+								defaultValue={this.state.data.reps}
+								onChange={(e) => this.handleChange(e)}
+							/>
+						</FormGroup>
+
+						<FormGroup>
+							<ControlLabel>Weight</ControlLabel>
+							<FormControl
+							  id="weight"
+							  type="number"
+							  placeholder="80"
+							  defaultValue={this.state.data.weight}
+							  onChange={(e) => this.handleChange(e)}
+							/>
+						</FormGroup>
+						
+						<FormGroup controlId="done">
+							<ControlLabel>Done</ControlLabel>
+							<FormControl 
+								componentClass="select" 
+								id="done" 
+								defaultValue={this.state.data.done}
+								onChange={(e) => this.handleChange(e)}>
+								<option value={true}>True</option>
+								<option value={false}>False</option>
+							</FormControl>
+						</FormGroup>
+					<h3>Details</h3>
+					
+					<FormGroup>
+						<ControlLabel>Id</ControlLabel>
+						<FormControl
+							readOnly
+							id="id"
+							type="number"
+							placeholder="id"
+							value={this.state.data.id}
+						/>
+					</FormGroup>
+
+					<FormGroup>
+						<ControlLabel>Workout ({this.state.data.workout_name})</ControlLabel>
+						<FormControl
+							id="workout"
+							type="number"
+							placeholder="Bicep and Chest"
+							defaultValue={this.state.data.workout}
+							onChange={(e) => this.handleChange(e)}
+						/>
+					</FormGroup>
+					
+
+					
+					<FormGroup>
+						<ControlLabel>Excercise ({this.state.data.excercise_name})</ControlLabel>
+						<FormControl
+						  id="excercise"
+						  type="number"
+						  placeholder="9"
+						  defaultValue={this.state.data.excercise}
+						  onChange={(e) => this.handleChange(e)}
+						/>
+					</FormGroup>
+					
+					<FormGroup>
+						<ControlLabel>Workout Order</ControlLabel>
+						<FormControl
+						  id="workout_order"
+						  type="number"
+						  placeholder="1"
+						  defaultValue={this.state.data.workout_order}
+						  onChange={(e) => this.handleChange(e)}
+						/>
+					</FormGroup>
+					
+				</form>						
 				
 			</div>
 

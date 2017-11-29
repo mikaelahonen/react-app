@@ -10,39 +10,60 @@ class GymSetEdit extends React.Component {
 	state = {
 		ready: false,
 		data: {},
+		updateOk: undefined,
 	}	
 	
+	
+	
 	handleDelete(id, event){
-		console.log('Delete object with id: ' + id + ', Event: ' + event);				
 		var endpoint = '/gym/sets/' + id + '/';
+		var redirect = '/gym/workouts/' + this.state.data.workout;
 		deleteData(endpoint)
 		.then((json)=>{
-			this.props.history.push('/gym/workouts/' + this.data.workout);
+			this.props.history.push(redirect);
 		});
 	}
 	
+	handleUpdateReturn(id, event){
+		var endpoint = '/gym/sets/' + id + '/';
+		var redirect = '/gym/workouts/' + this.state.data.workout;
+		putData(endpoint, this.state.data)
+		.then((json)=>{
+			this.props.history.push(redirect);
+		});		
+	}
+	
 	handleUpdate(id, event){
-		console.log('Update object with id: ' + id + ', Event: ' + event);
+		this.setState({
+			updateOk: ""
+		})
 		var endpoint = '/gym/sets/' + id + '/';
 		putData(endpoint, this.state.data)
 		.then((json)=>{
-			this.props.history.push();
+			this.setState({
+				updateOk: "Changes updated!"
+			})
 		});		
+	}
+	
+	handleInputSelect(event){
+		event.target.select();
 	}
 	
 	handleChange(event){
 
 		const target = event.target;
 		const value = target.type === 'checkbox' ? target.checked : target.value;
-		const name = target.id;
+		const name = target.id;		
 		
-		/*this.setState({
-			data: {[name]: value}
-		});*/
+		var inputs = this.state.data;
+		inputs[name] = value
 		
-		this.state.data[name] = value;
+		this.setState({
+			data: inputs,
+		});
 		
-		console.log("Form state: " + this.state.data[name]);
+		console.log("Form state: " + this.state.data);
 	}
 	
 	
@@ -51,34 +72,22 @@ class GymSetEdit extends React.Component {
 		var form = 
 		
 			<div>
-		
-				<ButtonToolbar>
-		
-					<Button bsStyle="primary" onClick={(event) => this.handleUpdate(set.id, event)}>
-						<FontAwesome name="refresh"/>
-						&nbsp;
-						Update
-					</Button>
-
-					<Button bsStyle="danger" onClick={(event) => this.handleDelete(set.id, event)}>
-						<FontAwesome name="remove"/>
-						&nbsp;
-						Delete
-					</Button>
-
-					<LinkContainer to={'/gym/workouts/' + this.state.data.workout}>
-						<Button bsStyle="success">
-							<FontAwesome name="arrow-right"/>
-							&nbsp;
-							Back to workout
-						</Button>
-					</LinkContainer>
-				
-				</ButtonToolbar>
-			
 			
 				<form>
 					<h3>Set</h3>
+					
+						<ButtonToolbar>
+				
+							<Button 
+								bsStyle="success" 
+								onClick={(event) => this.handleUpdateReturn(set.id, event)}>
+								<FontAwesome name="check"/>
+								&nbsp;
+								Update and return
+							</Button>
+						
+						</ButtonToolbar>
+						
 						<FormGroup>
 							<ControlLabel>Reps</ControlLabel>
 							<FormControl
@@ -87,6 +96,8 @@ class GymSetEdit extends React.Component {
 								placeholder="10"
 								defaultValue={this.state.data.reps}
 								onChange={(e) => this.handleChange(e)}
+								onSelect={(event) => this.handleInputSelect(event)}
+								autoFocus
 							/>
 						</FormGroup>
 
@@ -98,21 +109,63 @@ class GymSetEdit extends React.Component {
 							  placeholder="80"
 							  defaultValue={this.state.data.weight}
 							  onChange={(e) => this.handleChange(e)}
+							  onSelect={(event) => this.handleInputSelect(event)}
 							/>
 						</FormGroup>
 						
-						<FormGroup controlId="done">
-							<ControlLabel>Done</ControlLabel>
-							<FormControl 
-								componentClass="select" 
-								id="done" 
-								defaultValue={this.state.data.done}
-								onChange={(e) => this.handleChange(e)}>
-								<option value={true}>True</option>
-								<option value={false}>False</option>
-							</FormControl>
-						</FormGroup>
+						<FormGroup>
+							<ControlLabel>Comments</ControlLabel>
+							<FormControl
+							  id="comments"
+							  componentClass="textarea"
+							  placeholder="Add comments."
+							  defaultValue={this.state.data.comments}
+							  onChange={(e) => this.handleChange(e)}
+							/>
+						</FormGroup>						
+						
 					<h3>Details</h3>
+					
+					<p>
+						{this.state.updateOk}
+					</p>
+					
+					<ButtonToolbar>
+					
+						<Button bsStyle="primary" onClick={(event) => this.handleUpdate(set.id, event)}>
+							<FontAwesome name="refresh"/>
+							&nbsp;
+							Update
+						</Button>
+					
+						<LinkContainer to={'/gym/workouts/' + this.state.data.workout}>
+							<Button bsStyle="danger">
+								<FontAwesome name="ban"/>
+								&nbsp;
+								Cancel
+							</Button>
+						</LinkContainer>
+						
+						<Button bsStyle="danger" onClick={(event) => this.handleDelete(set.id, event)}>
+							<FontAwesome name="remove"/>
+							&nbsp;
+							Delete
+						</Button>
+						
+						
+					</ButtonToolbar>
+					
+					<FormGroup controlId="done">
+						<ControlLabel>Done</ControlLabel>
+						<FormControl 
+							componentClass="select" 
+							id="done" 
+							defaultValue={this.state.data.done}
+							onChange={(e) => this.handleChange(e)}>
+							<option value={true}>True</option>
+							<option value={false}>False</option>
+						</FormControl>
+					</FormGroup>					
 					
 					<FormGroup>
 						<ControlLabel>Id</ControlLabel>
@@ -235,7 +288,8 @@ class GymSetEdit extends React.Component {
 			</Row>			
 
 			<Row>
-				<Col md={12}>					
+				<Col md={12}>	
+					
 					{form}
 				</Col>
 			</Row>

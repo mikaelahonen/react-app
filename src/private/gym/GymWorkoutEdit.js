@@ -78,9 +78,9 @@ class GymWorkoutEdit extends React.Component {
 					<FormGroup>
 						<ControlLabel>Start time</ControlLabel>
 						<FormControl
-							id="Start_time"
+							id="start_time"
 							type="text"
-							placeholder="2017-01-01"
+							placeholder="2017-10-10T17:00:00Z"
 							defaultValue={this.state.data.start_time}
 							onChange={(e) => this.handleChange(e)}
 						/>
@@ -91,7 +91,7 @@ class GymWorkoutEdit extends React.Component {
 						<FormControl
 						  id="end_time"
 						  type="text"
-						  placeholder="2017-01-31"
+						  placeholder="2017-10-10T17:00:00+02"
 						  defaultValue={this.state.data.end_time}
 						  onChange={(e) => this.handleChange(e)}
 						/>

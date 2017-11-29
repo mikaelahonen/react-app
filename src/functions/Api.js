@@ -107,6 +107,28 @@ export function putData(endpoint, json) {
 	.then(response => response.json())	
 }
 
+export function patchData(endpoint, json) {
+	initApi();
+	console.log("Patch data: ", endpoint);
+
+	var headers = {
+	  'Accept': 'application/json',
+	  'Content-Type': 'application/json',
+	}
+	
+	if (!!localStorage.token){
+		headers.Authorization = 'JWT ' + localStorage.token
+	}
+	
+	return fetch(api_url + endpoint,{
+		method: "PATCH",
+		mode: "cors",
+		headers: headers,
+		body: JSON.stringify(json),
+	})
+	.then(response => response.json())	
+}
+
 export function getPayload(){
 	//Base64 encoded payload
 	var payloadBase64 = localStorage.token.split(".")[1];

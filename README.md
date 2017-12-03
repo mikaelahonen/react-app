@@ -4,3 +4,11 @@
 * Fetches data asynchronously from django api
 * Formattings by Twitter Bootstrap
 * Used for gym training
+
+## NPM
+Install latest version of react package and save it `package.json` file:
+
+`npm install react@latest --save`
+
+
+

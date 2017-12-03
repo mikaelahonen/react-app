@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table} from 'react-bootstrap';
 import {getData, patchData} from 'functions/Api';
-import {distinctValues} from 'functions/Functions';
+import {distinctValues, utcToDate} from 'functions/Functions';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -49,8 +49,8 @@ class GymWorkout extends React.Component {
 			<Panel>
 				<h2>{workout.name}</h2>
 				<p>Id: {workout.id}</p>
-				<p>Start time: {workout.start_time}</p>
-				<p>End time: {workout.end_time}</p>
+				<p>Start time: {utcToDate(workout.start_time)}</p>
+				<p>End time: {utcToDate(workout.end_time)}</p>
 				<p>Location: {workout.location}</p>
 				<p>Sets: {workout.sets.length}</p>
 			</Panel>

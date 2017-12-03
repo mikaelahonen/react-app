@@ -12,3 +12,34 @@ export function distinctValues(object, key){
 	
 	return items;
 }
+
+export function utcToDate(utcString){
+	if(utcString){
+		var year = utcString.substring(0, 4);
+		var month = utcString.substring(5, 7);
+		var day = utcString.substring(8, 10);
+		var dtStr = [day, month, year].join('.');
+		return dtStr;
+	}else{
+		return null;
+	}
+}
+
+//Get difference between two utc time strings in minutes
+export function utcDuration(startStr, stopStr){
+	
+	//Start time in milliseconds
+	var start = new Date(startStr);
+	var startMs = start.getTime(start);
+	
+	//Stop time in milliseconds
+	var stop = new Date(stopStr);
+	var stopMs = stop.getTime(stop)
+	
+	//Milliseconds to minutes
+	var dif = (stopMs - startMs)
+	var min = dif/1000/60;
+	var minRound = Math.round(min,0)
+	
+	return minRound;
+}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {Row, Col, Button, ButtonToolbar, FormGroup} from 'react-bootstrap';
+import {Row, Col, Button, ButtonToolbar, FormGroup, Table} from 'react-bootstrap';
 import {getData} from 'functions/Api';
+import {utcToDate, utcDuration} from 'functions/Functions';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
@@ -23,49 +24,60 @@ class GymWorkouts extends React.Component {
 	renderWorkouts(data){
 		var items = [];
 		data.map((workout, index) => {
-			var item = 
-			<Panel 
-				key={index} 
-				header={workout.name}
-			>
-				<p><FontAwesome name="hashtag"/> Id: {workout.id}</p>
-				<p><FontAwesome name="th-list"/> Sets: {workout.sets.length}</p>
-				<p><FontAwesome name="calendar"/> Start time: {workout.start_time}</p>
-				<p><FontAwesome name="calendar"/> End time: {workout.end_time}</p>
-				<p><FontAwesome name="map-marker"/> Location: {workout.location}</p>
-				
-				<ButtonToolbar>
-		
-						<LinkContainer to={'/gym/workouts/' + workout.id}>
-							<Button bsStyle="success">
-								<FontAwesome name="arrow-right"/>
-								&nbsp;
-								Start
-							</Button>
-						</LinkContainer>
 			
-						<LinkContainer to={'/gym/workouts/' + workout.id + '/edit'}>
-							<Button bsStyle="primary">
-								<FontAwesome name="edit"/>
-								&nbsp;
-								Edit
-							</Button>
-						</LinkContainer>
-
-
-						<Button bsStyle="danger" onClick={(event) => this.handleDelete(workout.id, event)}>
-							<FontAwesome name="remove"/>
-							&nbsp;
-							Delete
-						</Button>
-
-				
-				</ButtonToolbar>
-
-			</Panel>
+			var btnShow =
+				<LinkContainer to={'/gym/workouts/' + workout.id}>
+					<Button bsStyle="success">
+						<FontAwesome name="arrow-right"/>
+					</Button>
+				</LinkContainer>			
+			
+			var btnEdit =
+				<LinkContainer to={'/gym/workouts/' + workout.id + '/edit'}>
+					<Button>
+						<FontAwesome name="edit"/>
+					</Button>
+				</LinkContainer>			
+			
+			var btnDelete = 
+				<Button onClick={(event) => this.handleDelete(workout.id, event)}>
+					<FontAwesome name="remove"/>
+				</Button>
+			
+			var item = 
+			<tr key={index}>
+				<td>{btnShow}</td>
+				<td>{utcToDate(workout.start_time)}</td>
+				<td>{workout.name}</td>
+				<td>{workout.sets.length}</td>
+				<td>{utcDuration(workout.start_time, workout.end_time)}</td>
+				<td>{workout.location}</td>
+				<td>{btnEdit}</td>
+				<td>{btnDelete}</td>
+			</tr>
 			items.push(item);
 		});
-		return items;
+		
+		var tbl =
+			<Table responsive>
+				<thead>
+					<tr>
+						<th></th>
+						<th>Date</th>
+						<th>Workout</th>
+						<th>Sets</th>
+						<th>Duration</th>
+						<th>Location</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{items}
+				</tbody>				
+			</Table>
+		
+		return tbl;
 	}
 	
 	componentDidMount(){

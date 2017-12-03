@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table} from 'react-bootstrap';
 import {getData, patchData} from 'functions/Api';
-import {distinctValues} from 'functions/Functions';
+import {distinctValues, utcToDate} from 'functions/Functions';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -38,9 +38,9 @@ class GymExcercise extends React.Component {
 		sets.map((set, index) => {			
 				
 			var item = 
-				<tr key={index} onClick={(event) => this.handleRowClick(set.id, event)}>
+				<tr key={index}>
 					<td>{set.excercise_name}</td>
-					<td>{set.excercise_date}</td>
+					<td>{utcToDate(set.workout_date)}</td>
 					<td>{set.reps}</td>
 					<td>{set.weight}</td>
 					<td>{set.one_rep_max}{set.weight==0 ? '' : 'kg'}</td>						

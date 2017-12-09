@@ -1,50 +1,63 @@
 import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, Table} from 'react-bootstrap';
-import {getData} from 'functions/Api';
+import {getData, deleteData} from 'functions/Api';
 import {utcToDate, utcDuration} from 'functions/Functions';
+import Loading from 'components/Components';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
 class GymWorkouts extends React.Component {
-	
-	
+
+
 	state = {
 		ready: false,
-		data: [],
+		data: {},
 	}
-	
+
+	getWorkouts(){
+		var endpoint = '/gym/workouts/';
+		getData(endpoint).then(data => {
+			var state = {data: data, ready: true};
+			this.setState(state);
+		});
+	}
+
 	handleDelete(id, event){
-		alert('No action yet. Id: ' + id + ', Event: ' + event);
+		var ans  = window.confirm('Are you sure you want to delete this workout?')
+		if (ans) {
+			var endpoint = '/gym/workouts/' + id + '/';
+			deleteData(endpoint).then((json)=>{
+				this.props.history.push();
+			});
+		}
 	}
-	
-	endpoint = '/gym/workouts/';	
-	
+
 	renderWorkouts(data){
 		var items = [];
 		data.map((workout, index) => {
-			
+
 			var btnShow =
 				<LinkContainer to={'/gym/workouts/' + workout.id}>
 					<Button bsStyle="success">
 						<FontAwesome name="arrow-right"/>
 					</Button>
-				</LinkContainer>			
-			
+				</LinkContainer>
+
 			var btnEdit =
 				<LinkContainer to={'/gym/workouts/' + workout.id + '/edit'}>
 					<Button>
 						<FontAwesome name="edit"/>
 					</Button>
-				</LinkContainer>			
-			
-			var btnDelete = 
+				</LinkContainer>
+
+			var btnDelete =
 				<Button onClick={(event) => this.handleDelete(workout.id, event)}>
 					<FontAwesome name="remove"/>
 				</Button>
-			
-			var item = 
+
+			var item =
 			<tr key={index}>
 				<td>{btnShow}</td>
 				<td>{utcToDate(workout.start_time)}</td>
@@ -57,7 +70,7 @@ class GymWorkouts extends React.Component {
 			</tr>
 			items.push(item);
 		});
-		
+
 		var tbl =
 			<Table responsive>
 				<thead>
@@ -74,51 +87,51 @@ class GymWorkouts extends React.Component {
 				</thead>
 				<tbody>
 					{items}
-				</tbody>				
+				</tbody>
 			</Table>
-		
+
 		return tbl;
 	}
-	
-	componentDidMount(){
 
-		var data = getData(this.endpoint)
-		.then((json)=>{
-			var data = json;		
-			this.setState({
-				data: data,
-				ready: true
-			});
-		});
+	renderAddButton(){
+		return(
+			<FormGroup>
+				<Link to='/gym/workouts/add'>
+					<Button bsStyle="success">
+						<FontAwesome name="plus"/>
+						&nbsp;
+						Add
+					</Button>
+				</Link>
+			</FormGroup>
+		)
+	}
+
+	componentWillMount(){
+		this.getWorkouts();
+	}
+
+	componentWillReceiveProps(){
+		this.setState(this.state);
+		this.getWorkouts();
 	}
 
 	render() {
-		
+
 		var data = undefined;
 		if(this.state.ready){
-			data = this.renderWorkouts(this.state.data);		
+			data = this.renderWorkouts(this.state.data);
 		}else{
-			data = <FontAwesome name="circle-o-notch" size="3x" spin/>;
+			data = <Loading/>;
 		}
-		
-		console
-		
-		return (			
+
+		return (
 		  <div>
 
 			<Row>
 				<Col md={12}>
 					<h2>All workouts</h2>
-					<FormGroup>
-						<Link to='/gym/workouts/add'>
-							<Button bsStyle="success">
-								<FontAwesome name="plus"/>
-								&nbsp;
-								Add
-							</Button>
-						</Link>
-					</FormGroup>
-				
+					{this.renderAddButton()}
 					{data}
 				</Col>
 			</Row>
@@ -129,5 +142,5 @@ class GymWorkouts extends React.Component {
 
 
 
- 
+
 export default GymWorkouts;

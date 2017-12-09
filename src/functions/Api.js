@@ -30,51 +30,57 @@ export function postData(endpoint, json) {
 	  'Accept': 'application/json',
 	  'Content-Type': 'application/json',
 	}
-	
+
 	if (!!localStorage.token){
 		headers.Authorization = 'JWT ' + localStorage.token
 	}
-	
+
 	return fetch(api_url + endpoint,{
 		method: "POST",
 		mode: "cors",
 		headers: headers,
 		body: JSON.stringify(json),
 	})
-	.then(response => response.json())	
+	.then(response => response.json())
 }
 
 //HTTP GET
 export function getData(endpoint) {
 	initApi();
 	console.log("Get data: ", endpoint);
-	
+
 	var headers = {
 	  'Accept': 'application/json',
 	  'Content-Type': 'application/json',
 	}
-	
+
 	if (!!localStorage.token){
 		headers.Authorization = 'JWT ' + localStorage.token
 	}
-	
-	return fetch(api_url + endpoint,{
+
+	var payload = {
 		mode: "cors",
 		headers: headers,
-	})
-	.then(response => response.json())	
+	}
+
+	var promise = fetch(api_url + endpoint, payload)
+	.then((response) => {
+		return response.json()
+	});
+
+	return promise
 }
 
 //HTTP DELETE
 export function deleteData(endpoint){
 	initApi();
 	console.log("Delete data: ", endpoint);
-	
-	var headers = {};	
+
+	var headers = {};
 	if (!!localStorage.token){
 		headers.Authorization = 'JWT ' + localStorage.token
 	}
-	
+
 	return fetch(api_url + endpoint,{
 		method: "DELETE",
 		mode: "cors",
@@ -93,18 +99,18 @@ export function putData(endpoint, json) {
 	  'Accept': 'application/json',
 	  'Content-Type': 'application/json',
 	}
-	
+
 	if (!!localStorage.token){
 		headers.Authorization = 'JWT ' + localStorage.token
 	}
-	
+
 	return fetch(api_url + endpoint,{
 		method: "PUT",
 		mode: "cors",
 		headers: headers,
 		body: JSON.stringify(json),
 	})
-	.then(response => response.json())	
+	.then(response => response.json())
 }
 
 export function patchData(endpoint, json) {
@@ -115,18 +121,18 @@ export function patchData(endpoint, json) {
 	  'Accept': 'application/json',
 	  'Content-Type': 'application/json',
 	}
-	
+
 	if (!!localStorage.token){
 		headers.Authorization = 'JWT ' + localStorage.token
 	}
-	
+
 	return fetch(api_url + endpoint,{
 		method: "PATCH",
 		mode: "cors",
 		headers: headers,
 		body: JSON.stringify(json),
 	})
-	.then(response => response.json())	
+	.then(response => response.json())
 }
 
 export function getPayload(){
@@ -153,6 +159,5 @@ export function getTokenExpDate(){
 
 //Refresh token
 function initApi(){
-	return true;	
+	return true;
 }
-

@@ -8,6 +8,7 @@ import GymHome from 'private/gym/GymHome'
 import GymWorkouts from 'private/gym/GymWorkouts'
 import GymWorkout from 'private/gym/GymWorkout'
 import GymWorkoutEdit from 'private/gym/GymWorkoutEdit'
+import GymWorkoutAdd from 'private/gym/GymWorkoutAdd'
 import GymSets from 'private/gym/GymSets'
 //import GymSet from 'private/gym/GymSet'
 import GymSetEdit from 'private/gym/GymSetEdit'
@@ -30,19 +31,20 @@ class GymRouter extends Component {
 						<Button bsSize="lg" onClick={() => this.props.history.push('/gym/routines')}>Routines</Button>
 						<Button bsSize="lg" onClick={() => this.props.history.push('/gym/sections')}>Sections</Button>
 					</ButtonToolbar>
-					
+
 					<hr/>
-					
+
 					<Switch>
 						<Route exact path='/gym/workouts' component={GymWorkouts}/>
 						<Route exact path='/gym/workouts/:id/edit' component={GymWorkoutEdit}/>
+						<Route exact path='/gym/workouts/add' component={GymWorkoutAdd}/>
 						<Route exact path='/gym/workouts/:id' component={GymWorkout}/>
 						<Route exact path='/gym/excercises/:id' component={GymExcercise}/>
 						<Route exact path='/gym/sets' component={GymSets}/>
 						<Route exact path='/gym/sets/:id/edit' component={GymSetEdit}/>
 						<Route exact path='/gym/routines' component={GymRoutines}/>
 						{/*<Route exact path='/gym/sets/:id' component={GymSet}/>*/}
-						
+
 
 						<Route exact path='/gym' component={GymHome}/>
 					</Switch>

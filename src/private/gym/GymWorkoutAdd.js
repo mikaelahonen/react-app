@@ -7,16 +7,12 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 class GymWorkoutAdd extends React.Component {
 
-	state = {
-		data: {},
-	}
+	state = {data: {}}
 
 	handleSave(event){
-		console.log('Save new object.');
 		var endpoint = '/gym/workouts/';
 		var redirect = '/gym/workouts';
-		postData(endpoint, this.state.data)
-		.then((json)=>{
+		postData(endpoint, this.state.data).then(json => {
 			this.props.history.push(redirect);
 		});
 	}
@@ -30,9 +26,8 @@ class GymWorkoutAdd extends React.Component {
 		var data = this.state.data;
 		data[name] = value;
 
-		this.setState({
-			data: data,
-		})
+		var state = {data: data};
+		this.setState(state);
 
 	}
 

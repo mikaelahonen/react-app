@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, Table} from 'react-bootstrap';
 import {getData, deleteData} from 'functions/Api';
 import {utcToDate, utcDuration} from 'functions/Functions';
-import Loading from 'components/Components';
+import {Loading, TableFrame, TableRow, Btn, PageTitle} from 'components/Components';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
@@ -10,11 +10,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 class GymWorkouts extends React.Component {
 
-
-	state = {
-		ready: false,
-		data: {},
-	}
+	state = {ready: false, data: {}}
 
 	getWorkouts(){
 		var endpoint = '/gym/workouts/';
@@ -34,77 +30,37 @@ class GymWorkouts extends React.Component {
 		}
 	}
 
-	renderWorkouts(data){
+	renderRows(){
 		var items = [];
-		data.map((workout, index) => {
+		this.state.data.map((workout, index) => {
 
-			var btnShow =
-				<LinkContainer to={'/gym/workouts/' + workout.id}>
-					<Button bsStyle="success">
-						<FontAwesome name="arrow-right"/>
-					</Button>
-				</LinkContainer>
+			var linkShow = '/gym/workouts/' + workout.id;
+			var btnShow = <Btn to={linkShow} bsStyle="success" icon="arrow-right"/>
 
-			var btnEdit =
-				<LinkContainer to={'/gym/workouts/' + workout.id + '/edit'}>
-					<Button>
-						<FontAwesome name="edit"/>
-					</Button>
-				</LinkContainer>
+			var linkEdit = '/gym/workouts/' + workout.id + '/edit';
+			var btnEdit = <Btn to={linkEdit} icon="edit"/>
 
-			var btnDelete =
-				<Button onClick={(event) => this.handleDelete(workout.id, event)}>
-					<FontAwesome name="remove"/>
-				</Button>
+			var btnDelete = <Btn icon="remove" onClick={(event) => this.handleDelete(workout.id, event)} />
 
-			var item =
-			<tr key={index}>
-				<td>{btnShow}</td>
-				<td>{utcToDate(workout.start_time)}</td>
-				<td>{workout.name}</td>
-				<td>{workout.sets.length}</td>
-				<td>{utcDuration(workout.start_time, workout.end_time)}</td>
-				<td>{workout.location}</td>
-				<td>{btnEdit}</td>
-				<td>{btnDelete}</td>
-			</tr>
-			items.push(item);
+			var values = [
+				btnShow,
+				utcToDate(workout.start_time),
+				workout.name,
+				workout.sets.length,
+				utcDuration(workout.start_time, workout.end_time),
+				workout.location,
+				btnEdit,
+				btnDelete,
+			];
+
+			var trow = <TableRow values={values} key={index}/>
+
+			items.push(trow);
+
 		});
 
-		var tbl =
-			<Table responsive>
-				<thead>
-					<tr>
-						<th></th>
-						<th>Date</th>
-						<th>Workout</th>
-						<th>Sets</th>
-						<th>Duration</th>
-						<th>Location</th>
-						<th></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{items}
-				</tbody>
-			</Table>
+		return items
 
-		return tbl;
-	}
-
-	renderAddButton(){
-		return(
-			<FormGroup>
-				<Link to='/gym/workouts/add'>
-					<Button bsStyle="success">
-						<FontAwesome name="plus"/>
-						&nbsp;
-						Add
-					</Button>
-				</Link>
-			</FormGroup>
-		)
 	}
 
 	componentWillMount(){
@@ -118,29 +74,30 @@ class GymWorkouts extends React.Component {
 
 	render() {
 
+		var heads = ["","Date","Workout","Sets","Duration","Location","",""];
+		var rows = [];
+		var addLink = '/gym/workouts/add';
+
 		var data = undefined;
 		if(this.state.ready){
-			data = this.renderWorkouts(this.state.data);
+			rows = this.renderRows();
 		}else{
 			data = <Loading/>;
 		}
 
 		return (
 		  <div>
-
-			<Row>
-				<Col md={12}>
-					<h2>All workouts</h2>
-					{this.renderAddButton()}
-					{data}
-				</Col>
-			</Row>
+				<Row>
+					<Col md={12}>
+						<Btn to={addLink} icon="plus" bsStyle="success"/>
+						<PageTitle title="Workouts" />
+						<hr/>
+						<TableFrame heads={heads} rows={rows} />
+					</Col>
+				</Row>
 		  </div>
 		)
 	}
 }
-
-
-
 
 export default GymWorkouts;

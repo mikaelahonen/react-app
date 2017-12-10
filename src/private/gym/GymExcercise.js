@@ -7,19 +7,19 @@ import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
 class GymExcercise extends React.Component {
-	
+
 	state = {
 		ready: false,
 		excercise: {},
 		sets: {},
-	}	
-	
-	//Filter to excercises of clicked object
-	
+	}
 
-	
+	//Filter to excercises of clicked object
+
+
+
 	renderExcercise(excercise){
-		var item = 
+		var item =
 			<Panel>
 				<h2>{excercise.excercise} - {excercise.muscle_group_name}</h2>
 				<p>Id: {excercise.id}</p>
@@ -27,34 +27,34 @@ class GymExcercise extends React.Component {
 			</Panel>
 		return item;
 	}
-	
 
-	
+
+
 	renderSets(sets){
 
 		//Initiate row items
 		var items = [];
-		
-		sets.map((set, index) => {			
-				
-			var item = 
+
+		sets.map((set, index) => {
+
+			var item =
 				<tr key={index}>
 					<td>{set.excercise_name}</td>
 					<td>{utcToDate(set.workout_date)}</td>
 					<td>{set.reps}</td>
 					<td>{set.weight}</td>
-					<td>{set.one_rep_max}{set.weight==0 ? '' : 'kg'}</td>						
+					<td>{set.one_rep_max}{set.weight==0 ? '' : 'kg'}</td>
 				</tr>
-					
+
 				//Add row item to array
 				items.push(item);
 		});
-			
-		return( 
+
+		return(
 			<Table responsive>
 				<thead>
 					<tr>
-						<th>excercise</th>
+						<th>Excercise</th>
 						<th>Date</th>
 						<th>Reps</th>
 						<th>Weight</th>
@@ -66,14 +66,14 @@ class GymExcercise extends React.Component {
 				</tbody>
 			</Table>);
 	}
-	
+
 	componentWillMount(){
 		this.setState({
 			id: this.props.match.params.id
 		});
 	}
-	
-	
+
+
 	componentWillReceiveProps(nextProps){
 		var excerciseId = nextProps.match.params.id;
 		this.setState({
@@ -82,27 +82,27 @@ class GymExcercise extends React.Component {
 		});
 		this.getAsd(excerciseId);
 	}
-	
+
 	componentDidMount(){
 		var excerciseId = this.props.match.params.id
 		this.getAsd(excerciseId);
 	}
-	
-	getAsd(excerciseId){		
+
+	getAsd(excerciseId){
 		var excercise_promise = getData('/gym/excercises/' + excerciseId + '/');
-		var sets_promise = getData('/gym/sets/?excercise=' + excerciseId);	
+		var sets_promise = getData('/gym/sets/?excercise=' + excerciseId);
 		Promise.all([excercise_promise, sets_promise]).then(resolved => {
-	
-			
+
+
 			//excercises and sets from promises
 			var excercise = resolved[0];
-			var sets = resolved[1];	
+			var sets = resolved[1];
 
 			//Get active excercise
 			var activeSets = sets.filter(set => set.id == excercise.active_set);
 			var activeExcerciseId = undefined;
 			activeSets.length == 0 ? activeExcerciseId = null : activeExcerciseId = activeSets[0].excercise;
-			
+
 			//Set state
 			this.setState({
 				excercise: excercise,
@@ -110,12 +110,12 @@ class GymExcercise extends React.Component {
 				activeExcerciseId: activeExcerciseId,
 				ready: true,
 			});
-			
+
 		});
 	}
 
 	render() {
-		
+
 		if(this.state.ready){
 			var wait = "";
 			var excercise = this.renderExcercise(this.state.excercise);
@@ -124,16 +124,16 @@ class GymExcercise extends React.Component {
 			wait = <FontAwesome name="circle-o-notch" size="3x" spin/>;
 		}
 
-		
-		
-		return (			
-		  <div>			
+
+
+		return (
+		  <div>
 			<Row>
 				<Col md={12}>
 					{wait}
 					{excercise}
 					{sets}
-	
+
 				</Col>
 			</Row>
 		  </div>

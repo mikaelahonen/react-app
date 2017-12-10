@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import {getData, deleteData, putData} from 'functions/Api';
-import Loading from 'components/Components';
+import {Loading} from 'components/Components';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
@@ -150,20 +150,13 @@ class GymWorkoutEdit extends React.Component {
 	}
 
 	componentWillMount(){
-		this.setState({
-			id: this.props.match.params.id
-		});
+		this.getWorkout();
 	}
 
 	componentWillReceiveProps(nextProps){
 		this.setState(this.state);
 		this.getWorkout();
 	}
-
-	componentDidMount(){
-		this.getWorkout();
-	}
-
 
 	getWorkout(){
 		var id = this.props.match.params.id;

@@ -1,11 +1,11 @@
-/* Remove the navbar's default margin-bottom and rounded borders */ 
+/* Remove the navbar's default margin-bottom and rounded borders */
 nav.navbar {
 	margin-bottom: 0;
 	border-radius: 0;
 }
 
 body,html,#root{
-	font-family: 'Oswald', sans-serif;
+	font-family: 'Lato', sans-serif;
 	width: 100%;
 	height: 100%;
 }
@@ -15,11 +15,19 @@ body,html,#root{
 	padding-bottom: 15px;
 }
 
-/* Button margins */
-.btn{
+/* Button margins*/
+.btn-toolbar .btn{
 	margin-bottom: 5px;
 	margin-top: 5px;
 }
+
+/*
+Button inside tables
+table .btn{
+  padding: 1px 5px 1px;
+  font-size: 7px;
+  margin-right: -3px;
+}*/
 
 /*
 .head-img{
@@ -27,7 +35,7 @@ body,html,#root{
 	height: 150px;
 	background-size: cover;
 	background-repeat: no-repeat;
-	background-position: center; 
+	background-position: center;
 	border-bottom: 3px solid gray;
 }*/
 
@@ -56,7 +64,7 @@ body,html,#root{
 
 /* Login screen */
 
-#login-bg{		
+#login-bg{
 	background-color: white;
 	background-image: url('../images/login.jpg');
 	background-position: center center;
@@ -65,7 +73,7 @@ body,html,#root{
 	width: 100%;
 	padding: 100px 15px;
 	text-align: center;
-	
+
 }
 
 #login-form{
@@ -90,18 +98,20 @@ body,html,#root{
 
 
 
-/*
-#form{
-	background-color: rgb(222,222,222);
-	padding: 15px;
-}*/
+
+form{
+	/*background-color: rgb(245,245,245);
+	box-shadow: 0px 0px 2px 2px lightgray;
+	padding: 15px;*/
+
+}
 
 
 /* Tables */
 #tbl-btn{
 	float: right;
 	position: relative;
-	
+
 }
 #tbl-head{
 	margin: 0px;
@@ -112,17 +122,12 @@ body,html,#root{
 /*Override bootstrap colors for side bar*/
 .nav-pills a{
 	color: #5cb85c;
-	
+
 }
 
-.nav-pills > li.active > a, 
-.nav-pills > li.active > a:hover, 
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus{
 	background-color: #5cb85c;
 	color: white;
 }
-
-
-
-
-

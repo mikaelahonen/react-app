@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import {Row, Col, Button} from 'react-bootstrap';
-
+import {Btn, PageTitle} from 'components/Components';
 
 class GymSets extends React.Component {
-	
-	
-	endpoint = '/gym/sets/';
-	
-	render() {		
-		return (			
+
+	render() {
+
+		var addLink = "/gym/sets/add"
+
+		return (
 		  <div>
-			<h1>Gym Sets</h1>
-			<legend></legend>
+			<PageTitle title="Sets" />
+			<hr/>
 			<Row>
 				<Col md={12}>
-
+					<Btn bsStyle="success" icon="plus" text="Add" to={addLink}/>
 				</Col>
 			</Row>
 		  </div>
@@ -24,5 +24,5 @@ class GymSets extends React.Component {
 
 
 
- 
+
 export default GymSets;

@@ -21,6 +21,34 @@ export function isLoggedIn(){
 	return pass;
 }
 
+//HTTP OPTIONS
+export function optionsData(endpoint) {
+	initApi();
+	console.log("Options request: ", endpoint);
+
+	var headers = {
+	  'Accept': 'application/json',
+	  //'Content-Type': 'application/json',
+	}
+
+	if (!!localStorage.token){
+		headers.Authorization = 'JWT ' + localStorage.token
+	}
+
+	var payload = {
+		method: "OPTIONS",
+		mode: "cors",
+		headers: headers,
+	}
+
+	var promise = fetch(api_url + endpoint, payload)
+	.then((response) => {
+		return response.json()
+	});
+
+	return promise
+}
+
 //HTTP POST
 export function postData(endpoint, json) {
 	initApi();
@@ -51,7 +79,7 @@ export function getData(endpoint) {
 
 	var headers = {
 	  'Accept': 'application/json',
-	  'Content-Type': 'application/json',
+	  //'Content-Type': 'application/json',
 	}
 
 	if (!!localStorage.token){

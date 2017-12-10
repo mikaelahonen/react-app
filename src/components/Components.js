@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import FontAwesome from  'react-fontawesome';
+import {Table, Button, FormGroup, ControlLabel, FormControl, Label} from 'react-bootstrap';
+import {LinkContainer} from 'react-router-bootstrap';
 
-class Loading extends React.Component {
+export class Loading extends React.Component {
 	render() {
 		return (
       <FontAwesome name="circle-o-notch" size="3x" spin/>
@@ -9,4 +11,201 @@ class Loading extends React.Component {
 	}
 }
 
-export default Loading;
+export class PageTitle extends React.Component {
+	render(){
+		return <h2 style={{color:'gray'}}>{this.props.title.toUpperCase()}</h2>
+	}
+}
+
+export class Btn extends React.Component {
+
+	renderBtn(){
+
+		var text = undefined;
+
+		//If both icon and text
+		if(this.props.text && this.props.icon){
+			//Icon first
+			if(this.props.iconFirst){
+				text = <span><FontAwesome name={this.props.icon}/> {this.props.text}</span>;
+				console.log("icon first")
+			}
+			//Text first
+			else{
+				text = <span>{this.props.text} <FontAwesome name={this.props.icon}/></span>;
+			}
+		}
+		//If only icon or text
+		else{
+			//If icon only
+			if(this.props.icon){
+				text = <FontAwesome name={this.props.icon}/>;
+			}
+			//If text only
+			else{
+				text = this.props.text;
+			}
+		}
+
+
+		return(
+			<Button
+				bsStyle={this.props.bsStyle}
+				onClick={this.props.onClick}
+				bsSize={this.props.bsSize}>
+
+				{text}
+
+			</Button>
+		);
+	}
+
+	render() {
+
+		var btn = this.renderBtn();
+
+		//Add link container, if "to" props is defined
+		if(this.props.to){
+			btn = <LinkContainer to={this.props.to}>{btn}</LinkContainer>
+		}
+
+		return btn;
+	}
+}
+
+export class TableRow extends React.Component {
+
+	tdWrap(){
+		var tdList = []
+		var i = 0;
+		this.props.values.forEach(value => {
+			var td = <td key={i} style={{color:'gray'}}>{value}</td>
+			tdList = [...tdList, td]
+			i = i + 1;
+		});
+		return tdList;
+	}
+
+	render(){
+		var values = this.tdWrap();
+		return (
+			<tr onClick={this.props.onClick} style={this.props.style}>
+				{values}
+			</tr>
+		)
+	}
+}
+
+export class TableFrame extends React.Component {
+
+	thWrap(){
+		var thList = []
+		var i = 0;
+		this.props.heads.forEach(head => {
+			var th = <th key={i} style={{color:'gray'}}>{head.toUpperCase()}</th>
+    	thList = [...thList, th]
+			i = i + 1;
+		});
+		return thList;
+	}
+
+	render() {
+		var tableHead = this.thWrap()
+		var tableRows = this.props.rows
+
+		return(
+			<Table responsive>
+				<thead>
+					<tr>
+						{tableHead}
+					</tr>
+				</thead>
+				<tbody>
+					{tableRows}
+				</tbody>
+			</Table>
+		)
+	}
+}
+
+export class FormSelect extends React.Component{
+
+	renderOptions(){
+
+		//Initialize
+		var noOption = <option key={0} value={null}>-</option>
+		var items = [noOption]
+
+		//Loop through the array
+		for(var key in this.props.options){
+				var value = this.props.options[key];
+				var item = <option key={key} value={key}>{value}</option>
+			//Add to items array
+			items = [...items, item]
+		}
+
+		//Return a dictionary
+		return items;
+	}
+
+	render(){
+
+			var options = this.renderOptions();
+
+			return(
+				<FormGroup>
+
+					<ControlLabel style={{color:'lightgray'}}>
+							{this.props.label.toUpperCase()}
+					</ControlLabel>
+
+					<FormControl
+						id={this.props.id}
+						placeholder={this.props.placeholder}
+						onChange={this.props.onChange}
+						componentClass={this.props.type} >
+
+						{options}
+
+					</FormControl>
+
+				</FormGroup>
+		);
+	}
+}
+
+export class FormInput extends React.Component {
+
+
+
+	render(){
+
+		var componentClass = undefined;
+		var type = undefined;
+
+		//componentClass or type?
+		if(["textarea"].includes(this.props.type)){
+			componentClass = this.props.type;
+		}
+		else{
+			type = this.props.type
+		}
+
+		return(
+			<FormGroup>
+
+				<ControlLabel style={{color:'lightgray'}}>
+						{this.props.label.toUpperCase()}
+				</ControlLabel>
+
+				<FormControl
+					id={this.props.id}
+					type={type}
+					placeholder={this.props.placeholder}
+					onChange={this.props.onChange}
+					componentClass={componentClass} />
+
+			</FormGroup>
+		);
+	}
+}

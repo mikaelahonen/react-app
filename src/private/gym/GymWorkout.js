@@ -2,50 +2,47 @@ import React, { Component } from 'react';
 import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table} from 'react-bootstrap';
 import {getData, patchData} from 'functions/Api';
 import {distinctValues, utcToDate} from 'functions/Functions';
+import {Loading, TableFrame, TableRow, Btn} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
 class GymWorkout extends React.Component {
-	
+
 	state = {
 		ready: false,
 		workout: {},
 		sets: {},
-		activeExcerciseId: null,
 		excerciseFilter: null,
-	}	
-	
+	}
+
 	//Filter to excercises of clicked object
 	handleRowClick(clickedSetId, event){
-		
 		var sets = this.state.sets;
 		var filterId = sets.filter(set => clickedSetId == set.id)[0].excercise;
-		console.log('click: ' + clickedSetId);
-		console.log('filter: ' + filterId);
 		this.setState({
 			excerciseFilter: filterId
 		});
 	}
-	
-	handleClickUpdate(setId, event){
+
+	//Mark set as done
+	handleSetClick(setId, event){
 		var body = {done: true}
 		var endpoint = '/gym/sets/' + setId + '/';
 		var redirect = '/gym/sets/' + setId + '/edit';
-		patchData(endpoint, body)
-		.then((json)=>{
+		patchData(endpoint, body).then(response => {
 			this.props.history.push(redirect);
-		});		
-	}
-	
-	handleShowAll(event){
-		this.setState({
-			excerciseFilter: null,
 		});
 	}
-	
-	renderWorkout(workout){
-		var item = 
+
+	handleShowAll(event){
+		var state = {excerciseFilter: null};
+		this.setState(state);
+	}
+
+	renderWorkout(){
+		var workout = this.state.workout;
+		return (
 			<Panel>
 				<h2>{workout.name}</h2>
 				<p>Id: {workout.id}</p>
@@ -54,159 +51,130 @@ class GymWorkout extends React.Component {
 				<p>Location: {workout.location}</p>
 				<p>Sets: {workout.sets.length}</p>
 			</Panel>
-		return item;
+		);
 	}
-	
+
 	renderToolbar(){
-		var toolbar = 
-			<div>
-				<ButtonToolbar onClick={(event) => this.handleShowAll(event)}>
-					<Button >
-						Show all
-					</Button>
-				</ButtonToolbar>
-			</div>
-		return toolbar;
+		return (
+			<ButtonToolbar>
+				<Btn text="Show all" onClick={(event) => this.handleShowAll(event)} />
+				<Btn bsStyle="success" icon="plus" to="/gym/sets/add" />
+			</ButtonToolbar>
+		);
 	}
-	
-	renderSets(sets){
+
+	renderSets(){
 
 		//Initiate row items
 		var items = [];
-		
-		sets.map((set, index) => {
-			
-			//Filter excercises			
-			if(!this.state.excerciseFilter || set.excercise == this.state.excerciseFilter){					
-				
+
+		this.state.sets.map((set, index) => {
+
+			//Filter excercises
+			if(!this.state.excerciseFilter || set.excercise == this.state.excerciseFilter){
+
 				//Set an icon to currently active sets
 				var activeIcon = ""
 				if(set.id == this.state.workout.active_set){
-					activeIcon = <FontAwesome name="cog" spin/>;
+					activeIcon = <FontAwesome name="circle"/>;
 				}
-					
-				var btnSet = 
-					<Button 
-						bsStyle={set.done ? 'default' : 'success'}
-						onClick={(event) => this.handleClickUpdate(set.id, event)}
-						>
-						
-						<FontAwesome name={set.done ? 'pencil' : 'arrow-right'}/>
-					</Button>
 
-				var btnExcercise = 
-					<LinkContainer to={'/gym/excercises/' + set.excercise}>
-						<Button bsStyle="default">
-							<FontAwesome name="line-chart"/>
-						</Button>
-					</LinkContainer>				
-				
-				var item = 
-					<tr key={index} style={set.done ? {backgroundColor: '#c6efce'} : undefined} onClick={(event) => this.handleRowClick(set.id, event)}>
-						<td>{btnSet}</td>
-						<td>{set.workout_order}</td>
-						<td>{set.excercise_name} ({set.muscle_group_name}) {activeIcon}</td>
-						<td><pre>{set.reps + " x " + set.weight}kg</pre></td>
-						<td>{set.one_rep_max}{set.weight==0 ? '' : 'kg'}</td>						
-						<td>{btnExcercise}</td>
-					</tr>
-					
+				var btnSet = <Btn
+					bsStyle={set.done ? 'default' : 'success'}
+					onClick={(event) => this.handleSetClick(set.id, event)}
+					icon={set.done ? 'pencil' : 'arrow-right'}
+					/>
+
+				var link = '/gym/excercises/' + set.excercise;
+				var btnExcercise = <Btn
+					to={link}
+					icon="line-chart"
+				/>
+
+				var values = [
+						btnSet,
+						set.workout_order,
+						set.excercise_name + " (" + set.muscle_group_name + ")",
+						set.reps + " x " + set.weight + (!set.weight ? '' : ' kg'),
+						set.one_rep_max + (!set.weight ? '' : ' kg'),
+						btnExcercise
+				]
+
+				//<tr key={index}  >
+				var item = <TableRow
+					key={index}
+				 	onClick={(event) => this.handleRowClick(set.id, event)}
+					values={values}
+					style={set.done ? {backgroundColor: '#c6efce'} : undefined}
+				/>
+
 				//Add row item to array
 				items.push(item);
-			}
-			
-			
-		});
-		
-		return( 
-			<Table responsive>
-				<thead>
-					<tr>
-						<th></th>
-						<th>#</th>
-						<th>Excercise</th>
-						<th>Reps x Weight</th>
-						<th>Theoretical max</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{items}
-				</tbody>
-			</Table>);
-	}
-	
-	componentWillMount(){
-		console.log('will mount');
-		this.setState({
-			id: this.props.match.params.id
-		});
-	}
-	
-	
+
+			} //end if
+
+		}); //end map
+
+		return items
+
+	} //End function
+
 	componentWillReceiveProps(nextProps){
-		var workoutId = nextProps.match.params.id;
-		this.setState({
-			ready: false,
-			workoutId: workoutId,
-		});
-		this.getAsd(workoutId);
+		//var workoutId = nextProps.match.params.id;
+		this.setState({ready: false});
+		this.getAll();
 	}
-	
-	componentDidMount(){
-		var workoutId = this.props.match.params.id
-		this.getAsd(workoutId);
+
+	componentWillMount(){
+		this.getAll();
 	}
-	
-	getAsd(workoutId){		
+
+
+	getAll(){
+		var workoutId = this.props.match.params.id;
 		var workout_promise = getData('/gym/workouts/' + workoutId + '/');
-		var sets_promise = getData('/gym/sets/?workout=' + workoutId);	
+		var sets_promise = getData('/gym/sets/?workout=' + workoutId);
+
 		Promise.all([workout_promise, sets_promise]).then(resolved => {
-			
-			
-			
+
 			//Workouts and sets from promises
 			var workout = resolved[0];
-			var sets = resolved[1];	
+			var sets = resolved[1];
 
-			//Get active excercise
-			var activeSets = sets.filter(set => set.id == workout.active_set);
-			var activeExcerciseId = undefined;
-			activeSets.length == 0 ? activeExcerciseId = null : activeExcerciseId = activeSets[0].excercise;
-			console.log(activeExcerciseId);
-			
-			//Set state
-			this.setState({
+			var state = {
 				workout: workout,
 				sets: sets,
-				activeExcerciseId: activeExcerciseId,
 				ready: true,
-			});
-			
+			}
+
+			//Set state
+			this.setState(state);
+
 		});
 	}
 
 	render() {
-		
+
+		var wait = <Loading/>;
+		var workout = "";
+		var sets = [];
+
+		var heads = ["","#","Excercise","Reps x Weight","Theoretical max",""];
+
 		if(this.state.ready){
-			var wait = "";
-			var workout = this.renderWorkout(this.state.workout);
-			var filter = this.renderToolbar();
-			var sets = this.renderSets(this.state.sets);
-		}else{
-			wait = <FontAwesome name="circle-o-notch" size="3x" spin/>;
+			wait = "";
+			workout = this.renderWorkout();
+			sets = this.renderSets();
 		}
 
-		
-		
-		return (			
-		  <div>			
+		return (
+		  <div>
 			<Row>
 				<Col md={12}>
 					{wait}
 					{workout}
-					{filter}
-					{sets}
+					{this.renderToolbar()}
+					<TableFrame heads={heads} rows={sets} />
 				</Col>
 			</Row>
 		  </div>

@@ -106,6 +106,7 @@ class GymRoutines extends React.Component {
 					<Btn text="Add" icon="plus" bsStyle="success" to="/gym/routines/add"/>
 					<PageTitle title="Routines" />
 					<hr/>
+					Updated 11.12.2017 20:04 test
 					{wait}
 					{routines}
 				</Col>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import {getData, deleteData, putData} from 'functions/Api';
-import {Loading} from 'components/Components';
+import {Loading, Btn, FormInput} from 'components/Components';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
@@ -17,8 +17,9 @@ class GymWorkoutEdit extends React.Component {
 
 	handleSave(id, event){
 		var endpoint = '/gym/workouts/' + id + '/';
+		var redirect = '/gym/workouts'
 		putData(endpoint, this.state.data).then(repsonse => {
-			this.props.history.push();
+			this.props.history.push(redirect);
 		});
 	}
 
@@ -105,6 +106,7 @@ class GymWorkoutEdit extends React.Component {
 							id="comments"
 							componentClass="textarea"
 							placeholder="Comments."
+							defaultValue={this.state.data.comments}
 							onChange={(e) => this.handleChange(e)}
 						/>
 					</FormGroup>
@@ -118,11 +120,8 @@ class GymWorkoutEdit extends React.Component {
 
 	renderSaveButton(){
 		return (
-			<Button bsStyle="success" onClick={(event) => this.handleSave(this.state.data.id, event)}>
-				<FontAwesome name="save"/>
-				&nbsp;
-				Save
-			</Button>
+			<Btn bsStyle="success" icon="save" text="Save an return"
+				onClick={(event) => this.handleSave(this.state.data.id, event)} />
 		)
 	}
 
@@ -187,8 +186,8 @@ class GymWorkoutEdit extends React.Component {
 				<Row>
 					<Col md={12}>
 						{loading}
-						{form}
 						{saveButton}
+						{form}
 					</Col>
 				</Row>
 		  </div>

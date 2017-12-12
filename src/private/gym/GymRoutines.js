@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table} from 'react-bootstrap';
 import {getData, postData} from 'functions/Api';
 import {distinctValues} from 'functions/Functions';
-import {Btn, PageTitle} from 'components/Components';
+import {Btn, PageTitle, TableFrame, TableRow, Loading} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -20,8 +20,7 @@ class GymRoutines extends React.Component {
 		var body = '';
 		var endpoint = '/gym/routines/' + routineId + '/start/';
 		var redirect = '/gym/workouts';
-		postData(endpoint, body)
-		.then((json)=>{
+		postData(endpoint, body).then((json)=>{
 			this.props.history.push(redirect);
 		});
 	}
@@ -33,71 +32,57 @@ class GymRoutines extends React.Component {
 
 		routines.map((routine, index) => {
 
-			var btnSet =
-				<Button
-					bsStyle='success'
-					onClick={(event) => this.handleStart(routine.id, event)}
-					>
-					<FontAwesome name='arrow-right'/>
-				</Button>
+			var btnSet = <Btn	bsStyle='success' icon='arrow-right'
+					onClick={(event) => this.handleStart(routine.id, event)} />
 
-			var item =
-				<tr key={index}>
-					<td>{routine.name}</td>
-					<td>{routine.section_count}</td>
-					<td>{btnSet}</td>
-				</tr>
+			var routineLink = '/gym/routines/' + routine.id
+			var btnSections = <Btn to={routineLink} icon='th-large'/>
+
+			var values = [
+					routine.name,
+					routine.section_count,
+					btnSet,
+					btnSections,
+			]
+
+				var item = <TableRow key={index} values={values} />
 
 				//Add row item to array
 				items.push(item);
 		});
 
-		return(
-			<Table responsive>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Sections</th>
-						<th>Start</th>
-					</tr>
-				</thead>
-				<tbody>
-					{items}
-				</tbody>
-			</Table>);
+		var heads = ["Name","Section count","Start","Sections"];
+
+		return	<TableFrame	heads={heads}	rows={items} />
 	}
 
 
 	componentDidMount(){
-		this.getAsd();
+		this.getRoutines();
 	}
 
-	getAsd(){
+	getRoutines(){
 		var routines_promise = getData('/gym/routines/');
 		Promise.all([routines_promise]).then(resolved => {
 
 			//routines and sets from promises
 			var routines = resolved[0];
 
+			var state = {routines: routines,	ready: true}
 			//Set state
-			this.setState({
-				routines: routines,
-				ready: true,
-			});
+			this.setState(state);
 
 		});
 	}
 
 	render() {
 
+		var wait = <Loading />
+
 		if(this.state.ready){
 			var wait = "";
 			var routines = this.renderRoutines(this.state.routines);
-		}else{
-			wait = <FontAwesome name="circle-o-notch" size="3x" spin/>;
 		}
-
-
 
 		return (
 		  <div>
@@ -106,7 +91,6 @@ class GymRoutines extends React.Component {
 					<Btn text="Add" icon="plus" bsStyle="success" to="/gym/routines/add"/>
 					<PageTitle title="Routines" />
 					<hr/>
-					Updated 11.12.2017 20:04 test
 					{wait}
 					{routines}
 				</Col>

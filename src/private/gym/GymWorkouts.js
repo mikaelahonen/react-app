@@ -30,6 +30,21 @@ class GymWorkouts extends React.Component {
 		}
 	}
 
+	getDuration(start_time, end_time){
+		var duration = utcDuration(start_time, end_time)
+		if(!end_time){
+			duration = "Not ended"
+		}else if(duration==0){
+			duration = "Zero!"
+		}else if(duration<0){
+			duration = "Negative!"
+		}
+		else if(duration>180){
+			duration = ">3h"
+		}
+		return duration
+	}
+
 	renderRows(){
 		var items = [];
 		this.state.data.map((workout, index) => {
@@ -40,20 +55,29 @@ class GymWorkouts extends React.Component {
 			var linkEdit = '/gym/workouts/' + workout.id + '/edit';
 			var btnEdit = <Btn to={linkEdit} icon="edit"/>
 
-			var btnDelete = <Btn icon="remove" onClick={(event) => this.handleDelete(workout.id, event)} />
+			var btnDelete = <Btn icon="trash" onClick={(event) => this.handleDelete(workout.id, event)} />
 
 			var values = [
 				btnShow,
 				utcToDate(workout.start_time),
 				workout.name,
-				workout.sets.length,
-				utcDuration(workout.start_time, workout.end_time),
+				workout.sets_done + "/" + workout.sets_total,
+				this.getDuration(workout.start_time, workout.end_time),
 				workout.location,
 				btnEdit,
 				btnDelete,
 			];
 
-			var trow = <TableRow values={values} key={index}/>
+			//Color by completeness of the workout
+			var completeness = workout.sets_done / workout.sets_total
+			var statusStyle = {backgroundColor: ""}
+			if(completeness==1){
+				statusStyle = {backgroundColor: '#c6efce'}
+			}else if(completeness<1 && completeness>0){
+				statusStyle = {backgroundColor: '#ffeb9c'}
+			}
+
+			var trow = <TableRow style={statusStyle} values={values} key={index}/>
 
 			items.push(trow);
 
@@ -74,7 +98,7 @@ class GymWorkouts extends React.Component {
 
 	render() {
 
-		var heads = ["","Date","Workout","Sets","Duration","Location","",""];
+		var heads = ["","Date","Workout","Completed","Duration","Location","",""];
 		var rows = [];
 		var addLink = '/gym/workouts/add';
 

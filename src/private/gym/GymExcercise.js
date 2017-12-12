@@ -39,7 +39,6 @@ class GymExcercise extends React.Component {
 
 			var item =
 				<tr key={index}>
-					<td>{set.excercise_name}</td>
 					<td>{utcToDate(set.workout_date)}</td>
 					<td>{set.reps}</td>
 					<td>{set.weight}</td>
@@ -54,7 +53,6 @@ class GymExcercise extends React.Component {
 			<Table responsive>
 				<thead>
 					<tr>
-						<th>Excercise</th>
 						<th>Date</th>
 						<th>Reps</th>
 						<th>Weight</th>
@@ -80,17 +78,19 @@ class GymExcercise extends React.Component {
 			ready: false,
 			excerciseId: excerciseId,
 		});
-		this.getAsd(excerciseId);
+		this.getAll(excerciseId);
 	}
 
 	componentDidMount(){
 		var excerciseId = this.props.match.params.id
-		this.getAsd(excerciseId);
+		this.getAll(excerciseId);
 	}
 
-	getAsd(excerciseId){
+	getAll(excerciseId){
 		var excercise_promise = getData('/gym/excercises/' + excerciseId + '/');
-		var sets_promise = getData('/gym/sets/?excercise=' + excerciseId);
+		//Change to '/gym/sets/?order=workout_order,-workout_date&excercise=' + excerciseId
+		//after django api queryset joins are built
+		var sets_promise = getData('/gym/sets/?order=-id&excercise=' + excerciseId);
 		Promise.all([excercise_promise, sets_promise]).then(resolved => {
 
 

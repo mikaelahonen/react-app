@@ -18,8 +18,10 @@ import GymSetAdd from 'private/gym/GymSetAdd'
 import GymExcercise from 'private/gym/GymExcercise'
 //Gym routine
 import GymRoutines from 'private/gym/GymRoutines'
+import GymRoutine from 'private/gym/GymRoutine'
 import GymRoutineAdd from 'private/gym/GymRoutineAdd'
-
+//Gym section
+import GymSections from 'private/gym/GymSections'
 
 class GymRouter extends Component {
 	render() {
@@ -53,7 +55,10 @@ class GymRouter extends Component {
 						<Route exact path='/gym/excercises/:id' component={GymExcercise}/>
 						//Routine
 						<Route exact path='/gym/routines' component={GymRoutines}/>
+						<Route exact path='/gym/routines/:id' component={GymRoutine}/>
 						<Route exact path='/gym/routines/add' component={GymRoutineAdd}/>
+						//Section
+						<Route exact path='/gym/sections' component={GymSections}/>
 						//Gym home
 						<Route exact path='/gym' component={GymHome}/>
 					</Switch>

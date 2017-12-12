@@ -25,14 +25,14 @@ export class Btn extends React.Component {
 
 		//If both icon and text
 		if(this.props.text && this.props.icon){
-			//Icon first
-			if(this.props.iconFirst){
-				text = <span><FontAwesome name={this.props.icon}/> {this.props.text}</span>;
-				console.log("icon first")
-			}
 			//Text first
+			if(this.props.textFirst){
+				text = <span>{this.props.text + " "}<FontAwesome name={this.props.icon}/></span>;
+
+			}
+			//Icon first
 			else{
-				text = <span>{this.props.text} <FontAwesome name={this.props.icon}/></span>;
+				text = <span><FontAwesome name={this.props.icon}/>{" "+this.props.text}</span>;
 			}
 		}
 		//If only icon or text

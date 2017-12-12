@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table} from 'react-bootstrap';
-import {getData, patchData} from 'functions/Api';
+import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table, ProgressBar} from 'react-bootstrap';
+import {getData, patchData, deleteData} from 'functions/Api';
 import {distinctValues, utcToDate} from 'functions/Functions';
 import {Loading, TableFrame, TableRow, Btn} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
@@ -35,6 +35,17 @@ class GymWorkout extends React.Component {
 		});
 	}
 
+	//Mark set as done
+	handleSetDelete(setId, event){
+		var ans  = window.confirm('Are you sure you want to delete this set?')
+		if (ans) {
+			var endpoint = '/gym/sets/' + setId + '/';
+			deleteData(endpoint).then(response => {
+				this.props.history.push();
+			});
+		}
+	}
+
 	handleShowAll(event){
 		var state = {excerciseFilter: null};
 		this.setState(state);
@@ -49,7 +60,7 @@ class GymWorkout extends React.Component {
 				<p>Start time: {utcToDate(workout.start_time)}</p>
 				<p>End time: {utcToDate(workout.end_time)}</p>
 				<p>Location: {workout.location}</p>
-				<p>Sets: {workout.sets.length}</p>
+				<p>Sets: {workout.sets_total}</p>
 			</Panel>
 		);
 	}
@@ -61,6 +72,15 @@ class GymWorkout extends React.Component {
 				<Btn bsStyle="success" icon="plus" to="/gym/sets/add" />
 			</ButtonToolbar>
 		);
+	}
+
+	renderProgressBar(){
+		var done = this.state.workout.sets_done
+		var total = this.state.workout.sets_total
+		var percent = done/total*100
+		return(
+			<ProgressBar now={percent} label={done + "/" + total} bsStyle="success" />
+		)
 	}
 
 	renderSets(){
@@ -85,10 +105,15 @@ class GymWorkout extends React.Component {
 					icon={set.done ? 'pencil' : 'arrow-right'}
 					/>
 
+				var btnDelete = <Btn
+					onClick={(event) => this.handleSetDelete(set.id, event)}
+					icon='trash'
+					/>
+
 				var link = '/gym/excercises/' + set.excercise;
 				var btnExcercise = <Btn
 					to={link}
-					icon="line-chart"
+					icon="area-chart"
 				/>
 
 				var values = [
@@ -97,7 +122,8 @@ class GymWorkout extends React.Component {
 						set.excercise_name + " (" + set.muscle_group_name + ")",
 						set.reps + " x " + set.weight + (!set.weight ? '' : ' kg'),
 						set.one_rep_max + (!set.weight ? '' : ' kg'),
-						btnExcercise
+						btnExcercise,
+						btnDelete,
 				]
 
 				//<tr key={index}  >
@@ -119,12 +145,6 @@ class GymWorkout extends React.Component {
 
 	} //End function
 
-	componentWillReceiveProps(nextProps){
-		//var workoutId = nextProps.match.params.id;
-		this.setState({ready: false});
-		this.getAll();
-	}
-
 	componentWillMount(){
 		this.getAll();
 	}
@@ -145,6 +165,7 @@ class GymWorkout extends React.Component {
 				workout: workout,
 				sets: sets,
 				ready: true,
+				excerciseFilter: null,
 			}
 
 			//Set state
@@ -158,6 +179,7 @@ class GymWorkout extends React.Component {
 		var wait = <Loading/>;
 		var workout = "";
 		var sets = [];
+		var progressBar = "";
 
 		var heads = ["","#","Excercise","Reps x Weight","Theoretical max",""];
 
@@ -165,6 +187,7 @@ class GymWorkout extends React.Component {
 			wait = "";
 			workout = this.renderWorkout();
 			sets = this.renderSets();
+			progressBar = this.renderProgressBar();
 		}
 
 		return (
@@ -173,6 +196,7 @@ class GymWorkout extends React.Component {
 				<Col md={12}>
 					{wait}
 					{workout}
+					{progressBar}
 					{this.renderToolbar()}
 					<TableFrame heads={heads} rows={sets} />
 				</Col>

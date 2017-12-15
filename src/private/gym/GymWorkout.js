@@ -17,7 +17,7 @@ class GymWorkout extends React.Component {
 	}
 
 	//Filter to excercises of clicked object
-	handleRowClick(clickedSetId, event){
+	handleFilter(clickedSetId, event){
 		var sets = this.state.sets;
 		var filterId = sets.filter(set => clickedSetId == set.id)[0].excercise;
 		this.setState({
@@ -26,17 +26,7 @@ class GymWorkout extends React.Component {
 	}
 
 	//Mark set as done
-	handleSetClick(setId, event){
-		var body = {done: true}
-		var endpoint = '/gym/sets/' + setId + '/';
-		var redirect = '/gym/sets/' + setId + '/edit';
-		patchData(endpoint, body).then(response => {
-			this.props.history.push(redirect);
-		});
-	}
-
-	//Mark set as done
-	handleSetDelete(setId, event){
+	handleDelete(setId, event){
 		var ans  = window.confirm('Are you sure you want to delete this set?')
 		if (ans) {
 			var endpoint = '/gym/sets/' + setId + '/';
@@ -44,6 +34,11 @@ class GymWorkout extends React.Component {
 				this.props.history.push();
 			});
 		}
+	}
+
+	//Mark set as done
+	handleAnalytics(excerciseId, event){
+			this.props.history.push('/gym/excercises/' + excerciseId);
 	}
 
 	handleShowAll(event){
@@ -93,43 +88,32 @@ class GymWorkout extends React.Component {
 			//Filter excercises
 			if(!this.state.excerciseFilter || set.excercise == this.state.excerciseFilter){
 
-				//Set an icon to currently active sets
-				var activeIcon = ""
-				if(set.id == this.state.workout.active_set){
-					activeIcon = <FontAwesome name="circle"/>;
-				}
+				var remove = <FontAwesome name='trash'
+					onClick={(event) => this.handleDelete(set.id, event)} />
 
-				var btnSet = <Btn
-					bsStyle={set.done ? 'default' : 'success'}
-					onClick={(event) => this.handleSetClick(set.id, event)}
-					icon={set.done ? 'pencil' : 'arrow-right'}
-					/>
+				var analytics =	<FontAwesome name="area-chart"
+					onClick={(event) => this.handleAnalytics(set.excercise, event)} />
 
-				var btnDelete = <Btn
-					onClick={(event) => this.handleSetDelete(set.id, event)}
-					icon='trash'
-					/>
+				var filter = <FontAwesome name="filter"
+					onClick={(event) => this.handleFilter(set.id, event)}/>
 
-				var link = '/gym/excercises/' + set.excercise;
-				var btnExcercise = <Btn
-					to={link}
-					icon="area-chart"
-				/>
+				var setLink = '/gym/sets/' + set.id + '/edit';
+				var excerciseName = set.excercise_name + " (" + set.muscle_group_name + ")";
+				var excercise = <Link to={setLink}>{excerciseName}</Link>
 
 				var values = [
-						btnSet,
 						set.workout_order,
-						set.excercise_name + " (" + set.muscle_group_name + ")",
+						excercise,
 						set.reps + " x " + set.weight + (!set.weight ? '' : ' kg'),
 						set.one_rep_max + (!set.weight ? '' : ' kg'),
-						btnExcercise,
-						btnDelete,
+						filter,
+						analytics,
+						remove,
 				]
 
 				//<tr key={index}  >
 				var item = <TableRow
 					key={index}
-				 	onClick={(event) => this.handleRowClick(set.id, event)}
 					values={values}
 					style={set.done ? {backgroundColor: '#c6efce'} : undefined}
 				/>
@@ -181,7 +165,7 @@ class GymWorkout extends React.Component {
 		var sets = [];
 		var progressBar = "";
 
-		var heads = ["","#","Excercise","Reps x Weight","Theoretical max",""];
+		var heads = ["#","Excercise","Set","1 Max",""];
 
 		if(this.state.ready){
 			wait = "";

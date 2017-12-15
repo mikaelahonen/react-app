@@ -13,7 +13,20 @@ export class Loading extends React.Component {
 
 export class PageTitle extends React.Component {
 	render(){
-		return <h2 style={{color:'gray'}}>{this.props.title.toUpperCase()}</h2>
+		var title = <h2 style={{color:'gray'}}>{this.props.title.toUpperCase()}</h2>
+
+		var hr = undefined
+		if(this.props.hr==true){
+			hr = <hr/>
+		}
+
+		return (
+			<div>
+				{title}
+				{hr}
+			</div>
+		);
+
 	}
 }
 
@@ -163,7 +176,8 @@ export class FormSelect extends React.Component{
 						id={this.props.id}
 						placeholder={this.props.placeholder}
 						onChange={this.props.onChange}
-						componentClass={this.props.type} >
+						componentClass="select"
+						value={this.props.value}>
 
 						{options}
 
@@ -175,8 +189,6 @@ export class FormSelect extends React.Component{
 }
 
 export class FormInput extends React.Component {
-
-
 
 	render(){
 
@@ -191,6 +203,23 @@ export class FormInput extends React.Component {
 			type = this.props.type
 		}
 
+		//undefined will cause an error
+		var value = ""
+		if(this.props.value){
+			value=this.props.value
+		}
+
+		//Strip trailing Z from datetime-local
+		if(this.props.type=="datetime-local"){
+			value = value.replace("Z","")
+		}
+
+		//React doesn't allow null as the defaultValue
+		var defaultValue = ""
+		if(this.props.defaultValue){
+			defaultValue = this.props.defaultValue
+		}
+
 		return(
 			<FormGroup>
 
@@ -199,11 +228,14 @@ export class FormInput extends React.Component {
 				</ControlLabel>
 
 				<FormControl
+					disabled={this.props.readOnly}
 					id={this.props.id}
 					type={type}
 					placeholder={this.props.placeholder}
 					onChange={this.props.onChange}
-					componentClass={componentClass} />
+					componentClass={componentClass}
+					defaultValue={this.props.defaultValue}
+					value={value}/>
 
 			</FormGroup>
 		);

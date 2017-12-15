@@ -32,17 +32,21 @@ class GymRoutines extends React.Component {
 
 		routines.map((routine, index) => {
 
-			var btnSet = <Btn	bsStyle='success' icon='arrow-right'
+			var btnStart = <Btn	bsStyle='success' icon='arrow-right'
 					onClick={(event) => this.handleStart(routine.id, event)} />
 
-			var routineLink = '/gym/routines/' + routine.id
-			var btnSections = <Btn to={routineLink} icon='th-large'/>
+			var editLink = "/gym/routines/" + routine.id + "/edit"
+			var btnEdit = <Btn icon="edit" to={editLink} />
+
+			var sectionsLink = '/gym/routines/' + routine.id
+			var btnSections = <Btn to={sectionsLink} icon='th-large'/>
 
 			var values = [
+					btnStart,
 					routine.name,
 					routine.section_count,
-					btnSet,
 					btnSections,
+					btnEdit,
 			]
 
 				var item = <TableRow key={index} values={values} />
@@ -51,7 +55,7 @@ class GymRoutines extends React.Component {
 				items.push(item);
 		});
 
-		var heads = ["Name","Section count","Start","Sections"];
+		var heads = ["","Routine","Section count","",""];
 
 		return	<TableFrame	heads={heads}	rows={items} />
 	}

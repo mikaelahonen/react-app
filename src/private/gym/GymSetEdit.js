@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel, Radio, Checkbox} from 'react-bootstrap';
 import {getData, deleteData, putData} from 'functions/Api';
-import {Loading, Btn} from 'components/Components';
+import {Loading, Btn, FormInput, FormSelect} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -10,10 +10,34 @@ class GymSetEdit extends React.Component {
 
 	state = {ready: false, data: {}}
 
+	handleDoneReturn(event){
+
+		//Mark as done
+		var set = this.state.data;
+		set.done = true;
+		this.setState(set)
+
+		var id = this.state.data.id;
+		var endpoint = '/gym/sets/' + id + '/';
+		var redirect = '/gym/workouts/' + this.state.data.workout;
+		putData(endpoint, this.state.data).then(response => {
+			this.props.history.push(redirect);
+		});
+	}
+
 	handleSaveReturn(event){
 		var id = this.state.data.id;
 		var endpoint = '/gym/sets/' + id + '/';
 		var redirect = '/gym/workouts/' + this.state.data.workout;
+		putData(endpoint, this.state.data).then(response => {
+			this.props.history.push(redirect);
+		});
+	}
+
+	handleSaveStay(event){
+		var id = this.state.data.id;
+		var endpoint = '/gym/sets/' + id + '/';
+		var redirect = ""
 		putData(endpoint, this.state.data).then(response => {
 			this.props.history.push(redirect);
 		});
@@ -43,114 +67,111 @@ class GymSetEdit extends React.Component {
 					<h3>Set</h3>
 					<hr/>
 
-					<FormGroup>
-						<ControlLabel>Reps</ControlLabel>
-						<FormControl
+					<FormInput
 							id="reps"
+							label="Reps"
 							type="number"
-							placeholder="10"
-							defaultValue={this.state.data.reps}
+							value={this.state.data.reps}
 							onChange={(e) => this.handleChange(e)}
-							onSelect={(event) => this.handleInputSelect(event)}
+							onSelect={(e) => this.handleInputSelect(e)}
 							autoFocus
 						/>
-					</FormGroup>
 
-					<FormGroup>
-						<ControlLabel>Weight</ControlLabel>
-						<FormControl
+					<FormInput
 						  id="weight"
+							label="Weight"
 						  type="number"
-						  placeholder="80"
-						  defaultValue={this.state.data.weight}
+						  value={this.state.data.weight}
 						  onChange={(e) => this.handleChange(e)}
 						  onSelect={(event) => this.handleInputSelect(event)}
 						/>
-					</FormGroup>
 
-					<FormGroup>
-						<ControlLabel>Comments</ControlLabel>
-						<FormControl
+					<FormInput
 						  id="comments"
+							label="Comments"
 						  componentClass="textarea"
 						  placeholder="Add comments."
-						  defaultValue={this.state.data.comments}
+						  value={this.state.data.comments}
 						  onChange={(e) => this.handleChange(e)}
 						/>
-					</FormGroup>
 
 				<h3>Details</h3>
 				<hr/>
 
-				<FormGroup controlId="done">
-					<ControlLabel>Done</ControlLabel>
-					<FormControl
-						componentClass="select"
+				<FormSelect
 						id="done"
-						defaultValue={this.state.data.done}
-						onChange={(e) => this.handleChange(e)}>
-						<option value={true}>True</option>
-						<option value={false}>False</option>
-					</FormControl>
-				</FormGroup>
+						label="Done"
+						value={this.state.data.done}
+						onChange={(e) => this.handleChange(e)}
+						options={{true:"True", false:"False"}}
+					/>
 
-				<FormGroup>
-					<ControlLabel>Id</ControlLabel>
-					<FormControl
+				<FormInput
 						readOnly
 						id="id"
+						label="Id"
 						type="number"
-						placeholder="id"
 						value={this.state.data.id}
 					/>
-				</FormGroup>
 
-				<FormGroup>
-					<ControlLabel>Workout ({this.state.data.workout_name})</ControlLabel>
-					<FormControl
+				<FormInput
 						id="workout"
+						label={"Workout (" + this.state.data.workout_name + ")"}
 						type="number"
 						placeholder="Bicep and Chest"
-						defaultValue={this.state.data.workout}
+						value={this.state.data.workout}
 						onChange={(e) => this.handleChange(e)}
 					/>
-				</FormGroup>
 
-				<FormGroup>
-					<ControlLabel>Excercise ({this.state.data.excercise_name})</ControlLabel>
-					<FormControl
+					<FormInput
 					  id="excercise"
+						label={"Excercise (" + this.state.data.excercise_name + ")"}
 					  type="number"
 					  placeholder="9"
-					  defaultValue={this.state.data.excercise}
+					  value={this.state.data.excercise}
 					  onChange={(e) => this.handleChange(e)}
 					/>
-				</FormGroup>
 
-				<FormGroup>
-					<ControlLabel>Workout Order</ControlLabel>
-					<FormControl
+					<FormInput
 					  id="workout_order"
+						label="Workout Order"
 					  type="number"
 					  placeholder="1"
-					  defaultValue={this.state.data.workout_order}
+					  value={this.state.data.workout_order}
 					  onChange={(e) => this.handleChange(e)}
 					/>
-				</FormGroup>
 
 			</form>
 		)
 	}
 
-	renderSaveButton(){
+	renderButtonToolbar(){
 		return(
-			<Btn
-				bsStyle="success"
-				icon="check"
-				text="Save and return"
-				iconFirst={true}
-				onClick={(event) => this.handleSaveReturn(event)}
-				/>
+			<ButtonToolbar>
+				<Btn
+					bsStyle="success"
+					icon="check"
+					text="Done and return"
+					iconFirst={true}
+					onClick={(event) => this.handleDoneReturn(event)}
+					/>
+
+				<Btn
+					bsStyle="success"
+					icon="check"
+					text="Save and return"
+					iconFirst={true}
+					onClick={(event) => this.handleSaveReturn(event)}
+					/>
+
+					<Btn
+						bsStyle="success"
+						icon="check"
+						text="Save and stay"
+						iconFirst={true}
+						onClick={(event) => this.handleSaveStay(event)}
+						/>
+				</ButtonToolbar>
 		);
 	}
 
@@ -216,14 +237,13 @@ class GymSetEdit extends React.Component {
 			wait = "";
 		}
 
-
 		return (
 
 			<Row>
 				<Col md={12}>
 					{wait}
 					{navButtons}
-					{this.renderSaveButton()}
+						{this.renderButtonToolbar()}
 					{form}
 				</Col>
 			</Row>

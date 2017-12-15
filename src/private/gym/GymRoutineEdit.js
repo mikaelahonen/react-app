@@ -7,9 +7,13 @@ import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
-class GymWorkoutEdit extends React.Component {
+class GymRoutineEdit extends React.Component {
 
-	state = {ready: false, data: {}}
+	state = {
+		ready: false,
+		data: {},
+	}
+
 
 	handleSave(id, event){
 		var endpoint = '/gym/workouts/' + id + '/';
@@ -36,65 +40,88 @@ class GymWorkoutEdit extends React.Component {
 
 
 	createForm(workout){
-		console.log("End time: " + this.state.data.end_time)
-		return (
+
+		var form =
+
+			<div>
 				<form>
-					<FormInput
-							label="id"
+					<FormGroup>
+						<ControlLabel>Id</ControlLabel>
+						<FormControl
 							readOnly
 							id="id"
 							type="number"
+							placeholder="id"
 							value={this.state.data.id}
 						/>
+					</FormGroup>
 
-					<FormInput
+					<FormGroup>
+						<ControlLabel>Name</ControlLabel>
+						<FormControl
 							id="name"
-							label="Name"
+							type="text"
+							placeholder="Bicep and Chest"
 							defaultValue={this.state.data.name}
 							onChange={(e) => this.handleChange(e)}
 						/>
+					</FormGroup>
 
-					<FormInput
+					<FormGroup>
+						<ControlLabel>Start time</ControlLabel>
+						<FormControl
 							id="start_time"
-							label="Start time"
-							type="datetime-local"
+							type="text"
+							placeholder="2017-10-10T17:00:00Z"
 							defaultValue={this.state.data.start_time}
 							onChange={(e) => this.handleChange(e)}
 						/>
+					</FormGroup>
 
-					<FormInput
-							label="End time"
+					<FormGroup>
+						<ControlLabel>End time</ControlLabel>
+						<FormControl
 						  id="end_time"
-							type="datetime-local"
+						  type="text"
+						  placeholder="2017-10-10T17:00:00+02"
 						  defaultValue={this.state.data.end_time}
 						  onChange={(e) => this.handleChange(e)}
 						/>
+					</FormGroup>
 
-					<FormInput
+					<FormGroup>
+						<ControlLabel>Location</ControlLabel>
+						<FormControl
 						  id="location"
-							label="Location"
+						  type="text"
+						  placeholder="Location X"
 						  defaultValue={this.state.data.location}
 						  onChange={(e) => this.handleChange(e)}
 						/>
+					</FormGroup>
 
-					<FormInput
+					<FormGroup>
+						<ControlLabel>Comments</ControlLabel>
+						<FormControl
 							id="comments"
-							label="Comments"
-							type="textarea"
+							componentClass="textarea"
+							placeholder="Comments."
 							defaultValue={this.state.data.comments}
 							onChange={(e) => this.handleChange(e)}
 						/>
+					</FormGroup>
 
 				</form>
-			);
+
+			</div>
+
+		return form;
 	}
 
 	renderSaveButton(){
 		return (
-			<ButtonToolbar>
-				<Btn bsStyle="success" icon="save" text="Save an return"
-					onClick={(event) => this.handleSave(this.state.data.id, event)} />
-			</ButtonToolbar>
+			<Btn bsStyle="success" icon="save" text="Save an return"
+				onClick={(event) => this.handleSave(this.state.data.id, event)} />
 		)
 	}
 
@@ -169,4 +196,4 @@ class GymWorkoutEdit extends React.Component {
 	}
 }
 
-export default GymWorkoutEdit;
+export default GymRoutineEdit;

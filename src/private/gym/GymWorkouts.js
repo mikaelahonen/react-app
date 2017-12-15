@@ -5,8 +5,8 @@ import {utcToDate, utcDuration} from 'functions/Functions';
 import {Loading, TableFrame, TableRow, Btn, PageTitle} from 'components/Components';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
-import { Link } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
+import {Link} from 'react-router-dom';
+import {LinkContainer} from 'react-router-bootstrap';
 
 class GymWorkouts extends React.Component {
 
@@ -49,18 +49,17 @@ class GymWorkouts extends React.Component {
 		var items = [];
 		this.state.data.map((workout, index) => {
 
-			var linkShow = '/gym/workouts/' + workout.id;
-			var btnShow = <Btn to={linkShow} bsStyle="success" icon="arrow-right"/>
-
 			var linkEdit = '/gym/workouts/' + workout.id + '/edit';
 			var btnEdit = <Btn to={linkEdit} icon="edit"/>
 
 			var btnDelete = <Btn icon="trash" onClick={(event) => this.handleDelete(workout.id, event)} />
 
+			var workoutLink = '/gym/workouts/' + workout.id
+			var workoutName = <Link to={workoutLink}>{workout.name}</Link>
+
 			var values = [
-				btnShow,
 				utcToDate(workout.start_time),
-				workout.name,
+				workoutName,
 				workout.sets_done + "/" + workout.sets_total,
 				this.getDuration(workout.start_time, workout.end_time),
 				workout.location,
@@ -98,7 +97,7 @@ class GymWorkouts extends React.Component {
 
 	render() {
 
-		var heads = ["","Date","Workout","Completed","Duration","Location","",""];
+		var heads = ["Date","Workout","Completed","Duration","Location","",""];
 		var rows = [];
 		var addLink = '/gym/workouts/add';
 

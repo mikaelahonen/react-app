@@ -37,9 +37,8 @@ class GymSetEdit extends React.Component {
 	handleSaveStay(event){
 		var id = this.state.data.id;
 		var endpoint = '/gym/sets/' + id + '/';
-		var redirect = ""
 		putData(endpoint, this.state.data).then(response => {
-			this.props.history.push(redirect);
+			this.props.history.push();
 		});
 	}
 
@@ -90,7 +89,6 @@ class GymSetEdit extends React.Component {
 						  id="comments"
 							label="Comments"
 						  componentClass="textarea"
-						  placeholder="Add comments."
 						  value={this.state.data.comments}
 						  onChange={(e) => this.handleChange(e)}
 						/>
@@ -118,7 +116,6 @@ class GymSetEdit extends React.Component {
 						id="workout"
 						label={"Workout (" + this.state.data.workout_name + ")"}
 						type="number"
-						placeholder="Bicep and Chest"
 						value={this.state.data.workout}
 						onChange={(e) => this.handleChange(e)}
 					/>
@@ -127,7 +124,6 @@ class GymSetEdit extends React.Component {
 					  id="excercise"
 						label={"Excercise (" + this.state.data.excercise_name + ")"}
 					  type="number"
-					  placeholder="9"
 					  value={this.state.data.excercise}
 					  onChange={(e) => this.handleChange(e)}
 					/>
@@ -136,7 +132,6 @@ class GymSetEdit extends React.Component {
 					  id="workout_order"
 						label="Workout Order"
 					  type="number"
-					  placeholder="1"
 					  value={this.state.data.workout_order}
 					  onChange={(e) => this.handleChange(e)}
 					/>

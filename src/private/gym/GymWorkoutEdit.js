@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import {getData, deleteData, putData} from 'functions/Api';
-import {Loading, Btn, FormInput} from 'components/Components';
+import {Loading, Btn, FormInput, PageTitle} from 'components/Components';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
-import { Link } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
+import {Link} from 'react-router-dom';
+import {LinkContainer} from 'react-router-bootstrap';
 
 class GymWorkoutEdit extends React.Component {
 
@@ -25,18 +25,16 @@ class GymWorkoutEdit extends React.Component {
 		const value = target.type === 'checkbox' ? target.checked : target.value;
 		const name = target.id;
 
-		/*this.setState({
-			data: {[name]: value}
-		});*/
+		var state = this.state
 
-		this.state.data[name] = value;
+		state.input[name] = value;
 
-		console.log("Form state: " + this.state.data[name]);
+		this.setState(state)
+
 	}
 
-
 	createForm(workout){
-		console.log("End time: " + this.state.data.end_time)
+
 		return (
 				<form>
 					<FormInput
@@ -50,7 +48,7 @@ class GymWorkoutEdit extends React.Component {
 					<FormInput
 							id="name"
 							label="Name"
-							defaultValue={this.state.data.name}
+							value={this.state.data.name}
 							onChange={(e) => this.handleChange(e)}
 						/>
 
@@ -58,7 +56,7 @@ class GymWorkoutEdit extends React.Component {
 							id="start_time"
 							label="Start time"
 							type="datetime-local"
-							defaultValue={this.state.data.start_time}
+							value={this.state.data.start_time}
 							onChange={(e) => this.handleChange(e)}
 						/>
 
@@ -66,14 +64,14 @@ class GymWorkoutEdit extends React.Component {
 							label="End time"
 						  id="end_time"
 							type="datetime-local"
-						  defaultValue={this.state.data.end_time}
+						  value={this.state.data.end_time}
 						  onChange={(e) => this.handleChange(e)}
 						/>
 
 					<FormInput
 						  id="location"
 							label="Location"
-						  defaultValue={this.state.data.location}
+						  value={this.state.data.location}
 						  onChange={(e) => this.handleChange(e)}
 						/>
 
@@ -81,7 +79,7 @@ class GymWorkoutEdit extends React.Component {
 							id="comments"
 							label="Comments"
 							type="textarea"
-							defaultValue={this.state.data.comments}
+							value={this.state.data.comments}
 							onChange={(e) => this.handleChange(e)}
 						/>
 
@@ -155,7 +153,7 @@ class GymWorkoutEdit extends React.Component {
 		return (
 		  <div>
 				{this.renderNavButtons()}
-				<h2>Workout: {this.props.match.params.id}</h2>
+				<PageTitle title="Edit workout" hr={true} />
 				<Row>
 					<Col md={12}>
 						{loading}

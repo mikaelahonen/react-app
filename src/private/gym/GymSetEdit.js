@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel, Radio, Checkbox} from 'react-bootstrap';
 import {getData, deleteData, putData} from 'functions/Api';
-import {Loading, Btn, FormInput, FormSelect} from 'components/Components';
+import {Loading, Btn, FormInput, FormSelect, PageTitle} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -63,8 +63,7 @@ class GymSetEdit extends React.Component {
 		return(
 				<form>
 
-					<h3>Set</h3>
-					<hr/>
+					<PageTitle title="Edit set" hr={true} />
 
 					<FormInput
 							id="reps"
@@ -93,7 +92,6 @@ class GymSetEdit extends React.Component {
 						  onChange={(e) => this.handleChange(e)}
 						/>
 
-				<h3>Details</h3>
 				<hr/>
 
 				<FormSelect

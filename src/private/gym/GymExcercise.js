@@ -8,15 +8,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 class GymExcercise extends React.Component {
 
-	state = {
-		ready: false,
-		excercise: {},
-		sets: {},
-	}
-
-	//Filter to excercises of clicked object
-
-
+	state = {ready: false, excercise: {},	sets: {}}
 
 	renderExcercise(excercise){
 		var item =
@@ -27,8 +19,6 @@ class GymExcercise extends React.Component {
 			</Panel>
 		return item;
 	}
-
-
 
 	renderSets(sets){
 
@@ -90,9 +80,8 @@ class GymExcercise extends React.Component {
 		var excercise_promise = getData('/gym/excercises/' + excerciseId + '/');
 		//Change to '/gym/sets/?order=workout_order,-workout_date&excercise=' + excerciseId
 		//after django api queryset joins are built
-		var sets_promise = getData('/gym/sets/?order=-id&excercise=' + excerciseId);
+		var sets_promise = getData('/gym/sets/?order=-workout_date&excercise=' + excerciseId);
 		Promise.all([excercise_promise, sets_promise]).then(resolved => {
-
 
 			//excercises and sets from promises
 			var excercise = resolved[0];

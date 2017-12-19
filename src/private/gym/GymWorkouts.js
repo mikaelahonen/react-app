@@ -20,14 +20,19 @@ class GymWorkouts extends React.Component {
 		});
 	}
 
-	handleDelete(id, event){
+	handleDelete(workoutId, event){
 		var ans  = window.confirm('Are you sure you want to delete this workout?')
-		if (ans) {
-			var endpoint = '/gym/workouts/' + id + '/';
+		if(ans){
+			var endpoint = '/gym/workouts/' + workoutId + '/';
 			deleteData(endpoint).then((json)=>{
 				this.props.history.push();
 			});
 		}
+	}
+
+	handleEdit(workoutId, event){
+		var linkEdit = '/gym/workouts/' + workoutId + '/edit'
+		this.props.history.push(linkEdit)
 	}
 
 	getDuration(start_time, end_time){
@@ -49,10 +54,11 @@ class GymWorkouts extends React.Component {
 		var items = [];
 		this.state.data.map((workout, index) => {
 
-			var linkEdit = '/gym/workouts/' + workout.id + '/edit';
-			var btnEdit = <Btn to={linkEdit} icon="edit"/>
+			var btnEdit = <FontAwesome name="edit"
+				onClick={(e) => this.handleEdit(workout.id, e)}/>
 
-			var btnDelete = <Btn icon="trash" onClick={(event) => this.handleDelete(workout.id, event)} />
+			var btnDelete = <FontAwesome name="trash"
+				onClick={(e) => this.handleDelete(workout.id, e)} />
 
 			var workoutLink = '/gym/workouts/' + workout.id
 			var workoutName = <Link to={workoutLink}>{workout.name}</Link>

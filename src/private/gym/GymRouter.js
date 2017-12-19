@@ -15,6 +15,7 @@ import GymSetEdit from 'private/gym/GymSetEdit'
 import GymSetAdd from 'private/gym/GymSetAdd'
 //Gym excercise
 import GymExcercise from 'private/gym/GymExcercise'
+import GymExcercises from 'private/gym/GymExcercises'
 //Gym routine
 import GymRoutines from 'private/gym/GymRoutines'
 import GymRoutine from 'private/gym/GymRoutine'
@@ -50,6 +51,7 @@ class GymRouter extends Component {
 						<Route exact path='/gym/sets/add' component={GymSetAdd}/>
 						//Excercise
 						<Route exact path='/gym/excercises/:id' component={GymExcercise}/>
+						<Route exact path='/gym/excercises' component={GymExcercises}/>
 						//Routine
 						<Route exact path='/gym/routines' component={GymRoutines}/>
 						<Route exact path='/gym/routines/:id' component={GymRoutine}/>

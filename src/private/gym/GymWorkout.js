@@ -105,7 +105,7 @@ class GymWorkout extends React.Component {
 						set.workout_order,
 						excercise,
 						set.reps + " x " + set.weight + (!set.weight ? '' : ' kg'),
-						set.one_rep_max + (!set.weight ? '' : ' kg'),
+						set.orp + (!set.weight ? '' : ' kg'),
 						filter,
 						analytics,
 						remove,
@@ -137,7 +137,7 @@ class GymWorkout extends React.Component {
 	getAll(){
 		var workoutId = this.props.match.params.id;
 		var workout_promise = getData('/gym/workouts/' + workoutId + '/');
-		var sets_promise = getData('/gym/sets/?workout=' + workoutId);
+		var sets_promise = getData('/gym/sets/?workout=' + workoutId + '&ordering=workout_order');
 
 		Promise.all([workout_promise, sets_promise]).then(resolved => {
 

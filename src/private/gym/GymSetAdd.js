@@ -69,25 +69,30 @@ class GymSetAdd extends React.Component {
 
 		return(
 			<form>
-        <FormInput
-          label="Workout order" id="workout_order" type="number"
+        <FormInput label="Workout order" id="workout_order" type="number"
+					value={this.state.data.workout_order}
           onChange={(e) => this.handleChange(e)} />
 
         <FormSelect label="Workout" id="workout" type="select"
           options={this.state.workoutOptions}
+					value={this.state.data.workout}
           onChange={(e) => this.handleChange(e)} />
 
         <FormSelect label="Excercise" id="excercise" type="select"
           options={this.state.excerciseOptions}
+					value={this.state.data.excercise}
           onChange={(e) => this.handleChange(e)} />
 
         <FormInput label="Repetitions" id="reps" type="number"
+					value={this.state.data.reps}
           onChange={(e) => this.handleChange(e)} />
 
         <FormInput label="Weight" id="weight"
+					value={this.state.data.weight}
           onChange={(e) => this.handleChange(e)} />
 
         <FormInput label="Comments" id="comments" type="textarea"
+					value={this.state.data.comments}
           onChange={(e) => this.handleChange(e)} />
 
         <Btn bsStyle="success" icon="save" text="Save"

@@ -26,13 +26,13 @@ class GymExcercise extends React.Component {
 		var items = [];
 
 		sets.map((set, index) => {
-
+			console.log(set)
 			var item =
 				<tr key={index}>
-					<td>{utcToDate(set.workout_date)}</td>
+					<td>{utcToDate(set.workout_start_time)}</td>
 					<td>{set.reps}</td>
 					<td>{set.weight}</td>
-					<td>{set.one_rep_max}{set.weight==0 ? '' : 'kg'}</td>
+					<td>{set.orp}{set.weight==0 ? '' : 'kg'}</td>
 				</tr>
 
 				//Add row item to array
@@ -80,7 +80,7 @@ class GymExcercise extends React.Component {
 		var excercise_promise = getData('/gym/excercises/' + excerciseId + '/');
 		//Change to '/gym/sets/?order=workout_order,-workout_date&excercise=' + excerciseId
 		//after django api queryset joins are built
-		var sets_promise = getData('/gym/sets/?order=-workout_date&excercise=' + excerciseId);
+		var sets_promise = getData('/gym/sets/?ordering=workout__start_time&excercise=' + excerciseId);
 		Promise.all([excercise_promise, sets_promise]).then(resolved => {
 
 			//excercises and sets from promises

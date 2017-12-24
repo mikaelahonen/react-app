@@ -13,7 +13,7 @@ class GymExcercises extends React.Component {
 	state = {ready: false, data: {}}
 
 	getExcercises(){
-		var endpoint = '/gym/excercises/';
+		var endpoint = '/gym/excercises/?ordering=muscle_group';
 		getData(endpoint).then(data => {
 			var state = {data: data, ready: true};
 			this.setState(state);

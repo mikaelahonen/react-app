@@ -1,58 +1,64 @@
 import React, { Component } from 'react';
 import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table} from 'react-bootstrap';
 import {getData, patchData} from 'functions/Api';
+import {TableFrame, TableRow} from 'components/Components';
 import {distinctValues, utcToDate} from 'functions/Functions';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
-class GymExcercise extends React.Component {
+class GymExcerciseAnalytics extends React.Component {
 
-	state = {ready: false, excercise: {},	sets: {}}
+	state = {
+		ready: false,
+		excercise: {},
+		sets: {},
+		workouts_excercises: {},
+	}
 
 	renderExcercise(excercise){
 		var item =
 			<Panel>
 				<h2>{excercise.excercise} - {excercise.muscle_group_name}</h2>
-				<p>Id: {excercise.id}</p>
 				<p>Sets total: {this.state.sets.length}</p>
 			</Panel>
 		return item;
 	}
 
+	renderWorkoutsExcercises(){
+		var trows = []
+		this.state.workoutsExcercises.map((workoutExcercise, index) => {
+			var values = [
+				utcToDate(workoutExcercise.date),
+				workoutExcercise.set_count,
+				workoutExcercise.orm_avg,
+				workoutExcercise.orm_max,
+			]
+			var trow = <TableRow values={values} key={index} />
+			trows.push(trow);
+		});
+		return <TableFrame heads={["Date","Sets","Orm avg","Orm max"]} rows={trows} />
+	}
+
 	renderSets(sets){
 
 		//Initiate row items
-		var items = [];
+		var trows = [];
 
 		sets.map((set, index) => {
-			console.log(set)
-			var item =
-				<tr key={index}>
-					<td>{utcToDate(set.workout_start_time)}</td>
-					<td>{set.reps}</td>
-					<td>{set.weight}</td>
-					<td>{set.orp}{set.weight==0 ? '' : 'kg'}</td>
-				</tr>
-
-				//Add row item to array
-				items.push(item);
+			var values = [
+					utcToDate(set.workout_start_time),
+					set.reps,
+					set.weight,
+					set.orm + (set.weight==0 ? '' : 'kg'),
+			]
+			var trow = <TableRow values={values} key={index} />
+			//Add row item to array
+			trows.push(trow);
 		});
 
-		return(
-			<Table responsive>
-				<thead>
-					<tr>
-						<th>Date</th>
-						<th>Reps</th>
-						<th>Weight</th>
-						<th>Theoretical max</th>
-					</tr>
-				</thead>
-				<tbody>
-					{items}
-				</tbody>
-			</Table>);
+		return <TableFrame heads={["Date","Reps","Weight","Orm"]} rows={trows} />
+
 	}
 
 	componentWillMount(){
@@ -81,11 +87,13 @@ class GymExcercise extends React.Component {
 		//Change to '/gym/sets/?order=workout_order,-workout_date&excercise=' + excerciseId
 		//after django api queryset joins are built
 		var sets_promise = getData('/gym/sets/?ordering=workout__start_time&excercise=' + excerciseId);
-		Promise.all([excercise_promise, sets_promise]).then(resolved => {
+		var workouts_excercises_promise = getData('/gym/workouts/excercises/?excercise=' + excerciseId);
 
+		Promise.all([excercise_promise, sets_promise, workouts_excercises_promise]).then(resolved => {
 			//excercises and sets from promises
 			var excercise = resolved[0];
 			var sets = resolved[1];
+			var workoutsExcercises = resolved[2];
 
 			//Get active excercise
 			var activeSets = sets.filter(set => set.id == excercise.active_set);
@@ -96,6 +104,7 @@ class GymExcercise extends React.Component {
 			this.setState({
 				excercise: excercise,
 				sets: sets,
+				workoutsExcercises: workoutsExcercises,
 				activeExcerciseId: activeExcerciseId,
 				ready: true,
 			});
@@ -109,6 +118,7 @@ class GymExcercise extends React.Component {
 			var wait = "";
 			var excercise = this.renderExcercise(this.state.excercise);
 			var sets = this.renderSets(this.state.sets);
+			var workoutsExcercises = this.renderWorkoutsExcercises()
 		}else{
 			wait = <FontAwesome name="circle-o-notch" size="3x" spin/>;
 		}
@@ -121,8 +131,10 @@ class GymExcercise extends React.Component {
 				<Col md={12}>
 					{wait}
 					{excercise}
+					<h3>By workout</h3>
+					{workoutsExcercises}
+					<h3>By excercise</h3>
 					{sets}
-
 				</Col>
 			</Row>
 		  </div>
@@ -130,4 +142,4 @@ class GymExcercise extends React.Component {
 	}
 }
 
-export default GymExcercise;
+export default GymExcerciseAnalytics;

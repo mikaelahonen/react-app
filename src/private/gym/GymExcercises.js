@@ -13,11 +13,17 @@ class GymExcercises extends React.Component {
 	state = {ready: false, data: {}}
 
 	getExcercises(){
-		var endpoint = '/gym/excercises/?ordering=muscle_group';
+		var endpoint = '/gym/excercises/?ordering=muscle_group,excercise';
 		getData(endpoint).then(data => {
 			var state = {data: data, ready: true};
 			this.setState(state);
 		});
+	}
+
+
+	handleAnalytics(excerciseId, event){
+		var linkAnalytics = '/gym/excercises/' + excerciseId + '/analytics'
+		this.props.history.push(linkAnalytics)
 	}
 
 	handleDelete(excerciseId, event){
@@ -31,7 +37,6 @@ class GymExcercises extends React.Component {
 	}
 
 	handleEdit(excerciseId, event){
-    console.log(excerciseId)
 		var linkEdit = '/gym/excercises/' + excerciseId + '/edit'
 		this.props.history.push(linkEdit)
 	}
@@ -40,6 +45,8 @@ class GymExcercises extends React.Component {
 		var items = [];
 		this.state.data.map((excercise, index) => {
       console.log(excercise.id)
+			var btnAnalytics = <FontAwesome name="area-chart" onClick={(e) => this.handleAnalytics(excercise.id, e)} />
+
 			var btnEdit = <FontAwesome name="edit" onClick={(e) => this.handleEdit(excercise.id, e)} />
 
 			var btnDelete = <FontAwesome name="trash" onClick={(e) => this.handleDelete(excercise.id, e)} />
@@ -53,6 +60,7 @@ class GymExcercises extends React.Component {
 			var values = [
         muscleGroup,
         excerciseName,
+				btnAnalytics,
 				btnEdit,
 				btnDelete,
 			];

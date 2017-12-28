@@ -38,7 +38,7 @@ class GymWorkout extends React.Component {
 
 	//Mark set as done
 	handleAnalytics(excerciseId, event){
-			this.props.history.push('/gym/excercises/' + excerciseId);
+			this.props.history.push('/gym/excercises/' + excerciseId + '/analytics');
 	}
 
 	handleShowAll(event){

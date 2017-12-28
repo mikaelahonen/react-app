@@ -137,7 +137,7 @@ class GymExcerciseAnalytics extends React.Component {
 					{excercise}
 					<h3>By workout</h3>
 					{workoutsExcercises}
-					<h3>By excercise</h3>
+					<h3>By set</h3>
 					{sets}
 				</Col>
 			</Row>

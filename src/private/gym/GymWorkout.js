@@ -165,7 +165,7 @@ class GymWorkout extends React.Component {
 		var sets = [];
 		var progressBar = "";
 
-		var heads = ["#","Excercise","Set","1 Max",""];
+		var heads = ["#","Excercise","Set","Orm",""];
 
 		if(this.state.ready){
 			wait = "";

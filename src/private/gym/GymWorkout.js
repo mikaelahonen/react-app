@@ -105,7 +105,7 @@ class GymWorkout extends React.Component {
 						set.workout_order,
 						excercise,
 						set.reps + " x " + set.weight + (!set.weight ? '' : ' kg'),
-						set.orp + (!set.weight ? '' : ' kg'),
+						set.orm + (!set.weight ? '' : ' kg'),
 						filter,
 						analytics,
 						remove,

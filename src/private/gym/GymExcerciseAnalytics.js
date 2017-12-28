@@ -62,9 +62,11 @@ class GymExcerciseAnalytics extends React.Component {
 	}
 
 	componentWillMount(){
+		var id = this.props.match.params.id;
 		this.setState({
-			id: this.props.match.params.id
+			id: id,
 		});
+		this.getAll(id);
 	}
 
 
@@ -77,12 +79,13 @@ class GymExcerciseAnalytics extends React.Component {
 		this.getAll(excerciseId);
 	}
 
-	componentDidMount(){
+	/*componentDidMount(){
 		var excerciseId = this.props.match.params.id
 		this.getAll(excerciseId);
-	}
+	}*/
 
 	getAll(excerciseId){
+
 		var excercise_promise = getData('/gym/excercises/' + excerciseId + '/');
 		//Change to '/gym/sets/?order=workout_order,-workout_date&excercise=' + excerciseId
 		//after django api queryset joins are built
@@ -90,6 +93,7 @@ class GymExcerciseAnalytics extends React.Component {
 		var workouts_excercises_promise = getData('/gym/workouts/excercises/?excercise=' + excerciseId);
 
 		Promise.all([excercise_promise, sets_promise, workouts_excercises_promise]).then(resolved => {
+
 			//excercises and sets from promises
 			var excercise = resolved[0];
 			var sets = resolved[1];

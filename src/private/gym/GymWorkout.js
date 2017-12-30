@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table, ProgressBar} from 'react-bootstrap';
+import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table, ProgressBar, Modal} from 'react-bootstrap';
 import {getData, patchData, deleteData} from 'functions/Api';
-import {distinctValues, utcToDate} from 'functions/Functions';
-import {Loading, TableFrame, TableRow, Btn, MainTitle} from 'components/Components';
+import {distinctValues, utcToDate, groupBy} from 'functions/Functions';
+import {Loading, TableFrame, TableRow, Btn, MainTitle, FormInput} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -15,6 +15,9 @@ class GymWorkout extends React.Component {
 		sets: {},
 		excerciseFilter: null,
 		expandedId: undefined,
+		view: "list",
+		modalOpen: false,
+		modalSet: undefined,
 	}
 
 	handleWorkoutEdit(){
@@ -57,6 +60,11 @@ class GymWorkout extends React.Component {
 		}
 	}
 
+	handleChangeView(view, event){
+		var state = {view: view};
+		this.setState(state);
+	}
+
 	//Mark set as done
 	handleEdit(setId, event){
 		this.props.history.push('/gym/sets/' + setId + '/edit');
@@ -72,6 +80,20 @@ class GymWorkout extends React.Component {
 		this.setState(state);
 	}
 
+	handleQuickEdit(setId, event){
+		window.alert(setId)
+	}
+
+	handleModalOpen(set){
+		var state = {modalOpen: true, modalSet: set};
+		this.setState(state);
+	}
+
+	handleModalClose(){
+		var state = {modalOpen: false};
+		this.setState(state);
+	}
+
 	renderDuration(){
 		return (
 			<Panel>
@@ -84,6 +106,8 @@ class GymWorkout extends React.Component {
 		return (
 			<ButtonToolbar>
 				<Btn text="Show all" onClick={(event) => this.handleShowAll(event)} />
+				<Btn text="Quick view" onClick={(event) => this.handleChangeView("quick", event)} />
+				<Btn text="List view" onClick={(event) => this.handleChangeView("list", event)} />
 			</ButtonToolbar>
 		);
 	}
@@ -97,7 +121,7 @@ class GymWorkout extends React.Component {
 		)
 	}
 
-	renderSets(){
+	renderListView(){
 
 		//Initiate row items
 		var items = [];
@@ -123,7 +147,7 @@ class GymWorkout extends React.Component {
 				var actions = undefined
 
 				var expand =
-					<div className="text-right" onClick={(event) => this.handleExpand(set.id, event)} >
+					<div className="text-right"  >
 						<FontAwesome  name='chevron-circle-down' />
 					</div>
 
@@ -134,6 +158,12 @@ class GymWorkout extends React.Component {
 							{excercise}
 							<div>
 								<i>{set.muscle_group_name}</i>
+							</div>
+							<div>
+								<i>Id {set.id}</i>
+							</div>
+							<div>
+								<i>"{set.comments}"</i>
 							</div>
 						</div>
 
@@ -171,13 +201,11 @@ class GymWorkout extends React.Component {
 						excercise,
 						numbers,
 						actions,
-						expand,
 				]
 
 				//<tr key={index}  >
-				var item = <TableRow
-					key={index}
-					values={values}
+				var item = <TableRow onClick={(event) => this.handleExpand(set.id, event)}
+					key={index}	values={values}
 				/>
 
 				//Add row item to array
@@ -187,14 +215,120 @@ class GymWorkout extends React.Component {
 
 		}); //end map
 
-		return items
+		var heads = ["","","Excercise","Set",""];
+		var tableFrame = <TableFrame heads={heads} rows={items} />
+
+		return tableFrame
 
 	} //End function
+
+	renderQuickView(){
+
+		var elementStyle = {
+			textAlign: 'center',
+		}
+
+		var excerciseStyle = {
+			color: 'gray',
+		}
+
+		var grouped = groupBy(this.state.sets,"excercise_name");
+		var excercises = [];
+		for(var excercise in grouped){
+
+			var sets = []
+			grouped[excercise].map((set, index) => {
+
+				//set id done?
+
+				var bgColor = 'white';
+				var color = 'gray';
+				if(set.done){
+					bgColor = '#5cb85c';
+					color = 'white';
+				}
+
+				var setStyle = {
+					backgroundColor: bgColor,
+					color: color,
+					height: '100px',
+					paddingTop: '19px',
+					borderRadius: '30px',
+					marginLeft: '5px',
+					marginRight: '5px',
+					marginTop: '15px',
+					marginBottom: '25px',
+					width: '60px',
+					height: '60px',
+					display: 'inline-block',
+					textAlign: 'center',
+					border: '1px solid gray',
+				}
+
+				var setItem =
+					<span style={setStyle} key={index} onClick={() => this.handleModalOpen(set)}>
+						{set.reps + "x" + set.weight}
+					</span>
+				sets.push(setItem)
+			})
+
+			var excerciseItem =
+				<div style={elementStyle} key={excercise}>
+					<h3 style={excerciseStyle}>{excercise}</h3>
+					{sets}
+				</div>
+
+			excercises.push(excerciseItem)
+		}
+
+		return <div>{excercises}</div>;
+	}
+
+	renderModal(){
+		var modal =
+			<Modal show={this.state.modalOpen} onHide={() => this.handleModalClose()}>
+				<Modal.Header closeButton>
+					<Modal.Title>
+						{this.state.modalSet.excercise_name} (#{this.state.modalSet.workout_order})
+					</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+				<form>
+					<FormInput
+							id="reps"
+							label="Reps"
+							type="number"
+							value={this.state.modalSet.reps}
+							autoFocus
+						/>
+
+					<FormInput
+							id="weight"
+							label="Weight"
+							type="number"
+							value={this.state.modalSet.weight}
+						/>
+
+					<FormInput
+							id="comments"
+							label="Comments"
+							componentClass="textarea"
+							value={this.state.modalSet.comments}
+						/>
+					</form>
+
+					[analytics]
+				</Modal.Body>
+				<Modal.Footer>
+					<Button bsStyle="success" onClick={() => this.handleModalClose()}>Done</Button>
+				</Modal.Footer>
+			</Modal>
+		return modal
+	}
 
 	componentWillMount(){
 		this.getAll();
 	}
-
 
 	getAll(){
 		var workoutId = this.props.match.params.id;
@@ -223,17 +357,26 @@ class GymWorkout extends React.Component {
 	render() {
 
 		var workout = "Workout...";
-		var sets = [];
 		var progressBar = "";
-		var duration = ""
-
-		var heads = ["","","Excercise","Set","",""];
+		var duration = "";
+		var view = "Rendering view...";
+		var modal = "";
 
 		if(this.state.ready){
 			duration = this.renderDuration();
-			sets = this.renderSets();
 			progressBar = this.renderProgressBar();
-			workout = this.state.workout.name
+			workout = this.state.workout.name;
+
+			//View
+			if(this.state.view=="list"){
+				view = this.renderListView();
+			}else if(this.state.view=="quick"){
+				view = this.renderQuickView();
+			}
+
+			if(this.state.modalOpen){
+				modal = this.renderModal();
+			}
 		}
 
 		var menuItems = [
@@ -259,7 +402,8 @@ class GymWorkout extends React.Component {
 					{duration}
 					{progressBar}
 					{this.renderToolbar()}
-					<TableFrame heads={heads} rows={sets} />
+					{view}
+					{modal}
 				</Col>
 			</Row>
 		)

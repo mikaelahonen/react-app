@@ -73,10 +73,10 @@ export class MainTitle extends React.Component {
 
 		return (
 			<Row style={style}>
-				<Col sm={10}>
+				<Col xs={10}>
 					<h2>{this.props.title.toUpperCase()}</h2>
 				</Col>
-				<Col sm={2} >
+				<Col xs={2} >
 					<Dropdown id="maint-title-dropdown" className="pull-right">
 						<CustomToggle bsRole="toggle" noCaret>
 								<FontAwesome name="gear"/>
@@ -188,7 +188,7 @@ export class TableFrame extends React.Component {
 		var tableRows = this.props.rows
 
 		return(
-			<Table responsive>
+			<Table responsive hover>
 				<thead>
 					<tr>
 						{tableHead}
@@ -229,7 +229,7 @@ export class FormSelect extends React.Component{
 			return(
 				<FormGroup>
 
-					<ControlLabel style={{color:'lightgray'}}>
+					<ControlLabel>
 							{this.props.label.toUpperCase()}
 					</ControlLabel>
 
@@ -286,7 +286,7 @@ export class FormInput extends React.Component {
 		return(
 			<FormGroup>
 
-				<ControlLabel style={{color:'lightgray'}}>
+				<ControlLabel>
 						{this.props.label.toUpperCase()}
 				</ControlLabel>
 

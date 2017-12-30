@@ -103,7 +103,7 @@ table .btn{
 
 
 
-
+/*Forms*/
 form{
 	/*background-color: rgb(245,245,245);
 	box-shadow: 0px 0px 2px 2px lightgray;
@@ -111,6 +111,25 @@ form{
 
 }
 
+.form-control{
+	border-radius: 0px;
+	background-color: #e8e8e8;
+	font-style: italic;
+
+	border: none;
+	box-shadow: none;
+	webkit-box-shadow: none;
+	border-bottom: 1px solid lightgray;
+}
+.form-control:focus{
+	border: none;
+	box-shadow: none;
+	webkit-box-shadow: none;
+	border-bottom: 2px solid #5cb85c;
+}
+.control-label{
+	color: gray;
+}
 
 /* Tables */
 #tbl-btn{
@@ -126,6 +145,11 @@ form{
 
 .table>tbody>tr{
 	background-color: white;
+}
+
+.table>tbody>tr>td>div>div{
+	margin-top: 8px;
+	margin-bottom: 8px;
 }
 
 .table > tbody > tr > td{

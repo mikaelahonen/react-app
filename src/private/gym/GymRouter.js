@@ -30,16 +30,6 @@ class GymRouter extends Component {
 			<Row>
 				<Col xs={12}>
 
-					<ButtonToolbar>
-						<Button bsSize="lg" onClick={() => this.props.history.push('/gym/workouts')}>Workouts</Button>
-						<Button bsSize="lg" onClick={() => this.props.history.push('/gym/excercises')}>Excercises</Button>
-						<Button bsSize="lg" onClick={() => this.props.history.push('/gym/musclegroups')}>Muscle Groups</Button>
-						<Button bsSize="lg" onClick={() => this.props.history.push('/gym/plans')}>Plans</Button>
-						<Button bsSize="lg" onClick={() => this.props.history.push('/gym/routines')}>Routines</Button>
-					</ButtonToolbar>
-
-					<hr/>
-
 					<Switch>
 						//Workout
 						<Route exact path='/gym/workouts' component={GymWorkouts}/>

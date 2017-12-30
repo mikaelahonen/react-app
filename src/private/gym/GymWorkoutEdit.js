@@ -25,11 +25,11 @@ class GymWorkoutEdit extends React.Component {
 		const value = target.type === 'checkbox' ? target.checked : target.value;
 		const name = target.id;
 
-		var state = this.state
+		var inputs = this.state.data;
+		inputs[name] = value
 
-		state.input[name] = value;
-
-		this.setState(state)
+		var state = {data: inputs};
+		this.setState(state);
 
 	}
 

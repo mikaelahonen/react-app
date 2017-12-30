@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import FontAwesome from  'react-fontawesome';
-import {Table, Button, FormGroup, ControlLabel, FormControl, Label} from 'react-bootstrap';
+import {Table, Button, FormGroup, ControlLabel, FormControl, Label, Row, Col, Dropdown, MenuItem} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap';
 
 export class Loading extends React.Component {
@@ -13,7 +13,21 @@ export class Loading extends React.Component {
 
 export class PageTitle extends React.Component {
 	render(){
-		var title = <h2 style={{color:'gray'}}>{this.props.title.toUpperCase()}</h2>
+
+		var style = {color:'gray'};
+		var text = this.props.title.toUpperCase();
+		var title = <h2 style={style}>{text}</h2>
+
+		if(this.props.level==1){
+			title = <h1 style={style}>{text}</h1>
+		}else if(this.props.level==2){
+			title = <h2 style={style}>{text}</h2>
+		}else if(this.props.level==3){
+			title = <h3 style={style}>{text}</h3>
+		}else if(this.props.level==4){
+			title = <h4 style={style}>{text}</h4>
+		}
+
 
 		var hr = undefined
 		if(this.props.hr==true){
@@ -27,6 +41,53 @@ export class PageTitle extends React.Component {
 			</div>
 		);
 
+	}
+}
+
+class CustomToggle extends React.Component {
+
+  render() {
+    return (
+      <h2 onClick={(e) => this.props.onClick(e)}>
+        {this.props.children}
+      </h2>
+    );
+  }
+}
+
+export class MainTitle extends React.Component {
+
+	render(){
+
+		var style = {color: 'gray', marginBottom: '30px', padding: '0px'};
+
+		var menuItems = []
+
+		this.props.menuItems.map((item, index) => {
+			var item =
+				<MenuItem key={index} eventKey={index} onClick={item.onClick}>
+					{item.text}
+				</MenuItem>
+				menuItems.push(item)
+		});
+
+		return (
+			<Row style={style}>
+				<Col sm={10}>
+					<h2>{this.props.title.toUpperCase()}</h2>
+				</Col>
+				<Col sm={2} >
+					<Dropdown id="maint-title-dropdown" className="pull-right">
+						<CustomToggle bsRole="toggle" noCaret>
+								<FontAwesome name="gear"/>
+						</CustomToggle>
+						<Dropdown.Menu>
+							{menuItems}
+						</Dropdown.Menu>
+					</Dropdown>
+				</Col>
+			</Row>
+		)
 	}
 }
 
@@ -176,6 +237,8 @@ export class FormSelect extends React.Component{
 						id={this.props.id}
 						placeholder={this.props.placeholder}
 						onChange={this.props.onChange}
+						onSelect={this.props.onSelect}
+						autoFocus={this.props.autoFocus}
 						componentClass="select"
 						value={this.props.value}>
 
@@ -233,6 +296,8 @@ export class FormInput extends React.Component {
 					type={type}
 					placeholder={this.props.placeholder}
 					onChange={this.props.onChange}
+					onSelect={this.props.onSelect}
+					autoFocus={this.props.autoFocus}
 					componentClass={componentClass}
 					defaultValue={this.props.defaultValue}
 					value={value}/>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table} from 'react-bootstrap';
 import {getData, postData} from 'functions/Api';
 import {distinctValues} from 'functions/Functions';
-import {Btn, PageTitle, TableFrame, TableRow, Loading} from 'components/Components';
+import {Btn, MainTitle, TableFrame, TableRow, Loading} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -16,6 +16,18 @@ class GymRoutines extends React.Component {
 		sets: {},
 	}
 
+	handleAddRoutine(){
+		window.alert("Not implemented yet")
+	}
+
+	handleSectionClick(routineId, event){
+		this.props.history.push('/gym/routines/' + routineId)
+	}
+
+	handleEdit(routineId, event){
+		this.props.history.push("/gym/routines/" + routineId + "/edit")
+	}
+
 	handleStart(routineId, event){
 		var body = '';
 		var endpoint = '/gym/routines/' + routineId + '/start/';
@@ -25,26 +37,26 @@ class GymRoutines extends React.Component {
 		});
 	}
 
-	renderRoutines(routines){
+	renderRoutines(){
 
 		//Initiate row items
 		var items = [];
 
-		routines.map((routine, index) => {
+		this.state.routines.map((routine, index) => {
 
-			var btnStart = <Btn	bsStyle='success' icon='arrow-right'
-					onClick={(event) => this.handleStart(routine.id, event)} />
+			var btnStart = <FontAwesome name='arrow-right'
+				onClick={(event) => this.handleStart(routine.id, event)} />
 
-			var editLink = "/gym/routines/" + routine.id + "/edit"
-			var btnEdit = <Btn icon="edit" to={editLink} />
+			var btnEdit = <FontAwesome name='edit'
+				onClick={(e) => this.handleEdit(routine.id, e)} />
 
-			var sectionsLink = '/gym/routines/' + routine.id
-			var btnSections = <Btn to={sectionsLink} icon='th-large'/>
+			var btnSections = <FontAwesome name='th-large'
+				onClick={(e) => this.handleSectionClick(routine.id, e)} />
 
 			var values = [
-					btnStart,
 					routine.name,
 					routine.section_count,
+					btnStart,
 					btnSections,
 					btnEdit,
 			]
@@ -55,7 +67,7 @@ class GymRoutines extends React.Component {
 				items.push(item);
 		});
 
-		var heads = ["","Routine","Section count","",""];
+		var heads = ["Routine","Section count","","",""];
 
 		return	<TableFrame	heads={heads}	rows={items} />
 	}
@@ -82,19 +94,25 @@ class GymRoutines extends React.Component {
 	render() {
 
 		var wait = <Loading />
+		var routines = "";
 
 		if(this.state.ready){
 			var wait = "";
-			var routines = this.renderRoutines(this.state.routines);
+			var routines = this.renderRoutines();
 		}
+
+		var menuItems = [
+			{
+				text: "Add routine",
+				onClick: () => this.handleAddRoutine()
+			}
+		]
 
 		return (
 		  <div>
 			<Row>
 				<Col md={12}>
-					<Btn text="Add" icon="plus" bsStyle="success" to="/gym/routines/add"/>
-					<PageTitle title="Routines" />
-					<hr/>
+					<MainTitle title="Routines" menuItems={menuItems} />
 					{wait}
 					{routines}
 				</Col>

@@ -1,3 +1,13 @@
+export function groupBy(objects, prop){
+	var grouped = objects.reduce((groups, item)=> {
+		var val = item[prop];
+    groups[val] = groups[val] || [];
+    groups[val].push(item);
+    return groups;
+	}, {})
+
+	return grouped
+}
 
 //Extract distinct values from an object by a key
 export function distinctValues(object, key){

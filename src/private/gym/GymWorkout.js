@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table, ProgressBar} from 'react-bootstrap';
 import {getData, patchData, deleteData} from 'functions/Api';
 import {distinctValues, utcToDate} from 'functions/Functions';
-import {Loading, TableFrame, TableRow, Btn} from 'components/Components';
+import {Loading, TableFrame, TableRow, Btn, MainTitle} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -14,6 +14,27 @@ class GymWorkout extends React.Component {
 		workout: {},
 		sets: {},
 		excerciseFilter: null,
+		expandedId: undefined,
+	}
+
+	handleWorkoutEdit(){
+		window.alert('Edit workout');
+	}
+
+	handleWorkoutDelete(){
+		window.alert('Delete workout. Not implemented.');
+	}
+
+	handleSetAdd(){
+		this.props.history.push('/gym/sets/add');
+	}
+
+	handleExpand(setId, event){
+		var state = {expandedId: undefined}
+		if(setId != this.state.expandedId){
+			state = {expandedId: setId}
+		}
+		this.setState(state);
 	}
 
 	//Filter to excercises of clicked object
@@ -37,6 +58,11 @@ class GymWorkout extends React.Component {
 	}
 
 	//Mark set as done
+	handleEdit(setId, event){
+		this.props.history.push('/gym/sets/' + setId + '/edit');
+	}
+
+	//Mark set as done
 	handleAnalytics(excerciseId, event){
 			this.props.history.push('/gym/excercises/' + excerciseId + '/analytics');
 	}
@@ -46,16 +72,10 @@ class GymWorkout extends React.Component {
 		this.setState(state);
 	}
 
-	renderWorkout(){
-		var workout = this.state.workout;
+	renderDuration(){
 		return (
 			<Panel>
-				<h2>{workout.name}</h2>
-				<p>Id: {workout.id}</p>
-				<p>Start time: {utcToDate(workout.start_time)}</p>
-				<p>End time: {utcToDate(workout.end_time)}</p>
-				<p>Location: {workout.location}</p>
-				<p>Sets: {workout.sets_total}</p>
+				<h3>Duration: [mm:ss]</h3>
 			</Panel>
 		);
 	}
@@ -64,7 +84,6 @@ class GymWorkout extends React.Component {
 		return (
 			<ButtonToolbar>
 				<Btn text="Show all" onClick={(event) => this.handleShowAll(event)} />
-				<Btn bsStyle="success" icon="plus" to="/gym/sets/add" />
 			</ButtonToolbar>
 		);
 	}
@@ -88,34 +107,77 @@ class GymWorkout extends React.Component {
 			//Filter excercises
 			if(!this.state.excerciseFilter || set.excercise == this.state.excerciseFilter){
 
-				var remove = <FontAwesome name='trash'
-					onClick={(event) => this.handleDelete(set.id, event)} />
+				var status = undefined
+				if(set.done){
+					status = <FontAwesome style={{color:"#5cb85c"}} name='check' />
+				}
 
-				var analytics =	<FontAwesome name="area-chart"
-					onClick={(event) => this.handleAnalytics(set.excercise, event)} />
+				var editLink = '/gym/sets/' + set.id + '/edit';
+				var excercise =
+					<div>
+						<b><Link to={editLink}>{set.excercise_name}</Link></b>
+					</div>
 
-				var filter = <FontAwesome name="filter"
-					onClick={(event) => this.handleFilter(set.id, event)}/>
+				var numbers = <div>{set.reps + " x " + set.weight + (!set.weight ? '' : ' kg')}</div>
 
-				var setLink = '/gym/sets/' + set.id + '/edit';
-				var excerciseName = set.excercise_name + " (" + set.muscle_group_name + ")";
-				var excercise = <Link to={setLink}>{excerciseName}</Link>
+				var actions = undefined
+
+				var expand =
+					<div className="text-right" onClick={(event) => this.handleExpand(set.id, event)} >
+						<FontAwesome  name='chevron-circle-down' />
+					</div>
+
+				//Append default values if the row is expanded
+				if(this.state.expandedId == set.id){
+					excercise =
+						<div>
+							{excercise}
+							<div>
+								<i>{set.muscle_group_name}</i>
+							</div>
+						</div>
+
+					actions =
+						<div>
+							<div>
+								&nbsp;
+							</div>
+							<div onClick={(event) => this.handleDelete(set.id, event)}>
+								<FontAwesome name="trash" /> <i>Delete</i>
+							</div>
+							<div onClick={(event) => this.handleEdit(set.id, event)}>
+								<FontAwesome name="pencil" /> <i>Edit</i>
+							</div>
+							<div onClick={(event) => this.handleAnalytics(set.excercise, event)}>
+								<FontAwesome name="area-chart" /> <i>Analytics</i>
+							</div>
+							<div onClick={(event) => this.handleFilter(set.id, event)}>
+								<FontAwesome name="filter" /> <i>Filter</i>
+							</div>
+						</div>
+
+					numbers =
+						<div>
+							{numbers}
+							<div>
+								<i>{set.orm + " kg"}</i>
+							</div>
+						</div>
+				}
 
 				var values = [
 						set.workout_order,
+						status,
 						excercise,
-						set.reps + " x " + set.weight + (!set.weight ? '' : ' kg'),
-						set.orm + (!set.weight ? '' : ' kg'),
-						filter,
-						analytics,
-						remove,
+						numbers,
+						actions,
+						expand,
 				]
 
 				//<tr key={index}  >
 				var item = <TableRow
 					key={index}
 					values={values}
-					style={set.done ? {backgroundColor: '#c6efce'} : undefined}
 				/>
 
 				//Add row item to array
@@ -160,32 +222,46 @@ class GymWorkout extends React.Component {
 
 	render() {
 
-		var wait = <Loading/>;
-		var workout = "";
+		var workout = "Workout...";
 		var sets = [];
 		var progressBar = "";
+		var duration = ""
 
-		var heads = ["#","Excercise","Set","Orm",""];
+		var heads = ["","","Excercise","Set","",""];
 
 		if(this.state.ready){
-			wait = "";
-			workout = this.renderWorkout();
+			duration = this.renderDuration();
 			sets = this.renderSets();
 			progressBar = this.renderProgressBar();
+			workout = this.state.workout.name
 		}
 
+		var menuItems = [
+			{
+				text: 'Edit workout',
+				onClick: () => this.handleWorkoutEdit(),
+			},
+			{
+				text: 'Delete workout',
+				onClick: () => this.handleWorkoutDelete(),
+			},
+			{
+				text: 'Add set',
+				onClick: () => this.handleSetAdd(),
+			}
+
+		]
+
 		return (
-		  <div>
 			<Row>
 				<Col md={12}>
-					{wait}
-					{workout}
+					<MainTitle title={workout} menuItems={menuItems} />
+					{duration}
 					{progressBar}
 					{this.renderToolbar()}
 					<TableFrame heads={heads} rows={sets} />
 				</Col>
 			</Row>
-		  </div>
 		)
 	}
 }

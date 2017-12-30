@@ -5,7 +5,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import FontAwesome from  'react-fontawesome';
 
 class MenuSide extends Component {
-	
+
 	sideStyle = {
 		height: '100%',
 		backgroundColor: 'white',
@@ -15,7 +15,7 @@ class MenuSide extends Component {
 		padding: '10px',
 		borderRight: '2px solid lightgray',
 	}
-	
+
 	btnStyle = {
 		top: '48%',
 		left: '228px',
@@ -32,25 +32,28 @@ class MenuSide extends Component {
 		borderRadius: '21px',
 		color: 'lightgray',
 	}
-	
+
 	items = [
 		{text: 'Home', url: '/', icon: 'home'},
 		{text: 'Gym', url: '/gym', icon: 'bolt'},
+		{text: 'Gym - Workouts', url: '/gym/workouts', icon: 'bolt'},
+		{text: 'Gym - Excercises', url: '/gym/excercises', icon: 'bolt'},
+		{text: 'Gym - Routines', url: '/gym/routines', icon: 'bolt'},
 		{text: 'User', url: '/user', icon: 'user'},
 		{text: 'Login', url: '/login', icon: 'sign-in'},
 		{text: 'Logout', url: '/logout', icon: 'sign-out'},
 		{text: 'Public Apps', url: '/public', icon: 'mobile'},
 	]
-	
+
 	render(){
-		
+
 		var items = [];
 		this.items.map((item, index) => {
-			item = 
+			item =
 			<LinkContainer exact key={index} to={item.url}>
 				<NavItem
 					onClick={() => this.props.clickHandler()}
-					
+
 					eventKey={index}>
 					<FontAwesome name={item.icon}/>
 					&nbsp;{item.text}
@@ -58,21 +61,21 @@ class MenuSide extends Component {
 			</LinkContainer>
 			items.push(item);
 		})
-		
+
 		return(
 			<div style={this.sideStyle}>
 
 				<Nav bsStyle="pills" stacked activeKey={1}>
 					{items}
 				</Nav>
-				
-				<div 
+
+				<div
 					style={this.btnStyle}
 					onClick={() => this.props.clickHandler()}
 				>
-					<FontAwesome 						
+					<FontAwesome
 						name="caret-left"
-						size='2x'						
+						size='2x'
 					/>
 				</div>
 			</div>

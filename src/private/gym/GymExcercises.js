@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, Table} from 'react-bootstrap';
 import {getData, deleteData} from 'functions/Api';
 import {utcToDate, utcDuration} from 'functions/Functions';
-import {Loading, TableFrame, TableRow, Btn, PageTitle} from 'components/Components';
+import {Loading, TableFrame, TableRow, Btn, MainTitle} from 'components/Components';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import {Link} from 'react-router-dom';
@@ -20,6 +20,9 @@ class GymExcercises extends React.Component {
 		});
 	}
 
+	handleAddExcercise(){
+		this.props.history.push('/gym/excercises/add');
+	}
 
 	handleAnalytics(excerciseId, event){
 		var linkAnalytics = '/gym/excercises/' + excerciseId + '/analytics'
@@ -88,7 +91,6 @@ class GymExcercises extends React.Component {
 
 		var heads = ["Muscle group","Excercise","",""];
 		var rows = [];
-		var addLink = '/gym/excercises/add';
 
 		var data = undefined;
 		if(this.state.ready){
@@ -97,13 +99,18 @@ class GymExcercises extends React.Component {
 			data = <Loading/>;
 		}
 
+		var menuItems = [
+			{
+				text: 'Add excercise',
+				onClick: () => this.handleAddExcercise(),
+			}
+		]
+
 		return (
 		  <div>
 				<Row>
 					<Col md={12}>
-						<Btn to={addLink} icon="plus" bsStyle="success"/>
-						<PageTitle title="Excercises" />
-						<hr/>
+						<MainTitle title="Excercises" menuItems={menuItems} />
 						<TableFrame heads={heads} rows={rows} />
 					</Col>
 				</Row>

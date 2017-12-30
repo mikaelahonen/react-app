@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import {postData} from 'functions/Api';
+import {FormInput} from 'components/Components'
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -24,6 +25,8 @@ class GymWorkoutAdd extends React.Component {
 		const name = target.id;
 
 		var data = this.state.data;
+		console.log("date[name]: " + data[name])
+		console.log("value: " + value)
 		data[name] = value;
 
 		var state = {data: data};
@@ -36,55 +39,30 @@ class GymWorkoutAdd extends React.Component {
 		return(
 			<form>
 
-				<FormGroup>
-					<ControlLabel>Name</ControlLabel>
-					<FormControl
-						id="name"
-						type="text"
-						placeholder="Bicep and Chest"
-						onChange={(e) => this.handleChange(e)}
-					/>
-				</FormGroup>
+				<FormInput id="name" label="Name"
+					value = {this.state.data.name}
+					onChange={(e) => this.handleChange(e)}
+				/>
 
-				<FormGroup>
-					<ControlLabel>Start time</ControlLabel>
-					<FormControl
-						id="start_time"
-						type="text"
-						placeholder="2017-10-10T17:00:00Z"
-						onChange={(e) => this.handleChange(e)}
-					/>
-				</FormGroup>
+				<FormInput id="start_time" label="Start time" type="datetime-local"
+					value = {this.state.data.start_time}
+					onChange={(e) => this.handleChange(e)}
+				/>
 
-				<FormGroup>
-					<ControlLabel>End time</ControlLabel>
-					<FormControl
-					  id="end_time"
-					  type="text"
-					  placeholder="2017-10-10T17:00:00+02"
-					  onChange={(e) => this.handleChange(e)}
-					/>
-				</FormGroup>
+				<FormInput id="end_time" label="End time" type="datetime-local"
+					value = {this.state.data.end_time}
+					onChange={(e) => this.handleChange(e)}
+				/>
 
-				<FormGroup>
-					<ControlLabel>Location</ControlLabel>
-					<FormControl
-					  id="location"
-					  type="text"
-					  placeholder="Location X"
-					  onChange={(e) => this.handleChange(e)}
-					/>
-				</FormGroup>
+				<FormInput id="location" label="location"
+					value = {this.state.data.location}
+				  onChange={(e) => this.handleChange(e)}
+				/>
 
-				<FormGroup>
-					<ControlLabel>Comments</ControlLabel>
-					<FormControl
-						id="comments"
-						componentClass="textarea"
-						placeholder="Comments."
-						onChange={(e) => this.handleChange(e)}
-					/>
-				</FormGroup>
+				<FormInput id="comments" label="Comments" type="textarea"
+					value = {this.state.data.comments}
+					onChange={(e) => this.handleChange(e)}
+				/>
 
 			</form>
 		)

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {Row, Col, Button, ButtonToolbar, FormGroup, Table} from 'react-bootstrap';
+import {Row, Col, Button, ButtonToolbar, FormGroup, Table, Dropdown, MenuItem} from 'react-bootstrap';
 import {getData, deleteData} from 'functions/Api';
 import {utcToDate, utcDuration} from 'functions/Functions';
-import {Loading, TableFrame, TableRow, Btn, PageTitle} from 'components/Components';
+import {Loading, TableFrame, TableRow, Btn, PageTitle, MainTitle} from 'components/Components';
 import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import {Link} from 'react-router-dom';
@@ -20,6 +20,7 @@ class GymWorkouts extends React.Component {
 		});
 	}
 
+
 	handleDelete(workoutId, event){
 		var ans  = window.confirm('Are you sure you want to delete this workout?')
 		if(ans){
@@ -28,6 +29,10 @@ class GymWorkouts extends React.Component {
 				this.props.history.push();
 			});
 		}
+	}
+
+	handleWorkoutAdd(){
+		this.props.history.push('/gym/workouts/add');
 	}
 
 	handleEdit(workoutId, event){
@@ -77,9 +82,9 @@ class GymWorkouts extends React.Component {
 			var completeness = workout.sets_done / workout.sets_total
 			var statusStyle = {backgroundColor: ""}
 			if(completeness==1){
-				statusStyle = {backgroundColor: '#c6efce'}
+				//statusStyle = {backgroundColor: '#c6efce'}
 			}else if(completeness<1 && completeness>0){
-				statusStyle = {backgroundColor: '#ffeb9c'}
+				//statusStyle = {backgroundColor: '#ffeb9c'}
 			}
 
 			var trow = <TableRow style={statusStyle} values={values} key={index}/>
@@ -114,13 +119,19 @@ class GymWorkouts extends React.Component {
 			data = <Loading/>;
 		}
 
+		var menuItems = [
+			{
+				text: 'Add workout',
+				onClick: () => this.handleWorkoutAdd(),
+			}
+
+		]
+
 		return (
 		  <div>
 				<Row>
 					<Col md={12}>
-						<Btn to={addLink} icon="plus" bsStyle="success"/>
-						<PageTitle title="Workouts" />
-						<hr/>
+						<MainTitle title="Workouts" menuItems={menuItems} />
 						<TableFrame heads={heads} rows={rows} />
 					</Col>
 				</Row>

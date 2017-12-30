@@ -43,10 +43,13 @@ class GymSetEdit extends React.Component {
 	}
 
 	handleInputSelect(event){
+		console.log("handleInputSelect")
 		event.target.select();
+
 	}
 
 	handleChange(event){
+		console.log("handleChange")
 		const target = event.target;
 		const value = target.type === 'checkbox' ? target.checked : target.value;
 		const name = target.id;

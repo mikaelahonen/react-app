@@ -1,4 +1,3 @@
-// ./src/reducers/bookReducers.js
 export default (state = [], action) => {
   switch (action.type){
     case 'CREATE_BOOK':

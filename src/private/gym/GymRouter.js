@@ -24,6 +24,7 @@ import GymRoutineEdit from 'private/gym/GymRoutineEdit'
 //Gym section
 
 import ReduxTest from 'private/gym/ReduxTest'
+import ReduxTest2 from 'private/gym/ReduxTest2'
 
 class GymRouter extends Component {
 	render() {
@@ -55,6 +56,7 @@ class GymRouter extends Component {
 
 						//Redux test
 						<Route exact path='/gym/reduxtest' component={ReduxTest}/>
+						<Route exact path='/gym/reduxtest2' component={ReduxTest2}/>
 
 					</Switch>
 				</Col>

@@ -1,5 +1,4 @@
-// ./src/actions/bookActions.js
-export const createBook = (book) => {
+export function createBook(book){
   // Return action
   return {
     // Unique identifier
@@ -7,4 +6,4 @@ export const createBook = (book) => {
     // Payload
     book: book
   }
-};
+}

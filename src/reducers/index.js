@@ -1,4 +1,3 @@
-// ./src/reducers/index.js
 import { combineReducers } from 'redux';
 import books from './bookReducers'
 

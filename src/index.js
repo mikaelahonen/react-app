@@ -13,18 +13,26 @@ import AppPublic from 'public/App';
 import Login from './Login';
 import Logout from './Logout';
 
+import { Provider } from 'react-redux';
+
+import configureStore from 'store/configureStore';
+
+const store = configureStore();
+
 ReactDOM.render((
-	<BrowserRouter>
-		<Switch>
-			<Route path='/public' component={AppPublic}/>
-			<Route path='/login' component={Login}/>
-			<Route path='/logout' component={Logout}/>
-			<Route path='/' component={() => (
-				isLoggedIn() ? (<PrivateRouter />) : (<Redirect to="/login" />)
-			)}/>
-		</Switch>
-	</BrowserRouter>
+	<Provider store={store}>
+		<BrowserRouter>
+			<Switch>
+				<Route path='/public' component={AppPublic}/>
+				<Route path='/login' component={Login}/>
+				<Route path='/logout' component={Logout}/>
+				<Route path='/' component={() => (
+					isLoggedIn() ? (<PrivateRouter />) : (<Redirect to="/login" />)
+				)}/>
+			</Switch>
+		</BrowserRouter>
+	</Provider>
 	), document.getElementById('root')
 );
-	
+
 registerServiceWorker();

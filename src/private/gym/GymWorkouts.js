@@ -128,14 +128,12 @@ class GymWorkouts extends React.Component {
 		]
 
 		return (
-		  <div>
-				<Row>
-					<Col md={12}>
-						<MainTitle title="Workouts" menuItems={menuItems} />
-						<TableFrame heads={heads} rows={rows} />
-					</Col>
-				</Row>
-		  </div>
+			<Row>
+				<Col md={12}>
+					<MainTitle title="Workouts" menuItems={menuItems} />
+					<TableFrame heads={heads} rows={rows} />
+				</Col>
+			</Row>
 		)
 	}
 }

@@ -79,7 +79,7 @@ export class MainTitle extends React.Component {
 				<Col xs={2} >
 					<Dropdown id="maint-title-dropdown" className="pull-right">
 						<CustomToggle bsRole="toggle" noCaret>
-								<FontAwesome name="gear"/>
+								<FontAwesome name="ellipsis-v"/>
 						</CustomToggle>
 						<Dropdown.Menu>
 							{menuItems}

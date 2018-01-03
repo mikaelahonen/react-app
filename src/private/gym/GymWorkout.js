@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table, ProgressBar, Modal} from 'react-bootstrap';
+import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table, ProgressBar, Modal, Dropdown, MenuItem} from 'react-bootstrap';
 import {getData, patchData, deleteData} from 'functions/Api';
 import {distinctValues, utcToDate, groupBy} from 'functions/Functions';
 import {Loading, TableFrame, TableRow, Btn, MainTitle, FormInput} from 'components/Components';
@@ -139,17 +139,31 @@ class GymWorkout extends React.Component {
 				var editLink = '/gym/sets/' + set.id + '/edit';
 				var excercise =
 					<div>
-						<b><Link to={editLink}>{set.excercise_name}</Link></b>
+						<Link to={editLink}>{set.excercise_name}</Link>
 					</div>
 
 				var numbers = <div>{set.reps + " x " + set.weight + (!set.weight ? '' : ' kg')}</div>
 
-				var actions = undefined
-
-				var expand =
-					<div className="text-right"  >
-						<FontAwesome  name='chevron-circle-down' />
-					</div>
+				var actions =
+					<Dropdown id="maint-title-dropdown" className="pull-right">
+						<Dropdown.Toggle noCaret>
+								<FontAwesome name="ellipsis-v"/>
+						</Dropdown.Toggle>
+						<Dropdown.Menu>
+							<MenuItem key={index} eventKey={index + 'delete'} onClick={(event) => this.handleDelete(set.id, event)}>
+								Delete
+							</MenuItem>
+							<MenuItem key={index} eventKey={index + 'edit'} onClick={(event) => this.handleEdit(set.id, event)}>
+								Edit
+							</MenuItem>
+							<MenuItem key={index} eventKey={index + 'analytics'} onClick={(event) => this.handleAnalytics(set.excercise, event)}>
+								Analytics
+							</MenuItem>
+							<MenuItem key={index} eventKey={index + 'filter'} onClick={(event) => this.handleFilter(set.id, event)}>
+								Filter
+							</MenuItem>
+						</Dropdown.Menu>
+					</Dropdown>
 
 				//Append default values if the row is expanded
 				if(this.state.expandedId == set.id){
@@ -164,25 +178,6 @@ class GymWorkout extends React.Component {
 							</div>
 							<div>
 								<i>"{set.comments}"</i>
-							</div>
-						</div>
-
-					actions =
-						<div>
-							<div>
-								&nbsp;
-							</div>
-							<div onClick={(event) => this.handleDelete(set.id, event)}>
-								<FontAwesome name="trash" /> <i>Delete</i>
-							</div>
-							<div onClick={(event) => this.handleEdit(set.id, event)}>
-								<FontAwesome name="pencil" /> <i>Edit</i>
-							</div>
-							<div onClick={(event) => this.handleAnalytics(set.excercise, event)}>
-								<FontAwesome name="area-chart" /> <i>Analytics</i>
-							</div>
-							<div onClick={(event) => this.handleFilter(set.id, event)}>
-								<FontAwesome name="filter" /> <i>Filter</i>
 							</div>
 						</div>
 

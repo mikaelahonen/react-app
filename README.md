@@ -10,5 +10,8 @@ Install latest version of react package and save it `package.json` file:
 
 `npm install react@latest --save`
 
+If this occurs: `unmet peer dependency`
+Run `npm install -g npm` and `npm install`
+
 ## Redux
 [Tutorial](https://scotch.io/tutorials/build-a-bookshop-with-react-redux-i-react-redux-flow)

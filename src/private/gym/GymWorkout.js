@@ -6,6 +6,8 @@ import {Loading, TableFrame, TableRow, Btn, MainTitle, FormInput} from 'componen
 import FontAwesome from  'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
+import{connect} from 'react-redux'
+import * as workoutActions from 'actions/workoutActions';
 
 class GymWorkout extends React.Component {
 
@@ -106,8 +108,8 @@ class GymWorkout extends React.Component {
 		return (
 			<ButtonToolbar>
 				<Btn text="Show all" onClick={(event) => this.handleShowAll(event)} />
-				<Btn text="Quick view" onClick={(event) => this.handleChangeView("quick", event)} />
-				<Btn text="List view" onClick={(event) => this.handleChangeView("list", event)} />
+				<Btn text="Quick view" onClick={() => this.props.setView("quick")} />
+				<Btn text="List view" onClick={() => this.props.setView("list")} />
 			</ButtonToolbar>
 		);
 	}
@@ -150,16 +152,16 @@ class GymWorkout extends React.Component {
 								<FontAwesome name="ellipsis-v"/>
 						</Dropdown.Toggle>
 						<Dropdown.Menu>
-							<MenuItem key={index} eventKey={index + 'delete'} onClick={(event) => this.handleDelete(set.id, event)}>
+							<MenuItem key={index+'d'} eventKey={index+'d'} onClick={(event) => this.handleDelete(set.id, event)}>
 								Delete
 							</MenuItem>
-							<MenuItem key={index} eventKey={index + 'edit'} onClick={(event) => this.handleEdit(set.id, event)}>
+							<MenuItem key={index+'e'} eventKey={index+'e'} onClick={(event) => this.handleEdit(set.id, event)}>
 								Edit
 							</MenuItem>
-							<MenuItem key={index} eventKey={index + 'analytics'} onClick={(event) => this.handleAnalytics(set.excercise, event)}>
+							<MenuItem key={index+'a'} eventKey={index+'a'} onClick={(event) => this.handleAnalytics(set.excercise, event)}>
 								Analytics
 							</MenuItem>
-							<MenuItem key={index} eventKey={index + 'filter'} onClick={(event) => this.handleFilter(set.id, event)}>
+							<MenuItem key={index+'f'} eventKey={index+'f'} onClick={(event) => this.handleFilter(set.id, event)}>
 								Filter
 							</MenuItem>
 						</Dropdown.Menu>
@@ -363,9 +365,9 @@ class GymWorkout extends React.Component {
 			workout = this.state.workout.name;
 
 			//View
-			if(this.state.view=="list"){
+			if(this.props.workout.view=="list"){
 				view = this.renderListView();
-			}else if(this.state.view=="quick"){
+			}else if(this.props.workout.view=="quick"){
 				view = this.renderQuickView();
 			}
 
@@ -390,6 +392,8 @@ class GymWorkout extends React.Component {
 
 		]
 
+		console.log(this.props.workout)
+
 		return (
 			<Row>
 				<Col md={12}>
@@ -405,4 +409,24 @@ class GymWorkout extends React.Component {
 	}
 }
 
-export default GymWorkout;
+// Maps state from store to props
+// To fetch data from Redux store
+function mapStateToProps(state, ownProps){
+  return {
+    // You can now say this.props.workout
+    workout: state.workout
+  }
+}
+
+// Maps actions to props
+// To send data to Redux store
+function mapDispatchToProps(dispatch){
+  return {
+  // You can now say this.props.setView
+    setView: (view) => dispatch(workoutActions.setView(view))
+  }
+};
+
+const GymWorkoutConnected = connect(mapStateToProps, mapDispatchToProps)(GymWorkout);
+
+export default GymWorkoutConnected;

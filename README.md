@@ -15,3 +15,6 @@ Run `npm install -g npm` and `npm install`
 
 ## Redux
 [Tutorial](https://scotch.io/tutorials/build-a-bookshop-with-react-redux-i-react-redux-flow)
+
+## Plotly
+[Configure with create react app](https://github.com/plotly/react-plotly.js#with-bundled-plotlyjs).

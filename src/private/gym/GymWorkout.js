@@ -1,29 +1,26 @@
 import React, { Component } from 'react';
-import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, Table, ProgressBar, Modal, Dropdown, MenuItem} from 'react-bootstrap';
+import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, ProgressBar} from 'react-bootstrap';
 import {getData, patchData, deleteData} from 'functions/Api';
 import {distinctValues, utcToDate, groupBy} from 'functions/Functions';
-import {Loading, TableFrame, TableRow, Btn, MainTitle, FormInput} from 'components/Components';
+import {Loading, Btn, MainTitle, FormInput} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
-import { Link } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
+import {Link} from 'react-router-dom';
+import {LinkContainer} from 'react-router-bootstrap';
 import{connect} from 'react-redux'
 import * as workoutActions from 'actions/workoutActions';
+import GymWorkoutListMobile from './GymWorkoutListMobile';
+import GymWorkoutQuickView from './GymWorkoutQuickView';
 
-class GymWorkout extends React.Component {
+class Workout extends React.Component {
 
 	state = {
 		ready: false,
 		workout: {},
 		sets: {},
-		excerciseFilter: null,
-		expandedId: undefined,
-		view: "list",
-		modalOpen: false,
-		modalSet: undefined,
 	}
 
 	handleWorkoutEdit(){
-		window.alert('Edit workout');
+		this.props.history.push('/gym/workouts/' + this.props.match.params.id + '/edit');
 	}
 
 	handleWorkoutDelete(){
@@ -34,67 +31,19 @@ class GymWorkout extends React.Component {
 		this.props.history.push('/gym/sets/add');
 	}
 
-	handleExpand(setId, event){
-		var state = {expandedId: undefined}
-		if(setId != this.state.expandedId){
-			state = {expandedId: setId}
-		}
-		this.setState(state);
-	}
 
-	//Filter to excercises of clicked object
-	handleFilter(clickedSetId, event){
-		var sets = this.state.sets;
-		var filterId = sets.filter(set => clickedSetId == set.id)[0].excercise;
-		this.setState({
-			excerciseFilter: filterId
-		});
-	}
-
-	//Mark set as done
-	handleDelete(setId, event){
-		var ans  = window.confirm('Are you sure you want to delete this set?')
-		if (ans) {
-			var endpoint = '/gym/sets/' + setId + '/';
-			deleteData(endpoint).then(response => {
-				this.props.history.push();
-			});
-		}
-	}
 
 	handleChangeView(view, event){
 		var state = {view: view};
 		this.setState(state);
 	}
 
-	//Mark set as done
-	handleEdit(setId, event){
-		this.props.history.push('/gym/sets/' + setId + '/edit');
-	}
-
-	//Mark set as done
-	handleAnalytics(excerciseId, event){
-			this.props.history.push('/gym/excercises/' + excerciseId + '/analytics');
-	}
 
 	handleShowAll(event){
 		var state = {excerciseFilter: null};
 		this.setState(state);
 	}
 
-	handleQuickEdit(setId, event){
-		window.alert(setId)
-	}
-
-	handleModalOpen(set){
-		var state = {modalOpen: true, modalSet: set};
-		this.setState(state);
-	}
-
-	handleModalClose(){
-		var state = {modalOpen: false};
-		this.setState(state);
-	}
 
 	renderDuration(){
 		return (
@@ -107,7 +56,7 @@ class GymWorkout extends React.Component {
 	renderToolbar(){
 		return (
 			<ButtonToolbar>
-				<Btn text="Show all" onClick={(event) => this.handleShowAll(event)} />
+				<Btn text="Show all" onClick={() => this.props.excerciseFilter(undefined)} />
 				<Btn text="Quick view" onClick={() => this.props.setView("quick")} />
 				<Btn text="List view" onClick={() => this.props.setView("list")} />
 			</ButtonToolbar>
@@ -123,205 +72,6 @@ class GymWorkout extends React.Component {
 		)
 	}
 
-	renderListView(){
-
-		//Initiate row items
-		var items = [];
-
-		this.state.sets.map((set, index) => {
-
-			//Filter excercises
-			if(!this.state.excerciseFilter || set.excercise == this.state.excerciseFilter){
-
-				var status = undefined
-				if(set.done){
-					status = <FontAwesome style={{color:"#5cb85c"}} name='check' />
-				}
-
-				var editLink = '/gym/sets/' + set.id + '/edit';
-				var excercise =
-					<div>
-						<Link to={editLink}>{set.excercise_name}</Link>
-					</div>
-
-				var numbers = <div>{set.reps + " x " + set.weight + (!set.weight ? '' : ' kg')}</div>
-
-				var actions =
-					<Dropdown id="maint-title-dropdown" className="pull-right">
-						<Dropdown.Toggle noCaret>
-								<FontAwesome name="ellipsis-v"/>
-						</Dropdown.Toggle>
-						<Dropdown.Menu>
-							<MenuItem key={index+'d'} eventKey={index+'d'} onClick={(event) => this.handleDelete(set.id, event)}>
-								Delete
-							</MenuItem>
-							<MenuItem key={index+'e'} eventKey={index+'e'} onClick={(event) => this.handleEdit(set.id, event)}>
-								Edit
-							</MenuItem>
-							<MenuItem key={index+'a'} eventKey={index+'a'} onClick={(event) => this.handleAnalytics(set.excercise, event)}>
-								Analytics
-							</MenuItem>
-							<MenuItem key={index+'f'} eventKey={index+'f'} onClick={(event) => this.handleFilter(set.id, event)}>
-								Filter
-							</MenuItem>
-						</Dropdown.Menu>
-					</Dropdown>
-
-				//Append default values if the row is expanded
-				if(this.state.expandedId == set.id){
-					excercise =
-						<div>
-							{excercise}
-							<div>
-								<i>{set.muscle_group_name}</i>
-							</div>
-							<div>
-								<i>Id {set.id}</i>
-							</div>
-							<div>
-								<i>"{set.comments}"</i>
-							</div>
-						</div>
-
-					numbers =
-						<div>
-							{numbers}
-							<div>
-								<i>{set.orm + " kg"}</i>
-							</div>
-						</div>
-				}
-
-				var values = [
-						set.workout_order,
-						status,
-						excercise,
-						numbers,
-						actions,
-				]
-
-				//<tr key={index}  >
-				var item = <TableRow onClick={(event) => this.handleExpand(set.id, event)}
-					key={index}	values={values}
-				/>
-
-				//Add row item to array
-				items.push(item);
-
-			} //end if
-
-		}); //end map
-
-		var heads = ["","","Excercise","Set",""];
-		var tableFrame = <TableFrame heads={heads} rows={items} />
-
-		return tableFrame
-
-	} //End function
-
-	renderQuickView(){
-
-		var elementStyle = {
-			textAlign: 'center',
-		}
-
-		var excerciseStyle = {
-			color: 'gray',
-		}
-
-		var grouped = groupBy(this.state.sets,"excercise_name");
-		var excercises = [];
-		for(var excercise in grouped){
-
-			var sets = []
-			grouped[excercise].map((set, index) => {
-
-				//set id done?
-
-				var bgColor = 'white';
-				var color = 'gray';
-				if(set.done){
-					bgColor = '#5cb85c';
-					color = 'white';
-				}
-
-				var setStyle = {
-					backgroundColor: bgColor,
-					color: color,
-					height: '100px',
-					paddingTop: '19px',
-					borderRadius: '30px',
-					marginLeft: '5px',
-					marginRight: '5px',
-					marginTop: '15px',
-					marginBottom: '25px',
-					width: '60px',
-					height: '60px',
-					display: 'inline-block',
-					textAlign: 'center',
-					border: '1px solid gray',
-				}
-
-				var setItem =
-					<span style={setStyle} key={index} onClick={() => this.handleModalOpen(set)}>
-						{set.reps + "x" + set.weight}
-					</span>
-				sets.push(setItem)
-			})
-
-			var excerciseItem =
-				<div style={elementStyle} key={excercise}>
-					<h3 style={excerciseStyle}>{excercise}</h3>
-					{sets}
-				</div>
-
-			excercises.push(excerciseItem)
-		}
-
-		return <div>{excercises}</div>;
-	}
-
-	renderModal(){
-		var modal =
-			<Modal show={this.state.modalOpen} onHide={() => this.handleModalClose()}>
-				<Modal.Header closeButton>
-					<Modal.Title>
-						{this.state.modalSet.excercise_name} (#{this.state.modalSet.workout_order})
-					</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-				<form>
-					<FormInput
-							id="reps"
-							label="Reps"
-							type="number"
-							value={this.state.modalSet.reps}
-							autoFocus
-						/>
-
-					<FormInput
-							id="weight"
-							label="Weight"
-							type="number"
-							value={this.state.modalSet.weight}
-						/>
-
-					<FormInput
-							id="comments"
-							label="Comments"
-							componentClass="textarea"
-							value={this.state.modalSet.comments}
-						/>
-					</form>
-
-					[analytics]
-				</Modal.Body>
-				<Modal.Footer>
-					<Button bsStyle="success" onClick={() => this.handleModalClose()}>Done</Button>
-				</Modal.Footer>
-			</Modal>
-		return modal
-	}
 
 	componentWillMount(){
 		this.getAll();
@@ -348,6 +98,9 @@ class GymWorkout extends React.Component {
 			//Set state
 			this.setState(state);
 
+			//To global state
+			this.props.setSets(sets);
+
 		});
 	}
 
@@ -366,9 +119,9 @@ class GymWorkout extends React.Component {
 
 			//View
 			if(this.props.workout.view=="list"){
-				view = this.renderListView();
+				view = <GymWorkoutListMobile />;
 			}else if(this.props.workout.view=="quick"){
-				view = this.renderQuickView();
+				view = <GymWorkoutQuickView />;
 			}
 
 			if(this.state.modalOpen){
@@ -392,8 +145,6 @@ class GymWorkout extends React.Component {
 
 		]
 
-		console.log(this.props.workout)
-
 		return (
 			<Row>
 				<Col md={12}>
@@ -402,7 +153,7 @@ class GymWorkout extends React.Component {
 					{progressBar}
 					{this.renderToolbar()}
 					{view}
-					{modal}
+
 				</Col>
 			</Row>
 		)
@@ -423,10 +174,13 @@ function mapStateToProps(state, ownProps){
 function mapDispatchToProps(dispatch){
   return {
   // You can now say this.props.setView
-    setView: (view) => dispatch(workoutActions.setView(view))
+    setView: (view) => dispatch(workoutActions.setView(view)),
+		setSets: (sets) => dispatch(workoutActions.setSets(sets)),
+		excerciseFilter: (excerciseId) => dispatch(workoutActions.excerciseFilter(excerciseId)),
+
   }
 };
 
-const GymWorkoutConnected = connect(mapStateToProps, mapDispatchToProps)(GymWorkout);
+const WorkoutContainer = connect(mapStateToProps, mapDispatchToProps)(Workout);
 
-export default GymWorkoutConnected;
+export default WorkoutContainer;

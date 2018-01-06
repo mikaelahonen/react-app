@@ -25,6 +25,7 @@ import GymRoutineEdit from 'private/gym/GymRoutineEdit'
 
 import ReduxTest from 'private/gym/ReduxTest'
 import ReduxTest2 from 'private/gym/ReduxTest2'
+import PlotlyTest from 'private/gym/PlotlyTest'
 
 class GymRouter extends Component {
 	render() {
@@ -57,6 +58,7 @@ class GymRouter extends Component {
 						//Redux test
 						<Route exact path='/gym/reduxtest' component={ReduxTest}/>
 						<Route exact path='/gym/reduxtest2' component={ReduxTest2}/>
+						<Route exact path='/gym/plotlytest' component={PlotlyTest}/>
 
 					</Switch>
 				</Col>

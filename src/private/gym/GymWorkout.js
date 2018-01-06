@@ -10,13 +10,17 @@ import{connect} from 'react-redux'
 import * as workoutActions from 'actions/workoutActions';
 import GymWorkoutListMobile from './GymWorkoutListMobile';
 import GymWorkoutQuickView from './GymWorkoutQuickView';
+import * as moment from 'moment';
+import 'moment-duration-format';
 
-class Workout extends React.Component {
+class WorkoutClass extends React.Component {
 
 	state = {
 		ready: false,
 		workout: {},
 		sets: {},
+		timer: undefined,
+		ticks: 0,
 	}
 
 	handleWorkoutEdit(){
@@ -45,12 +49,21 @@ class Workout extends React.Component {
 	}
 
 
-	renderDuration(){
-		return (
-			<Panel>
-				<h3>Duration: [mm:ss]</h3>
-			</Panel>
-		);
+	tick(){
+		//Difference
+		var start = moment(this.props.workout.workout.start_time);
+		var now = moment()
+		var ms = now.diff(start)
+
+		//String timer
+		var duration = moment.duration(ms);
+		var timer = duration.format('hh:mm:ss');
+
+		//Set state
+		var newState = {timer: timer}
+		this.setState(newState)
+
+		return true
 	}
 
 	renderToolbar(){
@@ -100,33 +113,43 @@ class Workout extends React.Component {
 
 			//To global state
 			this.props.setSets(sets);
+			this.props.setWorkout(workout);
 
 		});
+	}
+
+	componentDidMount(){
+		//Loop timer once per second
+		this.interval = setInterval(() => this.tick(), 1000);
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
 	}
 
 	render() {
 
 		var workout = "Workout...";
 		var progressBar = "";
-		var duration = "";
+		var duration = "mm:ss";
 		var view = "Rendering view...";
 		var modal = "";
 
 		if(this.state.ready){
-			duration = this.renderDuration();
+
+			//Change: Render only, if workout is undone
+			duration = <div className="duration">{this.state.timer}</div>
 			progressBar = this.renderProgressBar();
 			workout = this.state.workout.name;
 
 			//View
 			if(this.props.workout.view=="list"){
+
 				view = <GymWorkoutListMobile />;
 			}else if(this.props.workout.view=="quick"){
 				view = <GymWorkoutQuickView />;
 			}
 
-			if(this.state.modalOpen){
-				modal = this.renderModal();
-			}
 		}
 
 		var menuItems = [
@@ -174,13 +197,14 @@ function mapStateToProps(state, ownProps){
 function mapDispatchToProps(dispatch){
   return {
   // You can now say this.props.setView
-    setView: (view) => dispatch(workoutActions.setView(view)),
 		setSets: (sets) => dispatch(workoutActions.setSets(sets)),
+		setWorkout: (workout) => dispatch(workoutActions.setWorkout(workout)),
+		setView: (view) => dispatch(workoutActions.setView(view)),
 		excerciseFilter: (excerciseId) => dispatch(workoutActions.excerciseFilter(excerciseId)),
 
   }
 };
 
-const WorkoutContainer = connect(mapStateToProps, mapDispatchToProps)(Workout);
+const WorkoutContainer = connect(mapStateToProps, mapDispatchToProps)(WorkoutClass);
 
 export default WorkoutContainer;

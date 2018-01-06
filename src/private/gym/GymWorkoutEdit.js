@@ -6,10 +6,15 @@ import {Panel} from 'react-bootstrap';
 import FontAwesome from  'react-fontawesome';
 import {Link} from 'react-router-dom';
 import {LinkContainer} from 'react-router-bootstrap';
+import * as moment from 'moment';
 
 class GymWorkoutEdit extends React.Component {
 
-	state = {ready: false, data: {}}
+	state = {
+		ready: false,
+		data: {},
+		formData: {},
+	}
 
 	handleSave(id, event){
 		var endpoint = '/gym/workouts/' + id + '/';
@@ -21,12 +26,19 @@ class GymWorkoutEdit extends React.Component {
 
 	handleChange(event){
 
+		/*Move to function module*/
 		const target = event.target;
-		const value = target.type === 'checkbox' ? target.checked : target.value;
-		const name = target.id;
+    var value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+		if(target.type=="datetime-local"){
+			const offset = moment().utcOffset()
+			const adjusted = moment(value).add(-offset,'minutes').parseZone(value).format()
+			value = adjusted;
+		}
 
 		var inputs = this.state.data;
-		inputs[name] = value
+		inputs[target.id] = value
 
 		var state = {data: inputs};
 		this.setState(state);

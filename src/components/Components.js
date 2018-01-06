@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FontAwesome from  'react-fontawesome';
 import {Table, Button, FormGroup, ControlLabel, FormControl, Label, Row, Col, Dropdown, MenuItem} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap';
+import * as moment from 'moment';
 
 export class Loading extends React.Component {
 	render() {
@@ -274,7 +275,9 @@ export class FormInput extends React.Component {
 
 		//Strip trailing Z from datetime-local
 		if(this.props.type=="datetime-local"){
-			value = value.replace("Z","")
+			//console.log("value before: " + value)
+			value = moment(value).format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS)
+			//console.log("value after: " + value)
 		}
 
 		//React doesn't allow null as the defaultValue

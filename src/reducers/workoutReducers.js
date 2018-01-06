@@ -1,6 +1,7 @@
 const initialState = {
   view: 'list',
   sets: [],
+  workout: {},
   excerciseFilter: undefined,
   expandedSet: undefined,
   modalSet: {},
@@ -8,15 +9,18 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
-  console.log(state)
   switch (action.type){
 
-    case 'SET_VIEW':
+    case 'VIEW':
         var x = Object.assign({}, state, {view: action.view});
         return x;
 
-    case 'SET_SETS':
+    case 'SETS':
         var x = Object.assign({}, state, {sets: action.sets});
+        return x;
+
+    case 'WORKOUT':
+        var x = Object.assign({}, state, {workout: action.workout});
         return x;
 
     case 'EXCERCISE_FILTER':

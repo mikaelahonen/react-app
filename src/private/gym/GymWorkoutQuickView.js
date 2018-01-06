@@ -5,6 +5,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import{connect} from 'react-redux'
 import * as workoutActions from 'actions/workoutActions';
 import GymWorkoutModal from './GymWorkoutModal'
+import {ButtonToolbar, ButtonGroup, Button} from 'react-bootstrap';
 
 class GymWorkoutQuickView extends React.Component {
 
@@ -32,39 +33,22 @@ class GymWorkoutQuickView extends React.Component {
 
 					//set id done?
 
-					var bgColor = 'white';
-					var color = 'gray';
+					var btnClasses = "circle"
+					var bsStyle = "default"
 					if(set.done){
-						bgColor = '#5cb85c';
-						color = 'white';
-					}
-
-					var setStyle = {
-						backgroundColor: bgColor,
-						color: color,
-						height: '100px',
-						paddingTop: '19px',
-						borderRadius: '30px',
-						marginLeft: '5px',
-						marginRight: '5px',
-						marginTop: '15px',
-						marginBottom: '25px',
-						width: '60px',
-						height: '60px',
-						display: 'inline-block',
-						textAlign: 'center',
-						border: '1px solid gray',
+						btnClasses = "circle"
+						bsStyle = "success"
 					}
 
 					var setItem =
-						<span style={setStyle} key={index} onClick={() => this.handleModalOpen(set)}>
+						<Button className={btnClasses} bsStyle={bsStyle} key={index} onClick={() => this.handleModalOpen(set)}>
 							{set.reps + "x" + set.weight}
-						</span>
+						</Button>
 					sets.push(setItem)
 				})
 
 				var excerciseItem =
-					<div style={elementStyle} key={excercise}>
+					<div className="circle-container">
 						<h3 style={excerciseStyle}>{excercise}</h3>
 						{sets}
 					</div>

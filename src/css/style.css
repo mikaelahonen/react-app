@@ -174,3 +174,25 @@ form{
 button.list-group-item:focus{
 	outline-width: 0px;
 }
+
+.circle{
+	border-radius: 30px;
+	margin: 15px 5px 25px 5px;
+	width: 60px;
+	height: 60px;
+	text-align: center;
+	padding: 0px;
+}
+
+.circle-container{
+	text-align: center;
+}
+
+.duration{
+	color: gray;
+	margin: 20px 0px;
+	text-align: center;
+	border: 2px solid gray;
+	padding: 10px;
+	font-size: 24px;
+}

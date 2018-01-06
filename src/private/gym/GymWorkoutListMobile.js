@@ -47,10 +47,6 @@ class GymWorkoutListMobile extends React.Component {
 		}
 
     filtered.map((set, index) => {
-
-      //Filter excercises
-      if(!this.props.workout.excerciseFilter || set.excercise == this.props.workout.excerciseFilter){
-
         var status = undefined
         if(set.done){
           status = <FontAwesome style={{color:"#5cb85c"}} name='check' />
@@ -126,8 +122,6 @@ class GymWorkoutListMobile extends React.Component {
         //Add row item to array
         items.push(item);
 
-      } //end if
-
     }); //end map
 
     var heads = ["","","Excercise","Set",""];
@@ -135,8 +129,9 @@ class GymWorkoutListMobile extends React.Component {
 
     return tableFrame
 
-  } //End function
-}
+	} //End render
+
+} //End class
 
 // Maps state from store to props
 // To fetch data from Redux store
@@ -152,7 +147,6 @@ function mapStateToProps(state, ownProps){
 function mapDispatchToProps(dispatch){
   return {
   // You can now say this.props.setView
-    setView: (view) => dispatch(workoutActions.setView(view)),
 		setExpandedSet: (setId) => dispatch(workoutActions.setExpandedSet(setId)),
 		excerciseFilter: (setId) => dispatch(workoutActions.excerciseFilter(setId)),
   }

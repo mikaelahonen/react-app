@@ -2,7 +2,7 @@ export function setView(view){
   // Return action
   return {
     // Unique identifier
-    type: 'SET_VIEW',
+    type: 'VIEW',
     // Payload
     view: view
   }
@@ -12,9 +12,19 @@ export function setSets(sets){
   // Return action
   return {
     // Unique identifier
-    type: 'SET_SETS',
+    type: 'SETS',
     // Payload
     sets: sets
+  }
+}
+
+export function setWorkout(workout){
+  // Return action
+  return {
+    // Unique identifier
+    type: 'WORKOUT',
+    // Payload
+    workout: workout
   }
 }
 

@@ -9,21 +9,15 @@ export function setView(view){
 }
 
 export function setSets(sets){
-  // Return action
   return {
-    // Unique identifier
     type: 'SETS',
-    // Payload
     sets: sets
   }
 }
 
 export function setWorkout(workout){
-  // Return action
   return {
-    // Unique identifier
     type: 'WORKOUT',
-    // Payload
     workout: workout
   }
 }
@@ -52,6 +46,13 @@ export function modalSet(modalSet){
   return {
     type: 'MODAL_SET',
     modalSet: modalSet,
+  }
+}
+
+export function saveModalSet(set){
+  return {
+    type: 'SAVE_MODAL_SET',
+    set: set,
   }
 }
 

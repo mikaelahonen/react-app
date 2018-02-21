@@ -7,10 +7,43 @@ import {LinkContainer} from 'react-router-bootstrap';
 import{connect} from 'react-redux'
 import * as workoutActions from 'actions/workoutActions';
 import Plot1 from 'plotly/Plot-1'
+import {putData} from 'functions/Api';
 
 
 class GymWorkoutModal extends React.Component {
 
+	handleChange(event){
+
+		console.log("handleChange")
+
+		const target = event.target;
+		const value = target.type === 'checkbox' ? target.checked : target.value;
+		const name = target.id;
+
+		var newSet = this.props.workout.modalSet;
+		newSet[name] = value;
+		console.log("newSet");
+		console.log(newSet);
+		this.props.modalSet(newSet);
+
+	}
+
+	handleClickEdit(event){
+		console.log("Click edit");
+		var id = this.props.workout.modalSet.id;
+		this.props.history.push('/gym/sets/' + id + '/edit');
+	}
+
+	handleSaveReturn(event){
+		console.log("Save and return");
+		var id = this.props.workout.modalSet.id;
+		var endpoint = '/gym/sets/' + id + '/';
+		var redirect = '/gym/workouts/' + this.props.workout.workout.id;
+		putData(endpoint, this.props.workout.modalSet).then(response => {
+			this.props.modalOpen(false);
+			this.props.history.push(redirect);
+		});
+	}
 
 	render(){
 
@@ -22,12 +55,14 @@ class GymWorkoutModal extends React.Component {
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
+
 				<form>
 					<FormInput
 							id="reps"
 							label="Reps"
 							type="number"
 							value={this.props.workout.modalSet.reps}
+							onChange={(e) => this.handleChange(e)}
 							autoFocus
 						/>
 
@@ -36,6 +71,7 @@ class GymWorkoutModal extends React.Component {
 							label="Weight"
 							type="number"
 							value={this.props.workout.modalSet.weight}
+							onChange={(e) => this.handleChange(e)}
 						/>
 
 					<FormInput
@@ -43,15 +79,25 @@ class GymWorkoutModal extends React.Component {
 							label="Comments"
 							componentClass="textarea"
 							value={this.props.workout.modalSet.comments}
+							onChange={(e) => this.handleChange(e)}
 						/>
 					</form>
+
+					<ButtonToolbar>
+						<Button bsStyle="success" onClick={() => this.handleSaveReturn(false)}>
+							Save
+						</Button>
+						<Button onClick={(e) => this.handleClickEdit(e)}>
+							Edit
+						</Button>
+					</ButtonToolbar>
 
 					<Plot1 />
 
 				</Modal.Body>
 				<Modal.Footer>
-					<Button bsStyle="success" onClick={() => this.props.modalOpen(false)}>
-						Done
+					<Button bsStyle="danger" onClick={() => this.props.modalOpen(false)}>
+						Cancel
 					</Button>
 				</Modal.Footer>
 			</Modal>
@@ -75,6 +121,7 @@ function mapDispatchToProps(dispatch){
   return {
   // You can now say this.props.setView
 		modalOpen: (isOpen) => dispatch(workoutActions.modalOpen(isOpen)),
+		modalSet: (set) => dispatch(workoutActions.modalSet(set)),
   }
 };
 

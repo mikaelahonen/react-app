@@ -70,8 +70,9 @@ class WorkoutClass extends React.Component {
 		return (
 			<ButtonToolbar>
 				<Btn text="Show all" onClick={() => this.props.excerciseFilter(undefined)} />
-				<Btn text="Quick view" onClick={() => this.props.setView("quick")} />
-				<Btn text="List view" onClick={() => this.props.setView("list")} />
+				<Btn text="Quick" onClick={() => this.props.setView("quick")} />
+				<Btn text="Mobile" onClick={() => this.props.setView("mobile")} />
+				<Btn text="Desktop" onClick={() => this.props.setView("desktop")} />
 			</ButtonToolbar>
 		);
 	}
@@ -143,8 +144,7 @@ class WorkoutClass extends React.Component {
 			workout = this.state.workout.name;
 
 			//View
-			if(this.props.workout.view=="list"){
-
+			if(this.props.workout.view=="mobile"){
 				view = <GymWorkoutListMobile />;
 			}else if(this.props.workout.view=="quick"){
 				view = <GymWorkoutQuickView />;

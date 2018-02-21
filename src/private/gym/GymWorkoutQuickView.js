@@ -48,7 +48,7 @@ class GymWorkoutQuickView extends React.Component {
 				})
 
 				var excerciseItem =
-					<div className="circle-container">
+					<div key={excercise} className="circle-container">
 						<h3 style={excerciseStyle}>{excercise}</h3>
 						{sets}
 					</div>

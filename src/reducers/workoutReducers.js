@@ -1,5 +1,5 @@
 const initialState = {
-  view: 'list',
+  view: 'quick',
   sets: [],
   workout: {},
   excerciseFilter: undefined,

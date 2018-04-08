@@ -68,9 +68,9 @@ export class MainTitle extends React.Component {
 				</Col>
 				<Col xs={2} >
 					<Dropdown id="main-title-dropdown" className="pull-right">
-						<h2 bsRole="toggle" noCaret>
-								<FontAwesome name="ellipsis-v"/>
-						</h2>
+						<H2Toggle bsRole="toggle">
+							<FontAwesome name="ellipsis-v"/>
+						</H2Toggle>
 						<Dropdown.Menu>
 							{menuItems}
 						</Dropdown.Menu>
@@ -80,6 +80,22 @@ export class MainTitle extends React.Component {
 		)
 	}
 }
+
+class H2Toggle extends React.Component{
+	//This class is needed as bsRole="toggle"
+	//cannot be used in tags such as h2
+	handleClick(e) {
+		e.preventDefault();
+	}
+	render(){
+		return (
+			<h2 onClick={(e) => this.props.onClick(e)}>
+				{this.props.children}
+			</h2>
+		);
+	}
+}
+
 
 export class IconToggle extends React.Component{
 

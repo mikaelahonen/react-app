@@ -3,6 +3,8 @@ import { Button, Grid, Row, Col, FormControl, FormGroup} from 'react-bootstrap';
 import {postData} from 'functions/Api';
 import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import {AWS} from 'aws-sdk'
+import {CognitoUserPool, CognitoUserAttribute, CognitoUser, AuthenticationDetails} from 'amazon-cognito-identity-js';
 
 class Login extends Component {
 
@@ -76,6 +78,33 @@ class Login extends Component {
 		this.getToken();
 	}
 
+	handleCognito(){
+		var authenticationData = {
+        Username : this.state.username,
+        Password : this.state.password,
+    };
+    var authenticationDetails = new AuthenticationDetails(authenticationData);
+    var poolData = {
+        UserPoolId : 'eu-west-1_H5mb08BMU', // Your user pool id here
+        ClientId : '46bf3oa91k0ff16vduo7lolv82' // Your client id here
+    };
+    var userPool = new CognitoUserPool(poolData);
+    var userData = {
+        Username : this.state.username,
+        Pool : userPool
+    };
+    var cognitoUser = new CognitoUser(userData);
+    cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: function (result) {
+            console.log('access token + ' + result.getAccessToken().getJwtToken());
+			},
+	    onFailure: function(err) {
+	        alert(err.message || JSON.stringify(err));
+	    },
+
+  	});
+	}
+
 	render() {
 
 		var hintStyle = {
@@ -106,6 +135,7 @@ class Login extends Component {
 									</FormGroup>
 									<FormGroup>
 										<Button block onClick={() => this.handleSubmit()}>Sign in</Button>
+										<Button block onClick={() => this.handleCognito()}>Cognito Auth</Button>
 									</FormGroup>
 
 									<div style={{...hintStyle,...this.state.login_style}}>{this.state.login_hint}</div>

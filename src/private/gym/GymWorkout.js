@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, ProgressBar} from 'react-bootstrap';
+import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, ProgressBar, DropdownButton, MenuItem} from 'react-bootstrap';
 import {getData, patchData, deleteData} from 'functions/Api';
 import {distinctValues, utcToDate, groupBy} from 'functions/Functions';
 import {Loading, Btn, MainTitle, FormInput} from 'components/Components';
@@ -70,20 +70,19 @@ class WorkoutClass extends React.Component {
 		return (
 			<ButtonToolbar>
 				<Btn text="Show all" onClick={() => this.props.excerciseFilter(undefined)} />
-				<Btn text="Quick" onClick={() => this.props.setView("quick")} />
-				<Btn text="Mobile" onClick={() => this.props.setView("mobile")} />
-				<Btn text="Desktop" onClick={() => this.props.setView("desktop")} />
+				<DropdownButton title="View">
+					<MenuItem eventKey="1" onClick={() => this.props.setView("quick")}>
+						Quick
+					</MenuItem>
+					<MenuItem eventKey="1" onClick={() => this.props.setView("mobile")}>
+						Mobile
+					</MenuItem>
+					<MenuItem eventKey="1" onClick={() => this.props.setView("desktop")}>
+						Desktop
+					</MenuItem>
+				</DropdownButton>
 			</ButtonToolbar>
 		);
-	}
-
-	renderProgressBar(){
-		var done = this.state.workout.sets_done
-		var total = this.state.workout.sets_total
-		var percent = done/total*100
-		return(
-			<ProgressBar now={percent} label={done + "/" + total} bsStyle="success" />
-		)
 	}
 
 
@@ -140,7 +139,6 @@ class WorkoutClass extends React.Component {
 
 			//Change: Render only, if workout is undone
 			duration = <div className="duration">{this.state.timer}</div>
-			progressBar = this.renderProgressBar();
 			workout = this.state.workout.name;
 
 			//View

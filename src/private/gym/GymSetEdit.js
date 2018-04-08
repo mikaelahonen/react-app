@@ -10,20 +10,6 @@ class GymSetEdit extends React.Component {
 
 	state = {ready: false, data: {}}
 
-	handleDoneReturn(event){
-
-		//Mark as done
-		var set = this.state.data;
-		set.done = true;
-		this.setState(set)
-
-		var id = this.state.data.id;
-		var endpoint = '/gym/sets/' + id + '/';
-		var redirect = '/gym/workouts/' + this.state.data.workout;
-		putData(endpoint, this.state.data).then(response => {
-			this.props.history.push(redirect);
-		});
-	}
 
 	handleSaveReturn(event){
 		var id = this.state.data.id;
@@ -144,53 +130,23 @@ class GymSetEdit extends React.Component {
 	renderButtonToolbar(){
 		return(
 			<ButtonToolbar>
-				<Btn
-					bsStyle="success"
-					icon="check"
-					text="Done and return"
-					iconFirst={true}
-					onClick={(event) => this.handleDoneReturn(event)}
-					/>
 
 				<Btn
 					bsStyle="success"
-					icon="check"
+					icon="save"
 					text="Save and return"
 					iconFirst={true}
 					onClick={(event) => this.handleSaveReturn(event)}
 					/>
 
 					<Btn
-						bsStyle="success"
+						bsStyle="default"
 						icon="check"
 						text="Save and stay"
 						iconFirst={true}
 						onClick={(event) => this.handleSaveStay(event)}
 						/>
 				</ButtonToolbar>
-		);
-	}
-
-	renderNavButtons(){
-		return(
-			<Row>
-				<Col xs={6}>
-					<FormGroup>
-						<Link to={'/gym/sets/' + this.state.data.prev_id + '/edit'}>
-							<Button block><FontAwesome name="caret-left" size="2x"/></Button>
-						</Link>
-					</FormGroup>
-				</Col>
-
-				<Col xs={6}>
-					<FormGroup>
-						<Link to={'/gym/sets/' + this.state.data.next_id + '/edit'}>
-							<Button block><FontAwesome name="caret-right" size="2x"/></Button>
-						</Link>
-					</FormGroup>
-
-				</Col>
-			</Row>
 		);
 	}
 
@@ -229,7 +185,6 @@ class GymSetEdit extends React.Component {
 
 		if(this.state.ready){
 			form = this.createForm(this.state.data);
-			navButtons = this.renderNavButtons();
 			wait = "";
 		}
 
@@ -238,7 +193,6 @@ class GymSetEdit extends React.Component {
 			<Row>
 				<Col md={12}>
 					{wait}
-					{navButtons}
 						{this.renderButtonToolbar()}
 					{form}
 				</Col>

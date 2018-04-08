@@ -45,17 +45,6 @@ export class PageTitle extends React.Component {
 	}
 }
 
-class CustomToggle extends React.Component {
-
-  render() {
-    return (
-      <h2 onClick={(e) => this.props.onClick(e)}>
-        {this.props.children}
-      </h2>
-    );
-  }
-}
-
 export class MainTitle extends React.Component {
 
 	render(){
@@ -78,16 +67,45 @@ export class MainTitle extends React.Component {
 					<h2>{this.props.title.toUpperCase()}</h2>
 				</Col>
 				<Col xs={2} >
-					<Dropdown id="maint-title-dropdown" className="pull-right">
-						<CustomToggle bsRole="toggle" noCaret>
+					<Dropdown id="main-title-dropdown" className="pull-right">
+						<h2 bsRole="toggle" noCaret>
 								<FontAwesome name="ellipsis-v"/>
-						</CustomToggle>
+						</h2>
 						<Dropdown.Menu>
 							{menuItems}
 						</Dropdown.Menu>
 					</Dropdown>
 				</Col>
 			</Row>
+		)
+	}
+}
+
+export class IconToggle extends React.Component{
+
+	render(){
+
+		var style = {paddingLeft: '10px', paddingRight: '10px'};
+
+		var menuItems = []
+
+		this.props.menuItems.map((item, index) => {
+			var item =
+				<MenuItem key={index} eventKey={index} onClick={item.onClick}>
+					{item.text}
+				</MenuItem>
+				menuItems.push(item)
+		});
+
+		return(
+			<Dropdown id="icon-dropdown">
+				<div bsRole="toggle" noCaret style={style}>
+						<FontAwesome name="ellipsis-v"/>
+				</div>
+				<Dropdown.Menu>
+					{menuItems}
+				</Dropdown.Menu>
+			</Dropdown>
 		)
 	}
 }
@@ -189,7 +207,7 @@ export class TableFrame extends React.Component {
 		var tableRows = this.props.rows
 
 		return(
-			<Table responsive hover>
+			<Table hover>
 				<thead>
 					<tr>
 						{tableHead}

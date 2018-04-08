@@ -30,12 +30,24 @@ class GymWorkoutModal extends React.Component {
 
 	handleClickEdit(event){
 		console.log("Click edit");
+
+		//Close the modal window
+		this.props.modalOpen(false)
+
+		//Go to edit view
 		var id = this.props.workout.modalSet.id;
 		this.props.history.push('/gym/sets/' + id + '/edit');
 	}
 
 	handleSaveReturn(event){
-		console.log("Save and return");
+
+		//Mark as done
+		console.log("Mark set done, save, and close modal");
+		var newSet = this.props.workout.modalSet;
+		newSet["done"] = true;
+		this.props.modalSet(newSet);
+
+		//Send changes to API
 		var id = this.props.workout.modalSet.id;
 		var endpoint = '/gym/sets/' + id + '/';
 		var redirect = '/gym/workouts/' + this.props.workout.workout.id;
@@ -87,18 +99,20 @@ class GymWorkoutModal extends React.Component {
 						<Button bsStyle="success" onClick={() => this.handleSaveReturn(false)}>
 							Save
 						</Button>
-						<Button onClick={(e) => this.handleClickEdit(e)}>
-							Edit
-						</Button>
 					</ButtonToolbar>
 
 					<Plot1 />
 
 				</Modal.Body>
 				<Modal.Footer>
-					<Button bsStyle="danger" onClick={() => this.props.modalOpen(false)}>
-						Cancel
-					</Button>
+					<ButtonToolbar>
+						<Button onClick={(e) => this.handleClickEdit(e)}>
+							Edit
+						</Button>
+						<Button bsStyle="danger" onClick={() => this.props.modalOpen(false)}>
+							Cancel
+						</Button>
+					</ButtonToolbar>
 				</Modal.Footer>
 			</Modal>
 		return modal

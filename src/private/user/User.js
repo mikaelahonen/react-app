@@ -1,51 +1,29 @@
 import React, { Component } from 'react';
 import {Col, Table} from 'react-bootstrap';
-import {getTokenExpDate} from 'functions/Api';
-//React Router
-//Gym components
-
-
+import {Auth} from 'aws-amplify';
 
 class User extends Component {
-	
+
 	state = {
-		userid: "Missing",
-		email: "Missing",
-		firstname: "Missing",
-		lastname: "Missing",
+		user: {
+			id: undefined,
+			username: undefined,
+			attributes:{
+				email: undefined,
+				phone_number: undefined
+			}
+		}
+	}
 
+	async componentDidMount(){
+		let user = await Auth.currentUserInfo();
+		this.setState({user: user});
 	}
-	
-	componentWillMount(){
-		
-		fetch('http://localhost:8000/users/current/',{
-			mode: "cors",
-			headers: {
-			  'Accept': 'application/json',
-			  'Content-Type': 'application/json',
-			  'Authorization': 'JWT ' + localStorage.token,
-			},	
-		})
-		.then((response) => response.json())
-		.then((json) => {
-			var email = json.email;
-			var firstname = json.firstname;
-			var lastname = json.lastname;
-			var userid = json.id;
-			this.setState({
-				userid: userid,
-				email: email,
-				firstname: firstname,
-				lastname: lastname,
-			})
-		})
-	}
-	
+
 	render() {
-
 		return (
 			<div>
-				<h1>User</h1>
+				<h2>User details</h2>
 				<legend></legend>
 				<Table>
 					<thead>
@@ -56,27 +34,22 @@ class User extends Component {
 					</thead>
 					<tbody>
 						<tr>
-							<td>User id</td><td>{this.state.userid}</td>
+							<td>Cognito id</td><td>{this.state.user.id}</td>
 						</tr>
 						<tr>
-							<td>First name</td><td>{this.state.firstname}</td>
+							<td>Cognito username</td><td>{this.state.user.username}</td>
 						</tr>
 						<tr>
-							<td>Last name</td><td>{this.state.lastname}</td>
+							<td>Email</td><td>{this.state.user.attributes.email}</td>
 						</tr>
 						<tr>
-							<td>Email</td><td>{this.state.email}</td>
-						</tr>
-						<tr>
-							<td>Token:</td><td>{localStorage.token.substring(1,50)}...</td>
-						</tr>
-						
-						<tr>
-							<td>Expiration:</td><td>{getTokenExpDate().toLocaleString()}</td>
+							<td>Phone number</td><td>{this.state.user.attributes.phone_number}</td>
 						</tr>
 					</tbody>
 				</Table>
-				
+
+
+
 			</div>
 		);
 	}

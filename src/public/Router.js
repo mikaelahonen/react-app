@@ -9,12 +9,12 @@ import Colors from 'public/colors/Colors';
 import RunningTrack from 'public/intervals/RunningTrack';
 import Home from 'public/Home';
 
-class AppPublic extends Component {
+class PublicRouter extends Component {
   render() {
     return (
 			<div>
-				<MenuPublic/>			
-				
+				<MenuPublic/>
+
 					<Switch>
 						<Route exact path='/public/' component={Home}/>
 						<Route path='/public/scores' component={Scores}/>
@@ -28,4 +28,4 @@ class AppPublic extends Component {
   }
 }
 
-export default AppPublic;
+export default PublicRouter;

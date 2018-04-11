@@ -40,8 +40,8 @@ class MenuSide extends Component {
 		{text: 'Gym - Excercises', url: '/gym/excercises', icon: 'bolt'},
 		{text: 'Gym - Routines', url: '/gym/routines', icon: 'bolt'},
 		{text: 'User', url: '/user', icon: 'user'},
-		{text: 'Login', url: '/login', icon: 'sign-in'},
-		{text: 'Logout', url: '/logout', icon: 'sign-out'},
+		{text: 'Login Cognito', url: '/login-cognito', icon: 'sign-in'},
+		{text: 'Logout Cognito', url: '/logout-cognito', icon: 'sign-out'},
 		{text: 'Public Apps', url: '/public', icon: 'mobile'},
 	]
 

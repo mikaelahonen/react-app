@@ -4,45 +4,41 @@ import 'css/style.css';
 //Bootstrap
 import { Grid, Row, Col } from 'react-bootstrap';
 //React Router
-import {Switch, Route} from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 //Components
 import MenuSide from 'private/MenuSide';
 import MenuPrivate from 'private/Menu';
 import Home from 'private/Home';
 import GymRouter from 'private/gym/GymRouter';
 import User from 'private/user/User';
+import Cognito from 'functions/Cognito'
+//AWS Amplify
+import {Auth} from 'aws-amplify';
 
 class PrivateRouter extends Component {
-	
+
 	state = {
-		menu: false
+		menu: false,
+		auth: undefined,
 	}
-	
+
+	//Show or hide menu
 	handleMenu(){
-
-		var menu = undefined;
-		if(this.state.menu){
-			menu = false;
-		}else{
-			menu = true;
-		}
-
 		this.setState({
-			menu: menu
+			menu: !this.state.menu
 		});
 	}
-	
-	render() {
-		
-	
+
+	renderAuthTrue(){
+
 		var sideMenu = this.state.menu ? <MenuSide clickHandler={() => this.handleMenu()} /> : '';
-		
+
 		return (
 			<div>
 				{sideMenu}
-				<MenuPrivate 
+				<MenuPrivate
 					clickHandler={() => this.handleMenu()}
-				/>			
+				/>
 				<Grid id="container">
 					<Row>
 						<Col md={12}>
@@ -54,10 +50,34 @@ class PrivateRouter extends Component {
 						</Col>
 					</Row>
 				</Grid>
-				
 			</div>
-		);
+		)
 	}
+
+	renderAuthFalse(){
+		return <Redirect to="/login-cognito"/>;
+	}
+
+	async componentDidMount(){
+		var auth = await Cognito.isAuthenticated()
+		this.setState({auth: auth})
+	}
+
+	render() {
+
+		var view = <p>Authenticating...</p>;
+
+		if(this.state.auth!=undefined){
+			if(this.state.auth){
+				view = this.renderAuthTrue();
+			}else{
+				view = this.renderAuthFalse();
+			}
+		}
+
+		return view;
+	}
+
 }
 
 export default PrivateRouter;

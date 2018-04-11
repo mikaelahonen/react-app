@@ -3,27 +3,28 @@ import ReactDOM from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import {isLoggedIn} from 'functions/Api';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import PrivateRouter from 'private/Router';
-import AppPublic from 'public/App';
-import Login from './Login';
-import Logout from './Logout';
+import PublicRouter from 'public/Router';
+import LoginCognito from 'LoginCognito';
+import LogoutCognito from 'LogoutCognito';
 import { Provider } from 'react-redux';
 import configureStore from 'store/configureStore';
+import Amplify from 'aws-amplify';
+import Cognito from 'functions/Cognito';
 
+//Configure Redux storage
 const store = configureStore();
 
+//Render the main view
 ReactDOM.render((
 	<Provider store={store}>
 		<BrowserRouter>
 			<Switch>
-				<Route path='/public' component={AppPublic}/>
-				<Route path='/login' component={Login}/>
-				<Route path='/logout' component={Logout}/>
-				<Route path='/' component={() => (
-					isLoggedIn() ? (<PrivateRouter />) : (<Redirect to="/login" />)
-				)}/>
+				<Route exact path='/login-cognito' component={LoginCognito}/>
+				<Route exact path='/logout-cognito' component={LogoutCognito}/>
+				<Route path='/public' component={PublicRouter}/>
+				<Route path='/' component={PrivateRouter}/>
 			</Switch>
 		</BrowserRouter>
 	</Provider>

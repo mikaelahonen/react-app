@@ -1,3 +1,5 @@
+import { Auth } from 'aws-amplify';
+
 let api_url = '';
 if(process.env.NODE_ENV === 'development'){
 	api_url = 'http://localhost:8000';
@@ -9,14 +11,22 @@ if(process.env.NODE_ENV === 'development'){
 
 export function isLoggedIn(){
 	var pass = false;
+
+	//Cognito login
+	//let session = Auth.currentSession();
+
+	//Django login
 	if(!!localStorage.token){
 		var msToken = getTokenExpMs();
 		var date = new Date();
 		var msNow = date.getTime();
 		if(msToken > msNow){
 			pass = true;
+			console.log("Django login ok")
 		}
 	}
+
+
 	console.log('Logged In: ', pass);
 	return pass;
 }

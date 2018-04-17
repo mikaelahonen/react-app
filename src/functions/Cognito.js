@@ -2,8 +2,8 @@ import {Auth} from 'aws-amplify';
 
 class Cognito {
 
-  static signInPath = "/";
-  static signOutPath = "/login-cognito";
+  static signInRedirect = "/gym/workouts";
+  static signOutRedirect = "/login-cognito";
 
   static authData = {
     // REQUIRED - Amazon Cognito Identity Pool ID

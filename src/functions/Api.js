@@ -104,6 +104,9 @@ export function getData(endpoint) {
 	var promise = fetch(api_url + endpoint, payload)
 	.then((response) => {
 		return response.json()
+	})
+	.catch((e) => {
+		return e
 	});
 
 	return promise

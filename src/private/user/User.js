@@ -5,6 +5,7 @@ import {Auth} from 'aws-amplify';
 class User extends Component {
 
 	state = {
+		ready: false,
 		user: {
 			id: undefined,
 			username: undefined,
@@ -15,13 +16,8 @@ class User extends Component {
 		}
 	}
 
-	async componentDidMount(){
-		let user = await Auth.currentUserInfo();
-		this.setState({user: user});
-	}
-
-	render() {
-		return (
+	renderUserData(){
+		return(
 			<div>
 				<h2>User details</h2>
 				<legend></legend>
@@ -47,11 +43,33 @@ class User extends Component {
 						</tr>
 					</tbody>
 				</Table>
-
-
-
 			</div>
 		);
+	}
+
+	async getInfo(){
+		try{
+			let user = await Auth.currentUserInfo();
+			this.setState({user: user, ready: true});
+		}
+		catch(e){
+			console.log(e);
+		}
+	}
+
+	componentDidMount(){
+		this.getInfo();
+	}
+
+	render() {
+
+		var view = <p>Getting user data...</p>
+
+		if(this.state.ready){
+			view = this.renderUserData();
+		}
+
+		return view;
 	}
 }
 

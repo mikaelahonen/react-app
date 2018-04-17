@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Grid, Row, Col, FormControl, FormGroup} from 'react-bootstrap';
-import {postData} from 'functions/Api';
+import { Button, FormControl, FormGroup} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Amplify, {Auth} from 'aws-amplify';
@@ -12,7 +11,8 @@ class LoginCognito extends Component {
 	state = {
 		username: null,
 		password: null,
-		auth: undefined,
+		auth: false,
+		ready: false,
 	};
 
 
@@ -27,23 +27,22 @@ class LoginCognito extends Component {
 	}
 
 
-	handleLogin(){
+	async handleLogin(){
 
-		//Configure the Cognito authentication
-		Amplify.configure({Auth: Cognito.authData});
-
-		//Sign the user in
-		Auth.signIn(this.state.username, this.state.password)
-    .then((user) => {
-			this.props.history.push(Cognito.signInPath);
-		})
-    .catch((err) => {
+    try{
+			//Configure the Cognito authentication
+			await Amplify.configure({Auth: Cognito.authData});
+			//Sign the user in
+			await Auth.signIn(this.state.username, this.state.password)
+			//Redirect
+			this.props.history.push(Cognito.signInRedirect);
+		}catch(e){
 			//pass
-		});
+		}
 	}
 
 	renderAuthTrue(){
-		return <Redirect to={"/"} />;
+		return <Redirect to={Config.startPath} />;
 	}
 
 	renderAuthFalse(){
@@ -70,16 +69,25 @@ class LoginCognito extends Component {
 		);
 	}
 
-	async componentDidMount(){
-		var auth = await Cognito.isAuthenticated();
-		this.setState({auth: auth});
+	async auth(){
+		try{
+			var auth = await Cognito.isAuthenticated()
+			this.setState({auth: auth, ready: true})
+		}
+		catch(e){
+			console.log("Auth failed.")
+		}
+	}
+
+	componentDidMount(){
+		this.auth();
 	}
 
 	render() {
 
 		var view = <p>Authenticating...</p>;
 
-		if(this.state.auth!=undefined){
+		if(this.state.ready){
 			if(this.state.auth){
 				view = this.renderAuthTrue();
 			}else{

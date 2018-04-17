@@ -9,20 +9,20 @@ class LogoutCognito extends Component {
     signout: false
   }
 
-  async componentWillMount(){
-    await Auth.signOut()
-    .then(data => {
+  async componentDidMount(){
+    try{
+      var signout = await Auth.signOut()
       this.setState({signout: true})
-    })
-    .catch(err => {
-      //this.setState({signout: true})
-    });
+    }
+    catch(e){
+      //pass
+    }
   }
 
   render() {
 
     if(this.state.signout){
-      return <Redirect to={Cognito.signOutPath} />
+      return <Redirect to={Cognito.signOutRedirect} />
     }else{
       return <p>Signing out...</p>
     }

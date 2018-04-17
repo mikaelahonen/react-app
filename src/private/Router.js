@@ -19,7 +19,8 @@ class PrivateRouter extends Component {
 
 	state = {
 		menu: false,
-		auth: undefined,
+		auth: false,
+		ready: false,
 	}
 
 	//Show or hide menu
@@ -58,16 +59,25 @@ class PrivateRouter extends Component {
 		return <Redirect to="/login-cognito"/>;
 	}
 
-	async componentDidMount(){
-		var auth = await Cognito.isAuthenticated()
-		this.setState({auth: auth})
+	async auth(){
+		try{
+			var auth = await Cognito.isAuthenticated()
+			this.setState({auth: auth, ready: true})
+		}
+		catch(e){
+			console.log("Auth failed.")
+		}
+	}
+
+	componentDidMount(){
+		this.auth();
 	}
 
 	render() {
 
 		var view = <p>Authenticating...</p>;
 
-		if(this.state.auth!=undefined){
+		if(this.state.ready){
 			if(this.state.auth){
 				view = this.renderAuthTrue();
 			}else{

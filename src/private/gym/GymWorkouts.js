@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Row, Col, Button, ButtonToolbar, FormGroup, Table, Dropdown, MenuItem} from 'react-bootstrap';
-import {getData, deleteData} from 'functions/Api';
+//import {getData, deleteData} from 'functions/Api';
+import DataApi from 'functions/DataApi'
 import {utcToDate, utcDuration} from 'functions/Functions';
 import {Loading, TableFrame, TableRow, Btn, PageTitle, MainTitle} from 'components/Components';
 import {Panel} from 'react-bootstrap';
@@ -10,24 +11,31 @@ import {LinkContainer} from 'react-router-bootstrap';
 
 class GymWorkouts extends React.Component {
 
-	state = {ready: false, data: {}}
+	state = {
+		ready: false,
+		err: false,
+		data: [],
+	}
 
-	getWorkouts(){
-		var endpoint = '/gym/workouts/';
-		getData(endpoint).then(data => {
-			var state = {data: data, ready: true};
-			this.setState(state);
-		});
+	async getWorkouts(){
+
+		var endpoint = '/gym/workoutsXXX';
+		var response = await DataApi.get(endpoint);
+		if(response){
+			this.setState({data: response, ready: true})
+		}else{
+			this.setState({err:true})
+		}
+
 	}
 
 
-	handleDelete(workoutId, event){
+	async handleDelete(workoutId, event){
 		var ans  = window.confirm('Are you sure you want to delete this workout?')
 		if(ans){
 			var endpoint = '/gym/workouts/' + workoutId + '/';
-			deleteData(endpoint).then((json)=>{
-				this.props.history.push();
-			});
+			var json = await DataApi.delete(endpoint);
+			this.props.history.push();
 		}
 	}
 

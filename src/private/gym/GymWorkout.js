@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Panel, Row, Col, Button, ButtonToolbar, FormGroup, ButtonGroup, InputGroup, ProgressBar, DropdownButton, MenuItem} from 'react-bootstrap';
 import {getData, patchData, deleteData} from 'functions/Api';
+import dataApi from 'functions/DataApi';
 import {distinctValues, utcToDate, groupBy} from 'functions/Functions';
 import {Loading, Btn, MainTitle, FormInput} from 'components/Components';
 import FontAwesome from  'react-fontawesome';
@@ -70,7 +71,7 @@ class WorkoutClass extends React.Component {
 		return (
 			<ButtonToolbar>
 				<Btn text="Show all" onClick={() => this.props.excerciseFilter(undefined)} />
-				<DropdownButton title="View">
+				<DropdownButton title="View" id="dropdown-view">
 					<MenuItem eventKey="1" onClick={() => this.props.setView("quick")}>
 						Quick
 					</MenuItem>
@@ -92,8 +93,8 @@ class WorkoutClass extends React.Component {
 
 	getAll(){
 		var workoutId = this.props.match.params.id;
-		var workout_promise = getData('/gym/workouts/' + workoutId + '/');
-		var sets_promise = getData('/gym/sets/?workout=' + workoutId + '&ordering=workout_order');
+		var workout_promise = dataApi.get('/gym/workouts/' + workoutId + '/');
+		var sets_promise = dataApi.get('/gym/sets/?workout=' + workoutId + '&sort=workout_order');
 
 		Promise.all([workout_promise, sets_promise]).then(resolved => {
 
@@ -109,9 +110,9 @@ class WorkoutClass extends React.Component {
 			}
 
 			//Set state
-			this.setState(state);
+			//this.setState(state);
 
-			//To global state
+			//To redux state
 			this.props.setSets(sets);
 			this.props.setWorkout(workout);
 

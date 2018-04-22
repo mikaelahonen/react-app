@@ -19,7 +19,7 @@ class GymWorkouts extends React.Component {
 
 	async getWorkouts(){
 
-		var endpoint = '/gym/workoutsXXX';
+		var endpoint = '/gym/workouts';
 		var response = await DataApi.get(endpoint);
 		if(response){
 			this.setState({data: response, ready: true})
@@ -50,7 +50,10 @@ class GymWorkouts extends React.Component {
 
 	getDuration(start_time, end_time){
 		var duration = utcDuration(start_time, end_time)
-		if(!end_time){
+		if(isNaN(duration)){
+			duration = "Missing"
+		}
+		else if(!end_time){
 			duration = "Not ended"
 		}else if(duration==0){
 			duration = "Zero!"
@@ -64,8 +67,8 @@ class GymWorkouts extends React.Component {
 	}
 
 	renderRows(){
-		var items = [];
-		this.state.data.map((workout, index) => {
+
+		var items = this.state.data.map((workout, index) => {
 
 			var btnEdit = <FontAwesome name="edit"
 				onClick={(e) => this.handleEdit(workout.id, e)}/>
@@ -79,25 +82,14 @@ class GymWorkouts extends React.Component {
 			var values = [
 				utcToDate(workout.start_time),
 				workoutName,
-				workout.sets_done + "/" + workout.sets_total,
+				"x/y", //workout.sets_done + "/" + workout.sets_total,
 				this.getDuration(workout.start_time, workout.end_time),
 				workout.location,
 				btnEdit,
 				btnDelete,
 			];
 
-			//Color by completeness of the workout
-			var completeness = workout.sets_done / workout.sets_total
-			var statusStyle = {backgroundColor: ""}
-			if(completeness==1){
-				//statusStyle = {backgroundColor: '#c6efce'}
-			}else if(completeness<1 && completeness>0){
-				//statusStyle = {backgroundColor: '#ffeb9c'}
-			}
-
-			var trow = <TableRow style={statusStyle} values={values} key={index}/>
-
-			items.push(trow);
+			return <TableRow values={values} key={index}/>
 
 		});
 

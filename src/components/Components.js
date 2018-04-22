@@ -185,20 +185,18 @@ export class Btn extends React.Component {
 export class TableRow extends React.Component {
 
 	tdWrap(){
-		var tdList = []
-		var i = 0;
-		this.props.values.forEach(value => {
-			var td = <td key={i} style={{color:'gray'}}>{value}</td>
-			tdList = [...tdList, td]
-			i = i + 1;
+
+		var tdList = this.props.values.map((value, i) => {
+			return <td key={i} style={{color:'gray'}}>{value}</td>
 		});
 		return tdList;
 	}
 
 	render(){
 		var values = this.tdWrap();
+		var style = this.props.style ? this.props.style : {};
 		return (
-			<tr onClick={this.props.onClick} style={this.props.style}>
+			<tr onClick={this.props.onClick} style={style}>
 				{values}
 			</tr>
 		)

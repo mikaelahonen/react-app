@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import {Col, Table} from 'react-bootstrap';
+import {Col, Table, FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import {Auth} from 'aws-amplify';
 
 class User extends Component {
 
 	state = {
-		ready: false,
+		readyUser: false,
+		readySession: false,
+		session: {},
 		user: {
 			id: undefined,
 			username: undefined,
@@ -43,14 +45,33 @@ class User extends Component {
 						</tr>
 					</tbody>
 				</Table>
+
 			</div>
 		);
+	}
+
+	renderSessionData(){
+		return(
+			<div>
+				<h2>Cognito id token</h2>
+				<FormGroup controlId="formControlsTextarea">
+					<ControlLabel>Id Token</ControlLabel>
+					<FormControl componentClass="textarea" readOnly value={this.state.session.idToken.jwtToken} />
+				</FormGroup>
+			</div>
+		)
+	}
+
+	async getSession(){
+		let session = await Auth.currentSession();
+		this.setState({session: session, readySession: true});
+		console.log(session)
 	}
 
 	async getInfo(){
 		try{
 			let user = await Auth.currentUserInfo();
-			this.setState({user: user, ready: true});
+			this.setState({user: user, readyUser: true});
 		}
 		catch(e){
 			console.log(e);
@@ -59,17 +80,27 @@ class User extends Component {
 
 	componentDidMount(){
 		this.getInfo();
+		this.getSession();
 	}
 
 	render() {
 
-		var view = <p>Getting user data...</p>
-
-		if(this.state.ready){
-			view = this.renderUserData();
+		var userSection = <p>Getting user data...</p>
+		if(this.state.readyUser){
+			userSection = this.renderUserData();
 		}
 
-		return view;
+		var sessionSection = <p>Getting session data...</p>
+		if(this.state.readySession){
+				sessionSection = this.renderSessionData();
+		}
+
+		return (
+			<div>
+				{userSection}
+				{sessionSection}
+			</div>
+		);
 	}
 }
 

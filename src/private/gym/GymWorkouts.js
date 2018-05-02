@@ -19,7 +19,7 @@ class GymWorkouts extends React.Component {
 
 	async getWorkouts(){
 
-		var endpoint = '/gym/workouts';
+		var endpoint = '/gym/workouts?sort=-start_time';
 		var response = await DataApi.get(endpoint);
 		if(response){
 			this.setState({data: response, ready: true})
@@ -82,7 +82,7 @@ class GymWorkouts extends React.Component {
 			var values = [
 				utcToDate(workout.start_time),
 				workoutName,
-				"x/y", //workout.sets_done + "/" + workout.sets_total,
+				workout.sets_done + "/" + workout.sets_total,
 				this.getDuration(workout.start_time, workout.end_time),
 				workout.location,
 				btnEdit,
